@@ -17,9 +17,6 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="earnest-manticore" options="-parameters" />
-      <module name="earnest-manticore.main" options="-parameters" />
-      <module name="earnest-manticore.test" options="-parameters" />
       <module name="senti_mate_back_end" options="-parameters" />
       <module name="senti_mate_back_end.main" options="-parameters" />
       <module name="senti_mate_back_end.test" options="-parameters" />

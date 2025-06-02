@@ -155,6 +155,38 @@ npm test
 1. Create a new test file with the `.test.js` or `.spec.js` extension next to the component you're testing.
 2. Use Jest and React Testing Library to write your tests.
 
+### Frontend Application Structure
+
+#### Main Features
+The frontend application includes the following main features:
+1. **Emotion Diary**: Users can create, view, edit, and delete diary entries with associated emotions.
+2. **Todo List**: Users can create, toggle, and delete todo items to track tasks.
+3. **Dashboard**: The home page combines both the diary list and todo list for a comprehensive view.
+
+#### Routing Structure
+The application uses React Router for navigation with the following routes:
+- `/`: Home component - Main dashboard with diary list and todo list
+- `/diary/:id`: Diary component - Detailed view for a specific diary entry
+- `/diary/new`: New component - Form for creating a new diary entry
+- `/diary/edit/:id`: Edit component - Form for editing an existing diary entry
+- `/todo`: Todo component - Dedicated view for managing todo items
+
+#### State Management
+- **Todo List State**: Managed in the App component and passed down to Home and Todo components
+- **Diary Entries**: Currently using dummy data, but will be connected to backend API
+- **Emotion Selection**: Managed in the Editor component for creating/editing diary entries
+
+#### Component Interactions
+- **Home Page**: Displays the Header, Clock, TodoList, and DiaryList components
+- **Diary Entry Flow**: 
+  - DiaryList displays a list of DiaryItem components
+  - Clicking a DiaryItem navigates to the Diary page
+  - The Diary page uses the Viewer component to display the entry details
+  - The New and Edit pages use the Editor component for creating/editing entries
+- **Todo Management**:
+  - TodoList displays a list of TodoItem components
+  - Users can add new todos, toggle completion status, and delete todos
+
 ## Additional Development Information
 
 ### Code Style
@@ -191,13 +223,27 @@ The backend follows a standard Spring Boot project structure:
 #### Frontend
 The frontend follows a standard React project structure:
 - `src`: Source code
-  - `components`: Reusable UI components
+  - `component`: Reusable UI components
+    - `Button.jsx/css`: Reusable button component with styling
+    - `Clock.jsx/css`: Analog clock display component
+    - `DiaryItem.jsx/css`: Individual diary entry display component
+    - `DiaryList.jsx/css`: Component for displaying a list of diary entries
+    - `Editor.jsx/css`: Form component for creating/editing diary entries
+    - `EmotionItem.jsx/css`: Component for selecting emotion in the diary editor
+    - `Header.jsx/css`: Navigation header component
+    - `TodoItem.jsx/css`: Individual todo item display component
+    - `TodoList.jsx/css`: Component for displaying and managing todo items
+    - `Viewer.jsx/css`: Component for viewing diary entry details
   - `pages`: Page components
-  - `services`: API services
+    - `Home.jsx/css`: Main dashboard page with diary list and todo list
+    - `Diary.jsx`: Page for viewing a single diary entry
+    - `Edit.jsx`: Page for editing an existing diary entry
+    - `New.jsx`: Page for creating a new diary entry
+    - `Todo.jsx`: Dedicated page for todo list management
   - `hooks`: Custom hooks
+    - `useDiary.jsx`: Hook for fetching and managing diary entry data
   - `utils`: Utility functions
-  - `assets`: Static assets
-  - `styles`: CSS/SCSS files
+    - `Util.jsx`: Common utility functions used across the application
 
 ### Debugging
 
@@ -330,15 +376,15 @@ This document outlines the tasks required to develop and maintain the SentiMate 
 - [ ] Implement responsive design for all components
 
 ### Page Development
-- [ ] Create Home page
-- [ ] Create Login/Register pages
-- [ ] Create Dashboard page
-- [ ] Create Diary page
-- [ ] Create Emotions page
-- [ ] Create Health Data page
-- [ ] Create Recommendations page
-- [ ] Create Settings page
-- [ ] Create Profile page
+- [x] Create Home page
+- [x] Create Login/Register pages
+- [x] Create Dashboard page
+- [x] Create Diary page
+- [x] Create Emotions page
+- [x] Create Health Data page
+- [x] Create Recommendations page
+- [x] Create Settings page
+- [x] Create Profile page
 
 ### Service Development
 - [ ] Create AuthService for authentication API calls

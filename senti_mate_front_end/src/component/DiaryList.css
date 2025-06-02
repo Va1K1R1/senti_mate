@@ -1,0 +1,52 @@
+.DiaryList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.DiaryList-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.DiaryList-title {
+    font-size: var(--font-size-xl);
+    color: var(--text-color);
+    margin: 0;
+}
+
+.DiaryList-controls {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.DiaryList-empty {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-color-lighter);
+    font-style: italic;
+    background: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Responsive styles */
+@media (max-width: var(--breakpoint-md)) {
+    .DiaryList-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .DiaryList-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+/* Dark theme styles */
+.dark-theme .DiaryList-empty {
+    background: var(--card-background);
+}

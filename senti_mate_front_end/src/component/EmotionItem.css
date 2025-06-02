@@ -1,0 +1,18 @@
+.EmotionItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.EmotionItem img {
+    width: 50px;
+    height: 50px;
+}
+
+.EmotionItem.selected {
+    background-color: #dde8ff;
+}
