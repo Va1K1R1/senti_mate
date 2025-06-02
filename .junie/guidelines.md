@@ -120,10 +120,10 @@ public class GreetingServiceTest {
     public void testGreetWithName() {
         // Given
         String name = "John";
-        
+
         // When
         String greeting = greetingService.greet(name);
-        
+
         // Then
         assertEquals("Hello, John!", greeting);
     }
@@ -132,10 +132,10 @@ public class GreetingServiceTest {
     public void testGreetWithNullName() {
         // Given
         String name = null;
-        
+
         // When
         String greeting = greetingService.greet(name);
-        
+
         // Then
         assertEquals("Hello, Guest!", greeting);
     }
@@ -220,3 +220,25 @@ The frontend follows a standard React project structure:
 - Use connection pooling (HikariCP is included with Spring Boot)
 - Use indexes for frequently queried columns
 - Consider using a migration tool like Flyway or Liquibase for database schema changes
+
+## API Documentation
+
+### Available APIs
+The project uses the following external APIs:
+
+#### Samsung Health SDK Web API
+For health data integration, refer to the detailed documentation in `api_doc.md` which includes:
+- Authentication flow using OAuth 2.0
+- Endpoints for retrieving step count, heart rate, sleep, and exercise data
+- Example requests and responses
+- Java/Spring Boot implementation examples
+
+#### OpenAI ChatGPT API
+For emotion analysis and personalized wellness advice, refer to the detailed documentation in `api_doc.md` which includes:
+- Authentication using API keys
+- Chat Completions API usage
+- Prompt engineering for health diary analysis
+- Java/Spring Boot implementation examples
+- Token usage optimization techniques
+
+For complete API implementation details, code examples, and best practices, please refer to the comprehensive documentation in `api_doc.md`.
