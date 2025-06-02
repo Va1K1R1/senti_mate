@@ -1,35 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import { useState } from "react";
+
+import Home from "./pages/Home.jsx";
+import Diary from "./pages/Diary.jsx";
+import Todo from "./pages/Todo.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+    // --------------------------------------------------------
+    // TodoList 전역 상태 관리 (Home / Todo 두 화면에서 공유)
+    // --------------------------------------------------------
+    const [todoList, setTodoList] = useState([]);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const addTodo = (text) => {
+        const newTodo = {
+            id: Date.now(),
+            text,
+            isDone: false,
+        };
+        setTodoList([newTodo, ...todoList]);
+    };
+
+    const toggleTodo = (id) => {
+        setTodoList(
+            todoList.map((todo) =>
+                todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
+            )
+        );
+    };
+
+    const deleteTodo = (id) => {
+        setTodoList(todoList.filter((todo) => todo.id !== id));
+    };
+
+    // --------------------------------------------------------
+    // 라우팅 설정: /   → Home (감정일기 + Todo 통합)
+    //             /diary → Diary (감정일기 전용 상세 뷰)
+    //             /todo  → Todo (Todo 전용 뷰)
+    // --------------------------------------------------------
+    return (
+        <Routes>
+            <Route
+                path="/"
+                element={
+                    <Home
+                        todoList={todoList}
+                        addTodo={addTodo}
+                        toggleTodo={toggleTodo}
+                        deleteTodo={deleteTodo}
+                    />
+                }
+            />
+            <Route path="/diary" element={<Diary />} />
+            <Route
+                path="/todo"
+                element={
+                    <Todo
+                        todoList={todoList}
+                        addTodo={addTodo}
+                        toggleTodo={toggleTodo}
+                        deleteTodo={deleteTodo}
+                    />
+                }
+            />
+        </Routes>
+    );
 }
 
-export default App
+export default App;

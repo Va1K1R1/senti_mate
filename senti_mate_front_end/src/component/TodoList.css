@@ -1,0 +1,50 @@
+.TodoList {
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.TodoList h2 {
+    margin-bottom: 14px;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.todo-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.todo-input input {
+    flex: 1;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.todo-input button {
+    padding: 8px 14px;
+    background-color: #5c6df5;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.todo-input button:hover {
+    background-color: #4a5cd1;
+}
+
+.todo-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.empty-msg {
+    color: #888;
+    font-style: italic;
+}

@@ -1,0 +1,4 @@
+.DiaryList {
+    display: flex;
+    flex-direction: column;
+}

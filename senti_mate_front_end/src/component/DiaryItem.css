@@ -1,0 +1,24 @@
+.DiaryItem {
+    padding: 12px;
+    margin-bottom: 12px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.DiaryItem:hover {
+    transform: translateY(-2px);
+}
+
+.DiaryItem .info {
+    display: flex;
+    gap: 10px;
+    font-size: 1rem;
+}
+
+.DiaryItem .content {
+    margin-top: 6px;
+    color: #555;
+}
