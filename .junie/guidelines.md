@@ -259,37 +259,37 @@ This document outlines the tasks required to develop and maintain the SentiMate 
 - [ ] Configure Spring Boot Actuator for monitoring
 
 ### Domain Model Development
-- [ ] Create User entity with authentication fields
-- [ ] Create DiaryEntry entity for health diary entries
-- [ ] Create Emotion entity for emotion tracking
-- [ ] Create HealthData entity for Samsung Health integration
-- [ ] Create Recommendation entity for ChatGPT recommendations
+- [x] Create User entity with authentication fields
+- [x] Create DiaryEntry entity for health diary entries
+- [x] Create Emotion entity for emotion tracking
+- [x] Create HealthData entity for Samsung Health integration
+- [x] Create Recommendation entity for ChatGPT recommendations
 - [ ] Implement entity relationships and validations
 
 ### Repository Layer
-- [ ] Create UserRepository interface
-- [ ] Create DiaryEntryRepository interface
-- [ ] Create EmotionRepository interface
-- [ ] Create HealthDataRepository interface
-- [ ] Create RecommendationRepository interface
+- [x] Create UserRepository interface
+- [x] Create DiaryEntryRepository interface
+- [x] Create EmotionRepository interface
+- [x] Create HealthDataRepository interface
+- [x] Create RecommendationRepository interface
 - [ ] Implement custom query methods as needed
 
 ### Service Layer
 - [x] Create GreetingService for testing demonstration
-- [ ] Create UserService for user management
-- [ ] Create DiaryEntryService for diary entry management
-- [ ] Create EmotionService for emotion tracking
-- [ ] Create HealthDataService for Samsung Health integration
-- [ ] Create RecommendationService for ChatGPT integration
+- [x] Create UserService for user management
+- [x] Create DiaryEntryService for diary entry management
+- [x] Create EmotionService for emotion tracking
+- [x] Create HealthDataService for Samsung Health integration
+- [x] Create RecommendationService for ChatGPT integration
 - [ ] Implement business logic and validation
 
 ### Controller Layer
-- [ ] Create AuthController for authentication endpoints
-- [ ] Create UserController for user management endpoints
-- [ ] Create DiaryEntryController for diary entry endpoints
-- [ ] Create EmotionController for emotion tracking endpoints
-- [ ] Create HealthDataController for Samsung Health endpoints
-- [ ] Create RecommendationController for ChatGPT endpoints
+- [x] Create AuthController for authentication endpoints
+- [x] Create UserController for user management endpoints
+- [x] Create DiaryEntryController for diary entry endpoints
+- [x] Create EmotionController for emotion tracking endpoints
+- [x] Create HealthDataController for Samsung Health endpoints
+- [x] Create RecommendationController for ChatGPT endpoints
 - [ ] Implement request validation and error handling
 
 ### External API Integration
