@@ -15,7 +15,7 @@ const TodoList = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
 
     return (
         <div className="TodoList">
-            <h2>오늘의 할 일</h2>
+            <h2>📋 오늘의 할 일</h2>
             <div className="todo-input">
                 <input
                     id="todoInput"
