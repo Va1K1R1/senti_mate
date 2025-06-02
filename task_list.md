@@ -7,11 +7,11 @@ This document outlines the tasks required to develop and maintain the SentiMate 
 ### Setup and Configuration
 - [x] Initialize Spring Boot project
 - [x] Configure basic application properties
-- [ ] Configure MySQL database connection
-- [ ] Set up Spring Security with JWT authentication
-- [ ] Configure CORS for frontend integration
-- [ ] Set up logging with SLF4J and Logback
-- [ ] Configure Spring Boot Actuator for monitoring
+- [x] Configure MySQL database connection
+- [x] Set up Spring Security with JWT authentication
+- [x] Configure CORS for frontend integration
+- [x] Set up logging with SLF4J and Logback
+- [x] Configure Spring Boot Actuator for monitoring
 
 ### Domain Model Development
 - [ ] Create User entity with authentication fields
