@@ -14,56 +14,56 @@ This document outlines the tasks required to develop and maintain the SentiMate 
 - [x] Configure Spring Boot Actuator for monitoring
 
 ### Domain Model Development
-- [ ] Create User entity with authentication fields
-- [ ] Create DiaryEntry entity for health diary entries
-- [ ] Create Emotion entity for emotion tracking
-- [ ] Create HealthData entity for Samsung Health integration
-- [ ] Create Recommendation entity for ChatGPT recommendations
-- [ ] Implement entity relationships and validations
+- [x] Create User entity with authentication fields
+- [x] Create DiaryEntry entity for health diary entries
+- [x] Create Emotion entity for emotion tracking
+- [x] Create HealthData entity for Samsung Health integration
+- [x] Create Recommendation entity for ChatGPT recommendations
+- [x] Implement entity relationships and validations
 
 ### Repository Layer
-- [ ] Create UserRepository interface
-- [ ] Create DiaryEntryRepository interface
-- [ ] Create EmotionRepository interface
-- [ ] Create HealthDataRepository interface
-- [ ] Create RecommendationRepository interface
-- [ ] Implement custom query methods as needed
+- [x] Create UserRepository interface
+- [x] Create DiaryEntryRepository interface
+- [x] Create EmotionRepository interface
+- [x] Create HealthDataRepository interface
+- [x] Create RecommendationRepository interface
+- [x] Implement custom query methods as needed
 
 ### Service Layer
 - [x] Create GreetingService for testing demonstration
-- [ ] Create UserService for user management
-- [ ] Create DiaryEntryService for diary entry management
-- [ ] Create EmotionService for emotion tracking
-- [ ] Create HealthDataService for Samsung Health integration
-- [ ] Create RecommendationService for ChatGPT integration
-- [ ] Implement business logic and validation
+- [x] Create UserService for user management
+- [x] Create DiaryEntryService for diary entry management
+- [x] Create EmotionService for emotion tracking
+- [x] Create HealthDataService for Samsung Health integration
+- [x] Create RecommendationService for ChatGPT integration
+- [x] Implement business logic and validation
 
 ### Controller Layer
-- [ ] Create AuthController for authentication endpoints
-- [ ] Create UserController for user management endpoints
-- [ ] Create DiaryEntryController for diary entry endpoints
-- [ ] Create EmotionController for emotion tracking endpoints
-- [ ] Create HealthDataController for Samsung Health endpoints
-- [ ] Create RecommendationController for ChatGPT endpoints
-- [ ] Implement request validation and error handling
+- [x] Create AuthController for authentication endpoints
+- [x] Create UserController for user management endpoints
+- [x] Create DiaryEntryController for diary entry endpoints
+- [x] Create EmotionController for emotion tracking endpoints
+- [x] Create HealthDataController for Samsung Health endpoints
+- [x] Create RecommendationController for ChatGPT endpoints
+- [x] Implement request validation and error handling
 
 ### External API Integration
-- [ ] Implement Samsung Health SDK Web API integration
-  - [ ] Set up OAuth 2.0 authentication flow
-  - [ ] Implement endpoints for retrieving health data
-  - [ ] Handle data synchronization and storage
-- [ ] Implement OpenAI ChatGPT API integration
-  - [ ] Set up API key authentication
-  - [ ] Implement prompt engineering for health diary analysis
-  - [ ] Handle token usage optimization
+- [x] Implement Samsung Health SDK Web API integration
+  - [x] Set up OAuth 2.0 authentication flow
+  - [x] Implement endpoints for retrieving health data
+  - [x] Handle data synchronization and storage
+- [x] Implement OpenAI ChatGPT API integration
+  - [x] Set up API key authentication
+  - [x] Implement prompt engineering for health diary analysis
+  - [x] Handle token usage optimization
 
 ### Security
-- [ ] Implement user registration and login
-- [ ] Implement JWT token generation and validation
-- [ ] Implement role-based access control
-- [ ] Implement password encryption
-- [ ] Implement secure API endpoints
-- [ ] Implement CSRF protection
+- [x] Implement user registration and login
+- [x] Implement JWT token generation and validation
+- [x] Implement role-based access control
+- [x] Implement password encryption
+- [x] Implement secure API endpoints
+- [x] Implement CSRF protection
 
 ## Frontend Tasks (React)
 
@@ -122,7 +122,7 @@ This document outlines the tasks required to develop and maintain the SentiMate 
 ### Backend Testing
 - [x] Set up JUnit 5 and Spring Boot Test
 - [x] Create GreetingServiceTest for demonstration
-- [ ] Create unit tests for all services
+- [x] Create unit tests for all services
 - [ ] Create unit tests for all repositories
 - [ ] Create integration tests for all controllers
 - [ ] Create end-to-end tests for critical flows
@@ -141,9 +141,9 @@ This document outlines the tasks required to develop and maintain the SentiMate 
 
 ### Backend Documentation
 - [ ] Create API documentation with Swagger/OpenAPI
-- [ ] Document all services with Javadoc
+- [x] Document all services with Javadoc
 - [ ] Document all controllers with Javadoc
-- [ ] Document all repositories with Javadoc
+- [x] Document all repositories with Javadoc
 - [ ] Document all entities with Javadoc
 - [ ] Create README.md with setup and usage instructions
 
@@ -188,10 +188,10 @@ This document outlines the tasks required to develop and maintain the SentiMate 
 ## Database Tasks
 
 ### Schema Design
-- [ ] Design database schema for all entities
+- [x] Design database schema for all entities
 - [ ] Create database migration scripts
 - [ ] Set up database versioning with Flyway or Liquibase
-- [ ] Optimize database schema for performance
+- [x] Optimize database schema for performance
 - [ ] Implement database indexing strategy
 
 ### Data Management
