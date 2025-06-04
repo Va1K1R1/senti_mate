@@ -46,6 +46,10 @@ dependencies {
     implementation 'org.springframework:spring-webflux'
     implementation 'io.projectreactor.netty:reactor-netty'
 
+    // Flyway for database migrations
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Register.css";
 
-const Register = ({ onRegister }) => {
+const Register = ({ onRegisterSuccess, onRegisterError }) => {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -10,17 +10,17 @@ const Register = ({ onRegister }) => {
         confirmPassword: "",
         agreeTerms: false
     });
-    
+
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
-    
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData({
             ...formData,
             [name]: type === "checkbox" ? checked : value
         });
-        
+
         // Clear error when user starts typing
         if (errors[name]) {
             setErrors({
@@ -29,67 +29,72 @@ const Register = ({ onRegister }) => {
             });
         }
     };
-    
+
     const validateForm = () => {
         const newErrors = {};
-        
+
         if (!formData.name.trim()) {
             newErrors.name = "Name is required";
         }
-        
+
         if (!formData.email) {
             newErrors.email = "Email is required";
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = "Email is invalid";
         }
-        
+
         if (!formData.password) {
             newErrors.password = "Password is required";
         } else if (formData.password.length < 6) {
             newErrors.password = "Password must be at least 6 characters";
         }
-        
+
         if (!formData.confirmPassword) {
             newErrors.confirmPassword = "Please confirm your password";
         } else if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = "Passwords do not match";
         }
-        
+
         if (!formData.agreeTerms) {
             newErrors.agreeTerms = "You must agree to the terms and conditions";
         }
-        
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!validateForm()) {
             return;
         }
-        
+
         setIsLoading(true);
-        
+
         try {
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // Call the onRegister callback with the form data
-            if (onRegister) {
-                onRegister(formData);
+
+            // Call the onRegisterSuccess callback with the form data
+            if (onRegisterSuccess) {
+                onRegisterSuccess(formData);
             }
         } catch (error) {
             console.error("Registration error:", error);
             setErrors({
                 form: "Registration failed. Please try again."
             });
+
+            // Call the onRegisterError callback with the error message
+            if (onRegisterError) {
+                onRegisterError("Registration failed. Please try again.");
+            }
         } finally {
             setIsLoading(false);
         }
     };
-    
+
     return (
         <div className="Register">
             <div className="RegisterContainer">
@@ -97,11 +102,11 @@ const Register = ({ onRegister }) => {
                     <h2>Create Account</h2>
                     <p>Sign up to start using SentiMate</p>
                 </div>
-                
+
                 {errors.form && (
                     <div className="ErrorMessage">{errors.form}</div>
                 )}
-                
+
                 <form onSubmit={handleSubmit}>
                     <div className="FormGroup">
                         <label htmlFor="name">Full Name</label>
@@ -118,7 +123,7 @@ const Register = ({ onRegister }) => {
                             <div className="ErrorMessage">{errors.name}</div>
                         )}
                     </div>
-                    
+
                     <div className="FormGroup">
                         <label htmlFor="email">Email</label>
                         <input
@@ -134,7 +139,7 @@ const Register = ({ onRegister }) => {
                             <div className="ErrorMessage">{errors.email}</div>
                         )}
                     </div>
-                    
+
                     <div className="FormGroup">
                         <label htmlFor="password">Password</label>
                         <input
@@ -150,7 +155,7 @@ const Register = ({ onRegister }) => {
                             <div className="ErrorMessage">{errors.password}</div>
                         )}
                     </div>
-                    
+
                     <div className="FormGroup">
                         <label htmlFor="confirmPassword">Confirm Password</label>
                         <input
@@ -166,7 +171,7 @@ const Register = ({ onRegister }) => {
                             <div className="ErrorMessage">{errors.confirmPassword}</div>
                         )}
                     </div>
-                    
+
                     <div className="FormGroup Checkbox">
                         <input
                             type="checkbox"
@@ -183,7 +188,7 @@ const Register = ({ onRegister }) => {
                     {errors.agreeTerms && (
                         <div className="ErrorMessage">{errors.agreeTerms}</div>
                     )}
-                    
+
                     <button 
                         type="submit" 
                         className="RegisterButton"
@@ -192,7 +197,7 @@ const Register = ({ onRegister }) => {
                         {isLoading ? "Creating Account..." : "Create Account"}
                     </button>
                 </form>
-                
+
                 <div className="RegisterFooter">
                     <p>
                         Already have an account?{" "}

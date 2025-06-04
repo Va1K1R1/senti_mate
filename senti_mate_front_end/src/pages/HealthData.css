@@ -1,0 +1,210 @@
+/* HealthData.css */
+.health-data-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.health-data-container {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.health-data-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.health-data-header h1 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 28px;
+}
+
+.health-data-subtitle {
+  margin: 0 0 10px 0;
+  color: #666;
+  font-size: 16px;
+}
+
+.health-data-sync-info {
+  margin: 0;
+  color: #888;
+  font-size: 14px;
+}
+
+.health-data-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.sync-button, 
+.disconnect-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.sync-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.sync-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.disconnect-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.disconnect-button:hover {
+  background-color: #d32f2f;
+  transform: translateY(-2px);
+}
+
+.sync-button:disabled, 
+.disconnect-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.health-data-error {
+  background-color: #ffebee;
+  border-left: 4px solid #f44336;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.health-data-error p {
+  margin: 0 0 10px 0;
+  color: #d32f2f;
+}
+
+.health-data-error button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.health-data-error button:hover {
+  background-color: #d32f2f;
+}
+
+.health-data-connect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.connect-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.health-data-connect h2 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.health-data-connect p {
+  margin: 0 0 20px 0;
+  color: #666;
+  max-width: 400px;
+}
+
+.health-data-connect button {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.health-data-connect button:hover {
+  background-color: #0b7dda;
+  transform: translateY(-2px);
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .health-data-container {
+    background-color: #1e1e1e;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .health-data-header {
+    border-bottom-color: #333;
+  }
+
+  .health-data-header h1 {
+    color: #fff;
+  }
+
+  .health-data-subtitle {
+    color: #aaa;
+  }
+
+  .health-data-sync-info {
+    color: #777;
+  }
+
+  .health-data-error {
+    background-color: rgba(244, 67, 54, 0.1);
+  }
+
+  .health-data-connect {
+    background-color: #2a2a2a;
+  }
+
+  .health-data-connect h2 {
+    color: #fff;
+  }
+
+  .health-data-connect p {
+    color: #aaa;
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .health-data-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .health-data-actions {
+    margin-top: 15px;
+  }
+
+  .health-data-connect {
+    padding: 30px 15px;
+  }
+}

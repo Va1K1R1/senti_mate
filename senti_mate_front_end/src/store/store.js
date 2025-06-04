@@ -5,6 +5,7 @@ import authReducer from './slices/authSlice';
 import emotionReducer from './slices/emotionSlice';
 import healthDataReducer from './slices/healthDataSlice';
 import recommendationReducer from './slices/recommendationSlice';
+import settingsReducer from './slices/settingsSlice';
 
 const store = configureStore({
   reducer: {
@@ -14,8 +15,9 @@ const store = configureStore({
     emotion: emotionReducer,
     healthData: healthDataReducer,
     recommendation: recommendationReducer,
+    settings: settingsReducer,
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false,
     }),

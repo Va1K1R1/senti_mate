@@ -1,0 +1,118 @@
+/* ErrorBoundary component styles */
+.ErrorBoundary {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    padding: var(--spacing-lg);
+    background-color: var(--background-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    margin: var(--spacing-md) 0;
+}
+
+.ErrorBoundary_content {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+}
+
+.ErrorBoundary h2 {
+    color: var(--error-color);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-xl);
+}
+
+.ErrorBoundary p {
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-color);
+    font-size: var(--font-size-md);
+}
+
+.ErrorBoundary_actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.ErrorBoundary_details {
+    text-align: left;
+    background-color: #f5f5f5;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    margin-top: var(--spacing-lg);
+    overflow: auto;
+}
+
+.ErrorBoundary_details h3 {
+    color: var(--text-color);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-md);
+}
+
+.ErrorBoundary_message {
+    color: var(--error-color);
+    font-family: monospace;
+    font-size: var(--font-size-md);
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm);
+    background-color: rgba(220, 53, 69, 0.1);
+    border-radius: var(--border-radius-sm);
+    overflow-wrap: break-word;
+}
+
+.ErrorBoundary_stack {
+    font-family: monospace;
+    font-size: var(--font-size-sm);
+    white-space: pre-wrap;
+    overflow-x: auto;
+    background-color: var(--background-color);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    color: #6c757d;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+}
+
+/* Animation for error appearance */
+@keyframes errorFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ErrorBoundary {
+    animation: errorFadeIn 0.3s ease-out forwards;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .ErrorBoundary {
+        padding: var(--spacing-md);
+        min-height: 300px;
+    }
+
+    .ErrorBoundary h2 {
+        font-size: var(--font-size-lg);
+    }
+
+    .ErrorBoundary p {
+        font-size: var(--font-size-sm);
+    }
+
+    .ErrorBoundary_actions {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .ErrorBoundary_stack {
+        max-height: 200px;
+    }
+}

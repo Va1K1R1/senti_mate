@@ -1,0 +1,520 @@
+/* HeartRateMonitor.css */
+.HeartRateMonitor {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    max-width: 100%;
+}
+
+/* Header Styles */
+.HeartRateHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.HeartRateHeader h2 {
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.RefreshButton {
+    background-color: transparent;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.RefreshButton:hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.RefreshIcon {
+    display: inline-block;
+    transition: transform 0.5s ease;
+}
+
+.RefreshButton:hover .RefreshIcon {
+    transform: rotate(180deg);
+}
+
+/* Current Heart Rate */
+.CurrentHeartRate {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.HeartRateValue {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.HeartIcon {
+    font-size: 2.5rem;
+    margin-right: 10px;
+    animation: pulse 1.5s infinite;
+}
+
+.BPMValue {
+    margin-right: 5px;
+}
+
+.BPMLabel {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: #666;
+}
+
+.HeartRateStatus {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.StatusText {
+    font-weight: bold;
+}
+
+.RestingHeartRate {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #eee;
+}
+
+.RestingValue {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.RestingLabel {
+    margin-right: 10px;
+    color: #666;
+}
+
+.RestingBPM {
+    font-weight: bold;
+}
+
+.RestingTrend {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.TrendIcon {
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+.TrendIcon.down {
+    color: #4CAF50; /* Green for improvement */
+}
+
+.TrendIcon.up {
+    color: #F44336; /* Red for deterioration */
+}
+
+/* View Selector */
+.HeartRateViewSelector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.ViewButton {
+    background-color: transparent;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.ViewButton:hover {
+    background-color: #f0f0f0;
+}
+
+.ViewButton.active {
+    background-color: #EF5350;
+    color: white;
+}
+
+/* Overview Section */
+.HeartRateOverview {
+    margin-bottom: 20px;
+}
+
+.PeriodSelector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.PeriodButton {
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    margin: 0 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.PeriodButton.active {
+    background-color: #EF5350;
+    color: white;
+}
+
+.HeartRateChartContainer, .RestingHeartRateChartContainer {
+    margin-bottom: 20px;
+}
+
+.HeartRateStats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.StatCard {
+    flex: 1;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 0 5px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.StatLabel {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.StatValue {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Zones Section */
+.HeartRateZones {
+    margin-bottom: 20px;
+}
+
+.ZonesDescription {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.ZonesContainer {
+    margin-bottom: 30px;
+}
+
+.ZoneItem {
+    margin-bottom: 15px;
+}
+
+.ZoneHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.ZoneName {
+    font-weight: bold;
+}
+
+.ZoneRange {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.ZoneProgressContainer {
+    height: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.ZoneProgress {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.5s ease;
+}
+
+.ZoneTime {
+    text-align: right;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.ZonesPieChart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.PieChartContainer {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.PieChart {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+.PieChartSegment {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 50%;
+}
+
+.PieChartLegend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.LegendItem {
+    display: flex;
+    align-items: center;
+}
+
+.LegendColor {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 6px;
+}
+
+.LegendLabel {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Insights Section */
+.HeartRateInsights {
+    margin-bottom: 20px;
+}
+
+.InsightsDescription {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.InsightsList {
+    margin-bottom: 30px;
+}
+
+.InsightItem {
+    display: flex;
+    align-items: flex-start;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.InsightItem.improvement {
+    border-left: 4px solid #4CAF50; /* Green */
+}
+
+.InsightItem.anomaly {
+    border-left: 4px solid #FF9800; /* Orange */
+}
+
+.InsightItem.tip {
+    border-left: 4px solid #2196F3; /* Blue */
+}
+
+.InsightIcon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+}
+
+.InsightContent {
+    flex: 1;
+}
+
+.InsightType {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.InsightMessage {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.HeartRateRecommendations h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.RecommendationsList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.RecommendationItem {
+    display: flex;
+    align-items: flex-start;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.RecommendationIcon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+}
+
+.RecommendationContent {
+    flex: 1;
+}
+
+.RecommendationTitle {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.RecommendationDescription {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* Loading and Error States */
+.LoadingContainer, .ErrorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    text-align: center;
+}
+
+.LoadingSpinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #EF5350;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.ErrorContainer p {
+    margin-bottom: 15px;
+    color: #666;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .HeartRateStats {
+        flex-direction: column;
+    }
+    
+    .StatCard {
+        margin: 0 0 10px 0;
+    }
+    
+    .HeartRateViewSelector {
+        flex-wrap: wrap;
+    }
+    
+    .ViewButton {
+        margin-bottom: 10px;
+    }
+    
+    .PeriodSelector {
+        flex-wrap: wrap;
+    }
+    
+    .PieChartContainer {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .HeartRateValue {
+        font-size: 2.5rem;
+    }
+    
+    .HeartIcon {
+        font-size: 2rem;
+    }
+    
+    .HeartRateStatus {
+        font-size: 1rem;
+    }
+    
+    .ViewButton {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .PeriodButton {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        margin-bottom: 5px;
+    }
+}

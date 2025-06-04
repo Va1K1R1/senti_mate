@@ -1,0 +1,271 @@
+/* SearchBar component styles */
+.SearchBar {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.SearchBar_form {
+  width: 100%;
+}
+
+.SearchBar_inputContainer {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 40px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+.SearchBar_focused .SearchBar_inputContainer {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Expandable search bar */
+.SearchBar_expandable .SearchBar_inputContainer {
+  width: 200px;
+  transition: width 0.3s ease;
+}
+
+.SearchBar_expandable.SearchBar_focused .SearchBar_inputContainer {
+  width: 100%;
+}
+
+/* Search icon */
+.SearchBar_icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: #6c757d;
+}
+
+/* Search input */
+.SearchBar_input {
+  flex: 1;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 14px;
+  color: #495057;
+}
+
+.SearchBar_input:focus {
+  outline: none;
+}
+
+.SearchBar_input::placeholder {
+  color: #adb5bd;
+}
+
+/* Clear button */
+.SearchBar_clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #6c757d;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.SearchBar_clearButton:hover {
+  opacity: 1;
+}
+
+/* Submit button */
+.SearchBar_submitButton {
+  height: 100%;
+  padding: 0 15px;
+  border: none;
+  border-left: 1px solid #ced4da;
+  border-radius: 0 4px 4px 0;
+  background-color: #f8f9fa;
+  color: #495057;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.SearchBar_submitButton:hover {
+  background-color: #e9ecef;
+}
+
+/* Search suggestions */
+.SearchBar_suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin-top: 5px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  animation: suggestions-fade-in 0.2s ease;
+}
+
+@keyframes suggestions-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.SearchBar_suggestionsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.SearchBar_clearHistoryButton {
+  padding: 0;
+  border: none;
+  background: none;
+  color: #007bff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.SearchBar_clearHistoryButton:hover {
+  text-decoration: underline;
+}
+
+.SearchBar_suggestionsList {
+  max-height: 250px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.SearchBar_suggestionItem {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.SearchBar_suggestionItem:hover {
+  background-color: #f8f9fa;
+}
+
+.SearchBar_historyIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  color: #6c757d;
+}
+
+/* Focus styles for accessibility */
+.SearchBar_input:focus,
+.SearchBar_clearButton:focus,
+.SearchBar_submitButton:focus,
+.SearchBar_clearHistoryButton:focus {
+  outline: none;
+}
+
+.SearchBar_clearButton:focus,
+.SearchBar_submitButton:focus,
+.SearchBar_clearHistoryButton:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Responsive styles */
+@media (max-width: 576px) {
+  .SearchBar {
+    max-width: 100%;
+  }
+  
+  .SearchBar_inputContainer {
+    height: 36px;
+  }
+  
+  .SearchBar_icon {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .SearchBar_submitButton {
+    padding: 0 10px;
+    font-size: 12px;
+  }
+  
+  .SearchBar_expandable .SearchBar_inputContainer {
+    width: 150px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .SearchBar_inputContainer {
+    border-color: #495057;
+    background-color: #343a40;
+  }
+  
+  .SearchBar_input {
+    color: #e9ecef;
+  }
+  
+  .SearchBar_input::placeholder {
+    color: #6c757d;
+  }
+  
+  .SearchBar_icon,
+  .SearchBar_clearButton {
+    color: #adb5bd;
+  }
+  
+  .SearchBar_submitButton {
+    border-left-color: #495057;
+    background-color: #495057;
+    color: #e9ecef;
+  }
+  
+  .SearchBar_submitButton:hover {
+    background-color: #5a6268;
+  }
+  
+  .SearchBar_suggestions {
+    border-color: #495057;
+    background-color: #343a40;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .SearchBar_suggestionsHeader {
+    border-bottom-color: #495057;
+    color: #adb5bd;
+  }
+  
+  .SearchBar_suggestionItem:hover {
+    background-color: #495057;
+  }
+  
+  .SearchBar_historyIcon {
+    color: #adb5bd;
+  }
+}

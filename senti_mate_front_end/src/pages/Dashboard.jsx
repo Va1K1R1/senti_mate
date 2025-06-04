@@ -20,18 +20,14 @@ const Dashboard = () => {
         <section className="dashboard_section">
           <h2>Health Overview</h2>
           <div className="dashboard_card">
-            {/* This component might not exist yet, so it's commented out */}
-            {/* <HealthDataSummary /> */}
-            <p>Health data summary will be displayed here</p>
+            <HealthDataSummary />
           </div>
         </section>
 
         <section className="dashboard_section">
           <h2>Recent Emotions</h2>
           <div className="dashboard_card">
-            {/* This component might not exist yet, so it's commented out */}
-            {/* <EmotionChart /> */}
-            <p>Emotion chart will be displayed here</p>
+            <EmotionChart />
           </div>
         </section>
 
@@ -52,9 +48,7 @@ const Dashboard = () => {
         <section className="dashboard_section">
           <h2>Recommendations</h2>
           <div className="dashboard_card">
-            {/* This component might not exist yet, so it's commented out */}
-            {/* <RecommendationList /> */}
-            <p>Recommendations will be displayed here</p>
+            <RecommendationList />
           </div>
         </section>
       </div>

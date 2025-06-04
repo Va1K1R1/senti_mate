@@ -12,7 +12,10 @@ SentiMate integrates with the Samsung Health SDK Web API for health data and the
 - Health diary entries
 - Emotion tracking
 - Integration with Samsung Health data
-- Personalized wellness advice using ChatGPT
+- Personalized wellness recommendations using ChatGPT
+  - Filter recommendations by type (wellness, exercise, nutrition, mental health)
+  - View recommendations based on data from different time periods (7, 14, or 30 days)
+  - Mark recommendations as completed or save them for later
 - Responsive design for mobile and desktop
 
 ## Technology Stack

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
+import "./Profile.css";
 
 /**
  * Profile page component
@@ -52,7 +53,7 @@ const ProfilePage = () => {
       <div className="profile-container">
         <h1>Your Profile</h1>
         <p className="profile-subtitle">Manage your personal information</p>
-        
+
         <div className="profile-header">
           <div className="profile-picture">
             <img src={profile.profilePicture} alt={profile.name} />
@@ -76,7 +77,7 @@ const ProfilePage = () => {
             )}
           </div>
         </div>
-        
+
         <div className="profile-details">
           {isEditing ? (
             // Edit mode
@@ -91,7 +92,7 @@ const ProfilePage = () => {
                   onChange={handleInputChange}
                 />
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="email">Email</label>
                 <input
@@ -102,7 +103,7 @@ const ProfilePage = () => {
                   onChange={handleInputChange}
                 />
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="bio">Bio</label>
                 <textarea
@@ -112,7 +113,7 @@ const ProfilePage = () => {
                   onChange={handleInputChange}
                 />
               </div>
-              
+
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="age">Age</label>
@@ -124,7 +125,7 @@ const ProfilePage = () => {
                     onChange={handleInputChange}
                   />
                 </div>
-                
+
                 <div className="form-group">
                   <label htmlFor="gender">Gender</label>
                   <select
@@ -140,7 +141,7 @@ const ProfilePage = () => {
                   </select>
                 </div>
               </div>
-              
+
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="height">Height (cm)</label>
@@ -152,7 +153,7 @@ const ProfilePage = () => {
                     onChange={handleInputChange}
                   />
                 </div>
-                
+
                 <div className="form-group">
                   <label htmlFor="weight">Weight (kg)</label>
                   <input
@@ -174,7 +175,7 @@ const ProfilePage = () => {
                 <p><strong>Email:</strong> {profile.email}</p>
                 <p><strong>Bio:</strong> {profile.bio}</p>
               </div>
-              
+
               <div className="info-group">
                 <h3>Health Information</h3>
                 <p><strong>Age:</strong> {profile.age}</p>

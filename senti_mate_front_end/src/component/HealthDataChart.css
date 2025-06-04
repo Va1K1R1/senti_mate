@@ -1,0 +1,185 @@
+/* HealthDataChart.css */
+.HealthDataChart {
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+}
+
+.ChartTitle {
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #333;
+    text-align: center;
+}
+
+.ChartContainer {
+    width: 100%;
+    position: relative;
+}
+
+/* Bar Chart Styles */
+.BarChartContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    height: 200px;
+    padding-bottom: 24px; /* Space for labels */
+}
+
+.BarChartColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+    position: relative;
+}
+
+.BarChartBar {
+    width: 60%;
+    background-color: #8eb695;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.5s ease;
+    cursor: pointer;
+}
+
+.BarChartBar:hover {
+    opacity: 0.8;
+}
+
+.BarChartBar.animate {
+    animation: growBar 1s forwards;
+}
+
+.BarChartLabel {
+    position: absolute;
+    bottom: -24px;
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+    width: 100%;
+}
+
+/* Line Chart Styles */
+.LineChartContainer {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    padding-bottom: 24px; /* Space for labels */
+}
+
+.LineChartLine {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+}
+
+.LineChartLine.animate {
+    animation: drawLine 1.5s forwards ease-out;
+}
+
+.LineChartPoint {
+    opacity: 0;
+    cursor: pointer;
+    transition: r 0.2s ease;
+}
+
+.LineChartPoint.animate {
+    animation: fadeIn 0.3s forwards;
+}
+
+.LineChartPoint:hover {
+    transform: scale(2);
+}
+
+.LineChartLabels {
+    position: absolute;
+    bottom: -24px;
+    left: 0;
+    right: 0;
+    height: 20px;
+}
+
+.LineChartLabel {
+    position: absolute;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+}
+
+/* Legend Styles */
+.ChartLegend {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.LegendItem {
+    display: flex;
+    align-items: center;
+    margin: 0 8px;
+}
+
+.LegendColor {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 6px;
+}
+
+.LegendLabel {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Animations */
+@keyframes growBar {
+    from {
+        height: 0;
+    }
+    to {
+        height: 100%;
+    }
+}
+
+@keyframes drawLine {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .BarChartBar {
+        width: 80%;
+    }
+
+    .BarChartLabel, .LineChartLabel {
+        font-size: 0.7rem;
+    }
+
+    .ChartTitle {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .BarChartBar {
+        width: 90%;
+    }
+
+    .BarChartLabel, .LineChartLabel {
+        font-size: 0.6rem;
+    }
+}

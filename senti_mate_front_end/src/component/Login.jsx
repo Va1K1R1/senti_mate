@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Login.css";
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLoginSuccess, onLoginError }) => {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -60,15 +60,20 @@ const Login = ({ onLogin }) => {
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // Call the onLogin callback with the form data
-            if (onLogin) {
-                onLogin(formData);
+            // Call the onLoginSuccess callback with the form data
+            if (onLoginSuccess) {
+                onLoginSuccess(formData);
             }
         } catch (error) {
             console.error("Login error:", error);
             setErrors({
                 form: "Login failed. Please try again."
             });
+
+            // Call the onLoginError callback with the error message
+            if (onLoginError) {
+                onLoginError("Login failed. Please try again.");
+            }
         } finally {
             setIsLoading(false);
         }

@@ -13,7 +13,10 @@ const todoSlice = createSlice({
     addTodo: (state, action) => {
       const newTodo = {
         id: Date.now(),
-        text: action.payload,
+        text: action.payload.text || action.payload,
+        category: action.payload.category || "other",
+        priority: action.payload.priority || 0,
+        dueDate: action.payload.dueDate || null,
         isDone: false,
       };
       state.todoList = [newTodo, ...state.todoList];
@@ -25,6 +28,28 @@ const todoSlice = createSlice({
     },
     deleteTodo: (state, action) => {
       state.todoList = state.todoList.filter((todo) => todo.id !== action.payload);
+    },
+    editTodo: (state, action) => {
+      state.todoList = state.todoList.map((todo) =>
+        todo.id === action.payload.id 
+          ? { ...todo, text: action.payload.text }
+          : todo
+      );
+    },
+    toggleAllTodos: (state) => {
+      // If all todos are done, mark all as not done
+      // Otherwise, mark all as done
+      const allDone = state.todoList.every(todo => todo.isDone);
+      state.todoList = state.todoList.map(todo => ({
+        ...todo,
+        isDone: !allDone
+      }));
+    },
+    deleteCompletedTodos: (state) => {
+      state.todoList = state.todoList.filter(todo => !todo.isDone);
+    },
+    clearAllTodos: (state) => {
+      state.todoList = [];
     },
     setTodoList: (state, action) => {
       state.todoList = action.payload;
@@ -38,6 +63,17 @@ const todoSlice = createSlice({
   },
 });
 
-export const { addTodo, toggleTodo, deleteTodo, setTodoList, setLoading, setError } = todoSlice.actions;
+export const { 
+  addTodo, 
+  toggleTodo, 
+  deleteTodo, 
+  editTodo, 
+  toggleAllTodos, 
+  deleteCompletedTodos, 
+  clearAllTodos,
+  setTodoList, 
+  setLoading, 
+  setError 
+} = todoSlice.actions;
 
 export default todoSlice.reducer;

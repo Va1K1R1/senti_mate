@@ -1,0 +1,443 @@
+/* StepCounter.css */
+.StepCounter {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    max-width: 100%;
+}
+
+/* Header Styles */
+.StepHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.StepHeader h2 {
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.RefreshButton {
+    background-color: transparent;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.RefreshButton:hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.RefreshIcon {
+    display: inline-block;
+    transition: transform 0.5s ease;
+}
+
+.RefreshButton:hover .RefreshIcon {
+    transform: rotate(180deg);
+}
+
+/* Step Progress */
+.StepProgress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.StepCircle {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+}
+
+.StepCount {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;
+}
+
+.StepValue {
+    display: block;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.StepLabel {
+    display: block;
+    font-size: 1rem;
+    color: #666;
+}
+
+.ProgressRing {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.ProgressRingBackground {
+    stroke: #f0f0f0;
+}
+
+.ProgressRingForeground {
+    stroke: #4CAF50;
+    transition: stroke-dashoffset 1s ease;
+}
+
+.GoalPercentage {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.StepGoal {
+    flex: 1;
+    min-width: 250px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    margin-left: 20px;
+}
+
+.GoalLabel {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.GoalValue {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.GoalProgressBar {
+    height: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.GoalProgressFill {
+    height: 100%;
+    background-color: #4CAF50;
+    border-radius: 5px;
+    transition: width 1s ease;
+}
+
+/* Step Stats */
+.StepStats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.StatCard {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 0 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.StatIcon {
+    font-size: 1.8rem;
+    margin-right: 15px;
+}
+
+.StatContent {
+    flex: 1;
+}
+
+.StatValue {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.StatLabel {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Chart Section */
+.StepChartSection {
+    margin-bottom: 30px;
+}
+
+.PeriodSelector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.PeriodButton {
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    margin: 0 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.PeriodButton.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.StepChartContainer {
+    margin-bottom: 20px;
+}
+
+/* Achievements Section */
+.StepAchievements {
+    margin-bottom: 30px;
+}
+
+.StepAchievements h3, .StepInsights h3, .StepTips h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.AchievementsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.AchievementItem {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.AchievementIcon {
+    font-size: 2rem;
+    margin-right: 15px;
+}
+
+.AchievementContent {
+    flex: 1;
+}
+
+.AchievementTitle {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.AchievementDate {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Insights Section */
+.StepInsights {
+    margin-bottom: 30px;
+}
+
+.InsightsList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.InsightItem {
+    display: flex;
+    align-items: flex-start;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.InsightItem.trend {
+    border-left: 4px solid #4CAF50; /* Green */
+}
+
+.InsightItem.goal {
+    border-left: 4px solid #FF9800; /* Orange */
+}
+
+.InsightItem.activity {
+    border-left: 4px solid #2196F3; /* Blue */
+}
+
+.InsightIcon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+}
+
+.InsightContent {
+    flex: 1;
+}
+
+.InsightMessage {
+    color: #333;
+    font-size: 0.95rem;
+}
+
+/* Tips Section */
+.StepTips {
+    margin-bottom: 20px;
+}
+
+.TipsList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.TipItem {
+    display: flex;
+    align-items: flex-start;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.TipIcon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+}
+
+.TipContent {
+    flex: 1;
+}
+
+.TipTitle {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.TipDescription {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* Loading and Error States */
+.LoadingContainer, .ErrorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    text-align: center;
+}
+
+.LoadingSpinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #4CAF50;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.ErrorContainer p {
+    margin-bottom: 15px;
+    color: #666;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .StepProgress {
+        flex-direction: column;
+    }
+    
+    .StepGoal {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .StepStats {
+        flex-direction: column;
+    }
+    
+    .StatCard {
+        margin: 0 0 10px 0;
+    }
+    
+    .AchievementsList {
+        flex-direction: column;
+    }
+    
+    .AchievementItem {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .StepCircle {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .StepValue {
+        font-size: 1.5rem;
+    }
+    
+    .StepLabel {
+        font-size: 0.8rem;
+    }
+    
+    .GoalPercentage {
+        font-size: 1rem;
+    }
+    
+    .PeriodButton {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+}
