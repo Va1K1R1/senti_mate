@@ -1,26 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import TodoItem from "./TodoItem";
 import "./TodoList.css";
+import { addTodo, toggleTodo, deleteTodo } from "../store/slices/todoSlice";
 
-const TodoList = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
-    // input 값을 로컬 변수로 관리(컴포넌트 상태가 아닌 단순 변수 사용)
-    let input = "";
+const TodoList = () => {
+    const dispatch = useDispatch();
+    const { todoList, loading, error } = useSelector((state) => state.todo);
+    const [inputText, setInputText] = useState("");
 
     const onAdd = () => {
-        if (input.trim() === "") return;
-        addTodo(input);
-        input = "";
-        document.getElementById("todoInput").value = "";
+        if (inputText.trim() === "") return;
+        dispatch(addTodo(inputText));
+        setInputText("");
     };
+
+    const handleToggle = (id) => {
+        dispatch(toggleTodo(id));
+    };
+
+    const handleDelete = (id) => {
+        dispatch(deleteTodo(id));
+    };
+
+    if (loading) {
+        return <div className="TodoList">Loading todos...</div>;
+    }
+
+    if (error) {
+        return <div className="TodoList">Error loading todos: {error}</div>;
+    }
 
     return (
         <div className="TodoList">
             <h2>📋 오늘의 할 일</h2>
             <div className="todo-input">
                 <input
-                    id="todoInput"
+                    value={inputText}
                     placeholder="할 일을 입력하세요"
-                    onChange={(e) => (input = e.target.value)}
+                    onChange={(e) => setInputText(e.target.value)}
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter') onAdd();
+                    }}
                 />
                 <button onClick={onAdd}>추가</button>
             </div>
@@ -34,8 +55,8 @@ const TodoList = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
                             id={todo.id}
                             content={todo.text}
                             isDone={todo.isDone}
-                            onToggle={toggleTodo}
-                            onDelete={deleteTodo}
+                            onToggle={handleToggle}
+                            onDelete={handleDelete}
                         />
                     ))
                 )}

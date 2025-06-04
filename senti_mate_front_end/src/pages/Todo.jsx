@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Header from "../component/Header.jsx";
 import TodoList from "../component/TodoList.jsx";
 
-const Todo = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
+const Todo = () => {
     return (
         <div>
             <Header
@@ -14,12 +14,7 @@ const Todo = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
             />
 
             <div style={{ padding: "20px" }}>
-                <TodoList
-                    todoList={todoList}
-                    addTodo={addTodo}
-                    toggleTodo={toggleTodo}
-                    deleteTodo={deleteTodo}
-                />
+                <TodoList />
             </div>
         </div>
     );

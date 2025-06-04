@@ -7,8 +7,8 @@ import TodoList from "../component/TodoList.jsx";
 import Clock from "../component/Clock.jsx";
 import './Home.css'
 
-const Home = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
-        // AI 친구의 조언 목록을 정의합니다.
+const Home = () => {
+        // AI 친구의 조언 목록을 정의합니다.실제 구현에서는 API 호출을 통해 상황에 맞는 조언 목록을 가져옵니다.
         const adviceMessages = [
             "오늘도 잘 버티고 있어요. 당신은 충분히 소중해요.",
             "작은 걸음 하나하나가 큰 변화를 만듭니다. 천천히 가도 괜찮아요.",
@@ -53,12 +53,7 @@ const Home = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
                         {/* 오른쪽 컬럼: 포스트잇 스타일 TodoList */}
                         <div className="RightColumn">
                             <div className="PostIt">
-                                <TodoList
-                                    todoList={todoList}
-                                    addTodo={addTodo}
-                                    toggleTodo={toggleTodo}
-                                    deleteTodo={deleteTodo}
-                                />
+                                <TodoList />
                             </div>
                         </div>
                     </div>

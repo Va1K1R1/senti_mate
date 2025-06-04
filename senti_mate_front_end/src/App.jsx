@@ -16,6 +16,9 @@ import Recommendations from "./pages/Recommendations.jsx";
 import Emotions from "./pages/Emotions.jsx";
 import Settings from "./pages/Settings.jsx";
 import Profile from "./pages/Profile.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import ErrorPage from "./pages/ErrorPage.jsx";
 import ThemeToggle from "./component/ThemeToggle.jsx";
 
 import store from "./store/store";
@@ -40,15 +43,28 @@ function AppContent() {
     };
 
     // --------------------------------------------------------
-    // 라우팅 설정: /             → Home (감정일기 + Todo 통합)
-    //             /diary/:id     → Diary (감정일기 전용 상세 뷰)
-    //             /diary/new     → New (새 감정일기 작성)
-    //             /diary/edit/:id → Edit (감정일기 수정)
-    //             /todo          → Todo (Todo 전용 뷰)
+    // Routing Configuration:
+    // /                → Home (Diary + Todo integrated view)
+    // /dashboard       → Dashboard (Comprehensive health view)
+    // /diary/:id       → Diary (Detailed view for a specific diary entry)
+    // /diary/new       → New (Create a new diary entry)
+    // /diary/edit/:id  → Edit (Edit an existing diary entry)
+    // /todo            → Todo (Dedicated todo management view)
+    // /login           → Login (User authentication)
+    // /register        → Register (User registration)
+    // /forgot-password → ForgotPassword (Password recovery)
+    // /health-data     → HealthData (Samsung Health integration)
+    // /recommendations → Recommendations (ChatGPT recommendations)
+    // /emotions        → Emotions (Emotion tracking and analysis)
+    // /settings        → Settings (Application settings)
+    // /profile         → Profile (User profile information)
+    // /error           → ErrorPage (General error handling)
+    // *                → NotFound (404 page for non-existent routes)
     // --------------------------------------------------------
     return (
         <>
             <Routes>
+                {/* Home route */}
                 <Route
                     path="/"
                     element={
@@ -60,9 +76,26 @@ function AppContent() {
                         />
                     }
                 />
+
+                {/* Dashboard route */}
+                <Route
+                    path="/dashboard"
+                    element={
+                        <Dashboard
+                            todoList={todoList}
+                            addTodo={handleAddTodo}
+                            toggleTodo={handleToggleTodo}
+                            deleteTodo={handleDeleteTodo}
+                        />
+                    }
+                />
+
+                {/* Diary routes */}
                 <Route path="/diary/:id" element={<Diary />} />
                 <Route path="/diary/new" element={<New />} />
                 <Route path="/diary/edit/:id" element={<Edit />} />
+
+                {/* Todo route */}
                 <Route
                     path="/todo"
                     element={
@@ -74,14 +107,26 @@ function AppContent() {
                         />
                     }
                 />
+
+                {/* Authentication routes */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
+
+                {/* Health data and analysis routes */}
                 <Route path="/health-data" element={<HealthData />} />
                 <Route path="/recommendations" element={<Recommendations />} />
                 <Route path="/emotions" element={<Emotions />} />
+
+                {/* User settings and profile routes */}
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/profile" element={<Profile />} />
+
+                {/* Error handling routes */}
+                <Route path="/error" element={<ErrorPage />} />
+
+                {/* 404 route - must be last */}
+                <Route path="*" element={<NotFound />} />
             </Routes>
             <ThemeToggle />
         </>

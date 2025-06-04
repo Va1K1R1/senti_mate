@@ -1,0 +1,95 @@
+.NotFound {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.back_btn {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.notfound_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.notfound_content {
+  padding: 30px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.notfound_title {
+  font-size: 6rem;
+  margin: 0;
+  color: #e74c3c;
+}
+
+.notfound_message {
+  font-size: 1.5rem;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.notfound_submessage {
+  font-size: 1rem;
+  margin-bottom: 30px;
+  color: #666;
+}
+
+.notfound_actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.notfound_button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.notfound_button:hover {
+  background-color: #2980b9;
+}
+
+.notfound_button_secondary {
+  background-color: #95a5a6;
+}
+
+.notfound_button_secondary:hover {
+  background-color: #7f8c8d;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .notfound_content {
+    background-color: #2c3e50;
+  }
+  
+  .notfound_message {
+    color: #ecf0f1;
+  }
+  
+  .notfound_submessage {
+    color: #bdc3c7;
+  }
+  
+  .back_btn {
+    color: #ecf0f1;
+  }
+}

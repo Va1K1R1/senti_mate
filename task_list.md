@@ -72,13 +72,13 @@ This document outlines the tasks required to develop and maintain the SentiMate 
 - [x] Set up basic project structure (components, pages, hooks, utils)
 - [x] Complete project structure with additional directories (services, assets, styles)
 - [x] Configure basic routing with React Router
-- [ ] Expand routing configuration for all required pages
+- [x] Expand routing configuration for all required pages
 - [x] Set up local state management for TodoList
-- [ ] Set up global state management with React Context or Redux
+- [x] Set up global state management with React Context or Redux
 - [x] Configure API service with Axios for backend communication
 - [x] Set up environment variables for different environments
-- [ ] Configure ESLint and Prettier for code formatting
-- [ ] Set up build and deployment scripts
+- [x] Configure ESLint and Prettier for code formatting
+- [x] Set up build and deployment scripts
 
 ### Component Development
 
@@ -96,8 +96,10 @@ This document outlines the tasks required to develop and maintain the SentiMate 
 - [ ] Enhance existing components with additional features and optimizations
 
 #### Additional Components
-- [ ] Create Footer component with app information and links
-- [ ] Create Sidebar component for navigation on larger screens
+- [x] Create Footer component with app information and links
+- [x] Create Sidebar component for navigation on larger screens
+- [x] Create SidebarToggle component for mobile navigation
+- [x] Create ThemeToggle component for light/dark mode switching
 - [ ] Create Modal component for dialogs and confirmations
 - [ ] Create Loader component for loading states
 - [ ] Create ErrorBoundary component for error handling
@@ -106,25 +108,25 @@ This document outlines the tasks required to develop and maintain the SentiMate 
 - [ ] Create SearchBar component for filtering content
 
 #### Authentication Components
-- [ ] Create Login component with form validation
-- [ ] Create Register component with form validation
-- [ ] Create ForgotPassword component with email validation
+- [x] Create Login component with form validation
+- [x] Create Register component with form validation
+- [x] Create ForgotPassword component with email validation
 - [ ] Create ResetPassword component with password validation
 - [ ] Create UserProfile component for displaying user information
 - [ ] Create AccountSettings component for updating user settings
 
 #### Health Data Components
-- [ ] Create HealthDataCard component for displaying health metrics
+- [x] Create HealthDataCard component for displaying health metrics
 - [ ] Create HealthDataChart component for visualizing health trends
-- [ ] Create HealthDataDashboard component for comprehensive health view
+- [x] Create HealthDataDashboard component for comprehensive health view
 - [ ] Create ActivityTracker component for exercise data
 - [ ] Create SleepTracker component for sleep data
 - [ ] Create HeartRateMonitor component for heart rate data
 - [ ] Create StepCounter component for step count data
 
 #### Recommendation Components
-- [ ] Create RecommendationCard component for individual recommendations
-- [ ] Create RecommendationList component for displaying all recommendations
+- [x] Create RecommendationItem component for individual recommendations
+- [x] Create RecommendationList component for displaying all recommendations
 - [ ] Create RecommendationDetail component for detailed view
 - [ ] Create MoodAnalysis component for emotion trend analysis
 - [ ] Create WellnessScore component for overall health score
@@ -137,15 +139,15 @@ This document outlines the tasks required to develop and maintain the SentiMate 
 - [x] Create New page for creating diary entries
 - [x] Create Todo page for dedicated todo management
 - [ ] Enhance existing pages with additional features and optimizations
-- [ ] Create Login/Register pages for authentication
-- [ ] Create Dashboard page with comprehensive health view
-- [ ] Create Emotions page for emotion tracking and analysis
-- [ ] Create Health Data page for Samsung Health integration
-- [ ] Create Recommendations page for ChatGPT recommendations
-- [ ] Create Settings page for app configuration
-- [ ] Create Profile page for user information
-- [ ] Create NotFound page for 404 errors
-- [ ] Create ErrorPage for general error handling
+- [x] Create Login/Register pages for authentication
+- [x] Create Dashboard page with comprehensive health view
+- [x] Create Emotions page for emotion tracking and analysis
+- [x] Create Health Data page for Samsung Health integration
+- [x] Create Recommendations section for ChatGPT recommendations
+- [x] Create Settings page for app configuration
+- [x] Create Profile page for user information
+- [x] Create NotFound page for 404 errors
+- [x] Create ErrorPage for general error handling
 
 ### Service Development
 - [x] Create ApiService as base service for API calls
