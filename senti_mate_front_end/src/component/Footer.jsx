@@ -6,11 +6,13 @@ const Footer = () => {
         <footer className="Footer">
             <div className="FooterContent">
                 <div className="FooterSection">
-                    <h3>SentiMate</h3>
-                    <p>Your personal health diary companion</p>
+                    <h3 style={{ color: "#ffffff" }}>SentiMate</h3>
+                    <p>A weary and exhausting day,<br/>
+                        with an emotional partner who understands <br/>without words.
+                    </p>
                 </div>
                 <div className="FooterSection">
-                    <h3>Quick Links</h3>
+                    <h3 style={{ color: "#ffffff" }}>Quick Links</h3>
                     <ul>
                         <li><a href="/">Home</a></li>
                         <li><a href="/diary">Diary</a></li>
@@ -18,9 +20,9 @@ const Footer = () => {
                     </ul>
                 </div>
                 <div className="FooterSection">
-                    <h3>Contact</h3>
-                    <p>Email: support@sentimate.com</p>
-                    <p>Phone: +1 (123) 456-7890</p>
+                    <h3 style={{ color: "#ffffff" }}>Contact</h3>
+                    <p>Email: realisshobeen@naver.com</p>
+                    <p>Phone: +82 010-6649-8606</p>
                 </div>
             </div>
             <div className="FooterBottom">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Login.css";
+import Header from "./Header.jsx";
 
 const Login = ({ onLogin }) => {
     const [formData, setFormData] = useState({
@@ -75,80 +76,84 @@ const Login = ({ onLogin }) => {
     };
 
     return (
-        <div className="Login">
-            <div className="LoginContainer">
-                <div className="LoginHeader">
-                    <h2>Welcome Back</h2>
-                    <p>Sign in to continue to SentiMate</p>
-                </div>
-
-                {errors.form && (
-                    <div className="ErrorMessage">{errors.form}</div>
-                )}
-
-                <form onSubmit={handleSubmit}>
-                    <div className="FormGroup">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="Enter your email"
-                            className={errors.email ? "error" : ""}
-                        />
-                        {errors.email && (
-                            <div className="ErrorMessage">{errors.email}</div>
-                        )}
+        <div> <Header title="Login"
+                      leftChild={<Link to="/">← 홈으로</Link>}
+                      rightChild={null}/>
+            <div className="Login">
+                <div className="LoginContainer">
+                    <div className="LoginHeader">
+                        <h2>Welcome Back</h2>
+                        <p>Sign in to continue to SentiMate</p>
                     </div>
 
-                    <div className="FormGroup">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="Enter your password"
-                            className={errors.password ? "error" : ""}
-                        />
-                        {errors.password && (
-                            <div className="ErrorMessage">{errors.password}</div>
-                        )}
-                    </div>
+                    {errors.form && (
+                        <div className="ErrorMessage">{errors.form}</div>
+                    )}
 
-                    <div className="FormGroup Checkbox">
-                        <input
-                            type="checkbox"
-                            id="rememberMe"
-                            name="rememberMe"
-                            checked={formData.rememberMe}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="rememberMe">Remember me</label>
-                    </div>
+                    <form onSubmit={handleSubmit}>
+                        <div className="FormGroup">
+                            <label htmlFor="email">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                placeholder="Enter your email"
+                                className={errors.email ? "error" : ""}
+                            />
+                            {errors.email && (
+                                <div className="ErrorMessage">{errors.email}</div>
+                            )}
+                        </div>
 
-                    <button 
-                        type="submit" 
-                        className="LoginButton"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? "Signing in..." : "Sign In"}
-                    </button>
-                </form>
+                        <div className="FormGroup">
+                            <label htmlFor="password">Password</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                placeholder="Enter your password"
+                                className={errors.password ? "error" : ""}
+                            />
+                            {errors.password && (
+                                <div className="ErrorMessage">{errors.password}</div>
+                            )}
+                        </div>
 
-                <div className="LoginFooter">
-                    <Link to="/forgot-password" className="ForgotPassword">
-                        Forgot Password?
-                    </Link>
-                    <p>
-                        Don't have an account?{" "}
-                        <Link to="/register" className="RegisterLink">
-                            Sign Up
+                        <div className="FormGroup Checkbox">
+                            <input
+                                type="checkbox"
+                                id="rememberMe"
+                                name="rememberMe"
+                                checked={formData.rememberMe}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="rememberMe">Remember me</label>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="LoginButton"
+                            disabled={isLoading}
+                        >
+                            {isLoading ? "Signing in..." : "Sign In"}
+                        </button>
+                    </form>
+
+                    <div className="LoginFooter">
+                        <Link to="/forgot-password" className="ForgotPassword">
+                            Forgot Password?
                         </Link>
-                    </p>
+                        <p>
+                            Don't have an account?{" "}
+                            <Link to="/register" className="RegisterLink">
+                                Sign Up
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

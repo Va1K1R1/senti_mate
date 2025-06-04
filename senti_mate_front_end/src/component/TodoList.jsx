@@ -14,31 +14,33 @@ const TodoList = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
     };
 
     return (
-        <div className="TodoList">
-            <h2>📋 오늘의 할 일</h2>
-            <div className="todo-input">
-                <input
-                    id="todoInput"
-                    placeholder="할 일을 입력하세요"
-                    onChange={(e) => (input = e.target.value)}
-                />
-                <button onClick={onAdd}>추가</button>
-            </div>
-            <div className="todo-items">
-                {todoList.length === 0 ? (
-                    <p className="empty-msg">할 일을 추가해보세요!</p>
-                ) : (
-                    todoList.map((todo) => (
-                        <TodoItem
-                            key={todo.id}
-                            id={todo.id}
-                            content={todo.text}
-                            isDone={todo.isDone}
-                            onToggle={toggleTodo}
-                            onDelete={deleteTodo}
-                        />
-                    ))
-                )}
+        <div className ="TodoTitle">
+            <div className="TodoList">
+                <h2>📋 오늘의 할 일</h2><br/>
+                <div className="todo-input">
+                    <input
+                        id="todoInput"
+                        placeholder="할 일을 입력하세요"
+                        onChange={(e) => (input = e.target.value)}
+                    />
+                    <button onClick={onAdd}>추가</button>
+                </div>
+                <div className="todo-items">
+                    {todoList.length === 0 ? (
+                        <p className="empty-msg">할 일을 추가해보세요!</p>
+                    ) : (
+                        todoList.map((todo) => (
+                            <TodoItem
+                                key={todo.id}
+                                id={todo.id}
+                                content={todo.text}
+                                isDone={todo.isDone}
+                                onToggle={toggleTodo}
+                                onDelete={deleteTodo}
+                            />
+                        ))
+                    )}
+                </div>
             </div>
         </div>
     );

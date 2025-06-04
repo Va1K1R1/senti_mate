@@ -6,7 +6,7 @@
 }
 body {
   margin: 0;
-  background-color: #f4f4f4;
+  /*background-color: #8eb695;*/
 }
 
 h1 {
@@ -17,10 +17,9 @@ h1 {
 }
 
 /* react-router-dom Link 등을 위한 a 태그 스타일 초기화 */
-a {
-  text-decoration: none;
-  color: inherit;
-}
+/*a {*/
+/*  color: var(--primary-color) !important;*/
+/*}*/
 
 /* 페이지 전체 여백 */
 div {

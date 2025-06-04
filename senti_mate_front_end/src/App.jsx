@@ -1,3 +1,4 @@
+// App.jsx
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
@@ -23,7 +24,6 @@ import { addTodo, toggleTodo, deleteTodo } from "./store/slices/todoSlice";
 import { ThemeProvider } from "./styles/theme.jsx";
 
 function AppContent() {
-    // Use Redux for state management
     const todoList = useSelector((state) => state.todo.todoList);
     const dispatch = useDispatch();
 
@@ -39,13 +39,6 @@ function AppContent() {
         dispatch(deleteTodo(id));
     };
 
-    // --------------------------------------------------------
-    // 라우팅 설정: /             → Home (감정일기 + Todo 통합)
-    //             /diary/:id     → Diary (감정일기 전용 상세 뷰)
-    //             /diary/new     → New (새 감정일기 작성)
-    //             /diary/edit/:id → Edit (감정일기 수정)
-    //             /todo          → Todo (Todo 전용 뷰)
-    // --------------------------------------------------------
     return (
         <>
             <Routes>

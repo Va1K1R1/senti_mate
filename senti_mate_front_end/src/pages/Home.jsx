@@ -6,6 +6,8 @@ import DiaryList from "../component/DiaryList.jsx";
 import TodoList from "../component/TodoList.jsx";
 import Clock from "../component/Clock.jsx";
 import './Home.css'
+import HomeTodoList from "../component/HomeTodoList.jsx";
+import Footer from "../component/Footer.jsx";
 
 const Home = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
         // AI 친구의 조언 목록을 정의합니다.
@@ -52,13 +54,9 @@ const Home = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
 
                         {/* 오른쪽 컬럼: 포스트잇 스타일 TodoList */}
                         <div className="RightColumn">
-                            <div className="PostIt">
-                                <TodoList
-                                    todoList={todoList}
-                                    addTodo={addTodo}
-                                    toggleTodo={toggleTodo}
-                                    deleteTodo={deleteTodo}
-                                />
+                            <div className="HomePage">
+                                {/* 다른 컴포넌트들 */}
+                                <HomeTodoList todoList={todoList} toggleTodo={toggleTodo} />
                             </div>
                         </div>
                     </div>
@@ -71,6 +69,7 @@ const Home = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
                         <DiaryList />
                     </div>
                 </div>
+                <Footer />
             </div>
         );
 };

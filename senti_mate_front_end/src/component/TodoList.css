@@ -1,8 +1,14 @@
+.TodoTitle{
+    text-align: center;
+
+}
 .TodoList {
     padding: var(--spacing-xl);
     background: var(--card-background);
     border-radius: var(--border-radius-xl);
     box-shadow: var(--shadow-sm);
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .TodoList h2 {
@@ -29,7 +35,6 @@
 }
 
 .todo-input input:focus {
-    border-color: var(--primary-color);
     outline: none;
 }
 

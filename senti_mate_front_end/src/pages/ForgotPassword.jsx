@@ -27,31 +27,25 @@ const ForgotPasswordPage = () => {
 
 
   return (
-    <div className="forgot-password-page">
-      <Header />
-      <div className="forgot-password-container">
-        <h1>Reset Your Password</h1>
-        <p className="forgot-password-subtitle">Enter your email to receive a password reset link</p>
+      <div> <Header title="Forgot Password"
+                    leftChild={<Link to="/">← 홈으로</Link>}
+                    rightChild={null}/>
+          <div className="forgot-password-page">
 
-        {error && <div className="error-message">{error}</div>}
-        {success && <div className="success-message">{success}</div>}
+            <div className="forgot-password-container">
 
-        <ForgotPassword 
-          onResetSuccess={handleResetSuccess} 
-          onResetError={handleResetError} 
-        />
+              {error && <div className="error-message">{error}</div>}
+              {success && <div className="success-message">{success}</div>}
 
-        <div className="forgot-password-links">
-          <p>
-            Remember your password? <Link to="/login">Return to Login</Link>
-          </p>
-          <p>
-            Don't have an account? <Link to="/register">Register</Link>
-          </p>
-        </div>
+              <ForgotPassword
+                onResetSuccess={handleResetSuccess}
+                onResetError={handleResetError}
+              />
+
+            </div>
+            <Footer />
+          </div>
       </div>
-      <Footer />
-    </div>
   );
 };
 
