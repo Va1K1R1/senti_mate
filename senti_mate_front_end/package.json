@@ -17,7 +17,11 @@
     "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.9.0",
     "react": "^19.1.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dnd-touch-backend": "^16.0.1",
     "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.1",
     "redux": "^5.0.1"
