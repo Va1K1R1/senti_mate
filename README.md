@@ -93,6 +93,7 @@ SentiMate integrates with the Samsung Health SDK Web API for health data and the
     - `config`: Configuration classes
     - `exception`: Custom exceptions
     - `util`: Utility classes
+    - `adapter`: Adapter controllers for frontend-backend integration
 - `src/main/resources`: Configuration files and static resources
 - `src/test/java`: Test source code
 
@@ -101,10 +102,37 @@ SentiMate integrates with the Samsung Health SDK Web API for health data and the
   - `components`: Reusable UI components
   - `pages`: Page components
   - `services`: API services
+  - `models`: Data models matching backend entities
   - `hooks`: Custom hooks
   - `utils`: Utility functions
   - `assets`: Static assets
   - `styles`: CSS/SCSS files
+
+## API Integration
+
+The application implements a robust API integration between the frontend and backend components:
+
+### Model Classes
+
+The frontend includes model classes that match the backend entity structures:
+
+- `DiaryEntry.js`: Matches the backend `DiaryEntry` entity
+- `Emotion.js`: Matches the backend `Emotion` entity
+
+These model classes provide methods for converting between frontend and backend formats, while maintaining backward compatibility with existing frontend components.
+
+### Service Integration
+
+The frontend services use these model classes for consistent request/response data structures:
+
+- `DiaryService.js`: Handles diary entry API calls with data conversion
+- `EmotionService.js`: Handles emotion API calls with data conversion
+
+### Error Handling
+
+All service methods include error handling to catch and log any errors that occur during API communication, providing a better user experience.
+
+For more details about the API integration, please refer to the [Frontend-Backend Data Structure Integration](frontend_backend_data_structure_integration.md) document.
 
 ## Development Guidelines
 

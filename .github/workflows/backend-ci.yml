@@ -1,0 +1,73 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'senti_mate_back_end/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'senti_mate_back_end/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./senti_mate_back_end
+
+    strategy:
+      matrix:
+        java-version: [17]
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for better relevancy of SonarQube analysis
+
+    - name: Set up JDK ${{ matrix.java-version }}
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ matrix.java-version }}
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    - name: Run tests
+      run: ./gradlew test
+
+    - name: Run OWASP Dependency Check
+      run: ./gradlew dependencyCheckAnalyze
+
+    - name: SonarQube Scan
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: ./gradlew sonarqube -Dsonar.projectKey=sentimate-backend -Dsonar.organization=sentimate -Dsonar.host.url=https://sonarcloud.io
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results
+        path: ./senti_mate_back_end/build/reports/tests/
+
+    - name: Upload dependency check report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: dependency-check-report
+        path: ./senti_mate_back_end/build/reports/dependency-check-report.html
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: backend-build
+        path: ./senti_mate_back_end/build/libs/

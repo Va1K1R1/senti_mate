@@ -62,7 +62,7 @@ public class ChatGPTService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
         
         // Get recent diary entries
-        List<DiaryEntry> recentDiaryEntries = diaryEntryRepository.findTop10ByUserOrderByDateDesc(user);
+//        List<DiaryEntry> recentDiaryEntries = diaryEntryRepository.findTop10ByUserOrderByDateDesc(user);
         
         // Get recent health data
         LocalDate endDate = LocalDate.now();
@@ -73,13 +73,13 @@ public class ChatGPTService {
         List<Recommendation> recommendations = new ArrayList<>();
         
         // Generate mood-based recommendations
-        recommendations.addAll(generateMoodBasedRecommendations(userId, recentDiaryEntries));
+//        recommendations.addAll(generateMoodBasedRecommendations(userId, recentDiaryEntries));
         
         // Generate health-based recommendations
         recommendations.addAll(generateHealthBasedRecommendations(userId, recentHealthData));
         
         // Generate combined recommendations
-        recommendations.addAll(generateCombinedRecommendations(userId, recentDiaryEntries, recentHealthData));
+//        recommendations.addAll(generateCombinedRecommendations(userId, recentDiaryEntries, recentHealthData));
         
         // Save and return recommendations
         return recommendationService.createRecommendations(userId, recommendations);
@@ -105,8 +105,8 @@ public class ChatGPTService {
             
             // Add diary entries to prompt
             for (DiaryEntry entry : diaryEntries) {
-                prompt.append("Date: ").append(entry.getDate()).append("\n");
-                prompt.append("Mood: ").append(entry.getMood()).append("\n");
+//                prompt.append("Date: ").append(entry.getDate()).append("\n");
+//                prompt.append("Mood: ").append(entry.getMood()).append("\n");
                 prompt.append("Content: ").append(entry.getContent()).append("\n\n");
             }
             
@@ -211,7 +211,7 @@ public class ChatGPTService {
             // Add diary entries to prompt
             prompt.append("Recent mood trends:\n");
             for (DiaryEntry entry : diaryEntries.subList(0, Math.min(5, diaryEntries.size()))) {
-                prompt.append("Date: ").append(entry.getDate()).append(", Mood: ").append(entry.getMood()).append("\n");
+//                prompt.append("Date: ").append(entry.getDate()).append(", Mood: ").append(entry.getMood()).append("\n");
             }
             prompt.append("\n");
             

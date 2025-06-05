@@ -49,7 +49,33 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.generateToken(authentication);
 
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+        // Generate refresh token
+        String username = loginRequest.getUsername();
+        String refreshToken = tokenProvider.generateRefreshToken(username);
+
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, refreshToken));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
+        // Validate refresh token
+        String refreshToken = refreshTokenRequest.getRefreshToken();
+        if (!tokenProvider.validateRefreshToken(refreshToken)) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Invalid refresh token!"));
+        }
+
+        // Get username from refresh token
+        String username = tokenProvider.getUsernameFromRefreshToken(refreshToken);
+
+        // Generate new access token
+        String newAccessToken = tokenProvider.generateToken(username);
+
+        // Generate new refresh token
+        String newRefreshToken = tokenProvider.generateRefreshToken(username);
+
+        return ResponseEntity.ok(new JwtAuthenticationResponse(newAccessToken, newRefreshToken));
     }
 
     @PostMapping("/register")
@@ -181,10 +207,16 @@ public class AuthController {
 
     public static class JwtAuthenticationResponse {
         private String token;
+        private String refreshToken;
         private String type = "Bearer";
 
         public JwtAuthenticationResponse(String token) {
             this.token = token;
+        }
+
+        public JwtAuthenticationResponse(String token, String refreshToken) {
+            this.token = token;
+            this.refreshToken = refreshToken;
         }
 
         public String getToken() {
@@ -193,6 +225,14 @@ public class AuthController {
 
         public void setToken(String token) {
             this.token = token;
+        }
+
+        public String getRefreshToken() {
+            return refreshToken;
+        }
+
+        public void setRefreshToken(String refreshToken) {
+            this.refreshToken = refreshToken;
         }
 
         public String getType() {
@@ -217,6 +257,18 @@ public class AuthController {
 
         public void setMessage(String message) {
             this.message = message;
+        }
+    }
+
+    public static class RefreshTokenRequest {
+        private String refreshToken;
+
+        public String getRefreshToken() {
+            return refreshToken;
+        }
+
+        public void setRefreshToken(String refreshToken) {
+            this.refreshToken = refreshToken;
         }
     }
 }

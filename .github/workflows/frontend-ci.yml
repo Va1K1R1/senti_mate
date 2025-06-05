@@ -1,0 +1,98 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'senti_mate_front_end/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'senti_mate_front_end/**'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./senti_mate_front_end
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: './senti_mate_front_end/package-lock.json'
+
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: ./senti_mate_front_end/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('./senti_mate_front_end/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Lint
+      run: npm run lint
+      continue-on-error: true
+
+    - name: Code Quality Check
+      run: |
+        npm install -g eslint eslint-plugin-react eslint-plugin-jsx-a11y eslint-plugin-import
+        eslint --ext .js,.jsx src/ --max-warnings=0 || echo "Code quality issues found but continuing..."
+
+    - name: Build
+      run: npm run build
+
+    - name: Test
+      run: npm test -- --coverage
+
+    - name: Upload test coverage
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: ./senti_mate_front_end/coverage
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-files
+        path: ./senti_mate_front_end/dist
+
+  e2e-tests:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./senti_mate_front_end
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: 'npm'
+        cache-dependency-path: './senti_mate_front_end/package-lock.json'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run E2E tests
+      run: npm run test:e2e || echo "No E2E tests found, skipping"

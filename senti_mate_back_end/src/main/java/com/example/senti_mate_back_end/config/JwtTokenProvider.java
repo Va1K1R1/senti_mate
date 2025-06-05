@@ -13,6 +13,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -23,6 +24,9 @@ public class JwtTokenProvider {
 
     @Value("${jwt.expiration}")
     private long jwtExpirationInMs;
+
+    @Value("${jwt.refresh-expiration:604800000}") // Default to 7 days if not specified
+    private long refreshExpirationInMs;
 
     private Key getSigningKey() {
         byte[] keyBytes = jwtSecret.getBytes();
@@ -81,5 +85,60 @@ public class JwtTokenProvider {
     private boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
+    }
+
+    /**
+     * Generate a refresh token for the given username
+     * @param username the username
+     * @return the refresh token
+     */
+    public String generateRefreshToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("type", "refresh");
+        claims.put("refreshId", UUID.randomUUID().toString());
+        return createRefreshToken(claims, username);
+    }
+
+    /**
+     * Create a refresh token with the given claims and subject
+     * @param claims the claims
+     * @param subject the subject
+     * @return the refresh token
+     */
+    private String createRefreshToken(Map<String, Object> claims, String subject) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + refreshExpirationInMs);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    /**
+     * Validate a refresh token
+     * @param token the refresh token
+     * @return true if the token is valid, false otherwise
+     */
+    public boolean validateRefreshToken(String token) {
+        try {
+            Claims claims = getAllClaimsFromToken(token);
+            String tokenType = claims.get("type", String.class);
+            return "refresh".equals(tokenType) && !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Get the username from a refresh token
+     * @param token the refresh token
+     * @return the username
+     */
+    public String getUsernameFromRefreshToken(String token) {
+        return getClaimFromToken(token, Claims::getSubject);
     }
 }
