@@ -1,8 +1,10 @@
 package com.example.senti_mate_back_end.controller;
 
 import com.example.senti_mate_back_end.model.HealthData;
+import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.service.HealthDataService;
 import com.example.senti_mate_back_end.service.SamsungHealthService;
+import com.example.senti_mate_back_end.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -23,18 +27,37 @@ import java.util.Map;
  * REST controller for managing health data operations
  */
 @RestController
-@RequestMapping("/api/health-data")
+@RequestMapping("/health-data")
 public class HealthDataController {
 
     private static final Logger logger = LoggerFactory.getLogger(HealthDataController.class);
 
     private final HealthDataService healthDataService;
     private final SamsungHealthService samsungHealthService;
+    private final UserService userService;
 
     @Autowired
-    public HealthDataController(HealthDataService healthDataService, SamsungHealthService samsungHealthService) {
+    public HealthDataController(HealthDataService healthDataService, SamsungHealthService samsungHealthService, UserService userService) {
         this.healthDataService = healthDataService;
         this.samsungHealthService = samsungHealthService;
+        this.userService = userService;
+    }
+
+    /**
+     * Get the current user ID from the authentication context
+     * @return the current user ID
+     * @throws IllegalStateException if the user is not authenticated or not found
+     */
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("User not authenticated");
+        }
+
+        String username = authentication.getName();
+        return userService.findByUsername(username)
+                .map(User::getId)
+                .orElseThrow(() -> new IllegalStateException("User not found: " + username));
     }
 
     /**
@@ -49,6 +72,21 @@ public class HealthDataController {
             return ResponseEntity.ok(healthDataList);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * GET /health-data : Get all health data for the current user
+     * @return the ResponseEntity with status 200 (OK) and the list of health data in body
+     */
+    @GetMapping
+    public ResponseEntity<List<HealthData>> getAllHealthData() {
+        try {
+            Long userId = getCurrentUserId();
+            List<HealthData> healthDataList = healthDataService.findAllByUser(userId);
+            return ResponseEntity.ok(healthDataList);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -118,6 +156,25 @@ public class HealthDataController {
             return ResponseEntity.ok(healthDataList);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * GET /health-data/range : Get health data by date range for the current user
+     * @param startDate the start date
+     * @param endDate the end date
+     * @return the ResponseEntity with status 200 (OK) and the list of health data in body
+     */
+    @GetMapping("/range")
+    public ResponseEntity<List<HealthData>> getHealthDataByDateRange(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        try {
+            Long userId = getCurrentUserId();
+            List<HealthData> healthDataList = healthDataService.findByUserAndDateRange(userId, startDate, endDate);
+            return ResponseEntity.ok(healthDataList);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 

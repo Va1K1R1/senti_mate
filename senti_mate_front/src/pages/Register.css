@@ -1,0 +1,122 @@
+/* Register page styles */
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.register-container {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.register-title {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.register-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.register-error {
+  background-color: #ffebee;
+  color: #d32f2f;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.register-form {
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+.form-hint {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #666;
+}
+
+.register-button {
+  width: 100%;
+  padding: 12px !important;
+  font-size: 16px !important;
+  margin-top: 10px;
+}
+
+.register-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.register-footer p {
+  margin: 10px 0;
+  color: #666;
+}
+
+.register-footer a {
+  color: #4CAF50;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.register-footer a:hover {
+  color: #45a049;
+  text-decoration: underline;
+}
+
+/* Responsive styles */
+@media (max-width: 576px) {
+  .register-container {
+    padding: 30px 20px;
+  }
+  
+  .register-title {
+    font-size: 24px;
+  }
+  
+  .register-subtitle {
+    font-size: 14px;
+  }
+}

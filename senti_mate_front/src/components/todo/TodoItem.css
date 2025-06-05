@@ -1,0 +1,68 @@
+/* TodoItem component styles */
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.todo-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.todo-item.completed {
+  background-color: #f9f9f9;
+  opacity: 0.8;
+}
+
+.todo-content {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.todo-checkbox {
+  margin-right: 15px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.todo-text {
+  font-size: 16px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.todo-actions {
+  display: flex;
+  align-items: center;
+}
+
+.todo-delete-btn {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .todo-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .todo-actions {
+    margin-top: 10px;
+    align-self: flex-end;
+  }
+}

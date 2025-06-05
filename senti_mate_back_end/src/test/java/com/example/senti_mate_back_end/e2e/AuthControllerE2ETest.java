@@ -89,7 +89,7 @@ public class AuthControllerE2ETest {
         registrationRequest.put("lastName", testUserLastName);
 
         // Perform registration request
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registrationRequest)))
                 .andExpect(status().isOk())
@@ -98,7 +98,7 @@ public class AuthControllerE2ETest {
         // Verify user was created in the database
         User createdUser = userRepository.findByEmail(testUserEmail)
                 .orElseThrow(() -> new AssertionError("User was not created in the database"));
-        
+
         assertEquals(testUserEmail, createdUser.getEmail());
         assertEquals(testUserFirstName, createdUser.getFirstName());
         assertEquals(testUserLastName, createdUser.getLastName());
@@ -121,7 +121,7 @@ public class AuthControllerE2ETest {
         registrationRequest.put("firstName", testUserFirstName);
         registrationRequest.put("lastName", testUserLastName);
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registrationRequest)))
                 .andExpect(status().isOk());
@@ -132,7 +132,7 @@ public class AuthControllerE2ETest {
         loginRequest.put("password", testUserPassword);
 
         // Perform login request
-        MvcResult result = mockMvc.perform(post("/api/auth/login")
+        MvcResult result = mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
@@ -162,7 +162,7 @@ public class AuthControllerE2ETest {
         registrationRequest.put("firstName", testUserFirstName);
         registrationRequest.put("lastName", testUserLastName);
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registrationRequest)))
                 .andExpect(status().isOk());
@@ -172,7 +172,7 @@ public class AuthControllerE2ETest {
         loginRequest.put("username", testUserEmail);
         loginRequest.put("password", testUserPassword);
 
-        MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
+        MvcResult loginResult = mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
@@ -207,7 +207,7 @@ public class AuthControllerE2ETest {
         registrationRequest.put("firstName", testUserFirstName);
         registrationRequest.put("lastName", testUserLastName);
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registrationRequest)))
                 .andExpect(status().isOk());
@@ -217,7 +217,7 @@ public class AuthControllerE2ETest {
         loginRequest.put("username", testUserEmail);
         loginRequest.put("password", testUserPassword);
 
-        MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
+        MvcResult loginResult = mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
@@ -231,7 +231,7 @@ public class AuthControllerE2ETest {
         Map<String, String> refreshRequest = new HashMap<>();
         refreshRequest.put("refreshToken", refreshToken);
 
-        mockMvc.perform(post("/api/auth/refresh")
+        mockMvc.perform(post("/auth/refresh")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(refreshRequest)))
                 .andExpect(status().isOk())
@@ -254,7 +254,7 @@ public class AuthControllerE2ETest {
         registrationRequest.put("firstName", testUserFirstName);
         registrationRequest.put("lastName", testUserLastName);
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registrationRequest)))
                 .andExpect(status().isOk())
@@ -265,7 +265,7 @@ public class AuthControllerE2ETest {
         loginRequest.put("username", testUserEmail);
         loginRequest.put("password", testUserPassword);
 
-        MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
+        MvcResult loginResult = mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
@@ -288,7 +288,7 @@ public class AuthControllerE2ETest {
         Map<String, String> refreshRequest = new HashMap<>();
         refreshRequest.put("refreshToken", refreshToken);
 
-        MvcResult refreshResult = mockMvc.perform(post("/api/auth/refresh")
+        MvcResult refreshResult = mockMvc.perform(post("/auth/refresh")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(refreshRequest)))
                 .andExpect(status().isOk())

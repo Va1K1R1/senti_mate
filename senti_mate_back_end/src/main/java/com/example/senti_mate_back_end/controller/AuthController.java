@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
@@ -39,9 +39,31 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        String username = loginRequest.getUsername();
+        String email = loginRequest.getEmail();
+
+        // If email is provided but username is not, try to find the user by email
+        if ((username == null || username.isEmpty()) && email != null && !email.isEmpty()) {
+            Optional<User> userOpt = userService.findByEmail(email);
+            if (userOpt.isPresent()) {
+                username = userOpt.get().getUsername();
+            } else {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse("Error: User not found with the provided email!"));
+            }
+        }
+
+        // If neither username nor email is provided, return an error
+        if ((username == null || username.isEmpty()) && (email == null || email.isEmpty())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username or email is required!"));
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
+                        username,
                         loginRequest.getPassword()
                 )
         );
@@ -50,7 +72,6 @@ public class AuthController {
         String jwt = tokenProvider.generateToken(authentication);
 
         // Generate refresh token
-        String username = loginRequest.getUsername();
         String refreshToken = tokenProvider.generateRefreshToken(username);
 
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, refreshToken));
@@ -129,6 +150,7 @@ public class AuthController {
 
     public static class LoginRequest {
         private String username;
+        private String email;
         private String password;
 
         public String getUsername() {
@@ -137,6 +159,14 @@ public class AuthController {
 
         public void setUsername(String username) {
             this.username = username;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
         }
 
         public String getPassword() {

@@ -2,8 +2,10 @@ package com.example.senti_mate_back_end.controller;
 
 import com.example.senti_mate_back_end.model.DiaryEntry;
 import com.example.senti_mate_back_end.model.Recommendation;
+import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.service.ChatGPTService;
 import com.example.senti_mate_back_end.service.RecommendationService;
+import com.example.senti_mate_back_end.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -23,18 +27,37 @@ import java.util.Map;
  * REST controller for managing recommendation operations
  */
 @RestController
-@RequestMapping("/api/recommendations")
+@RequestMapping("/recommendations")
 public class RecommendationController {
 
     private static final Logger logger = LoggerFactory.getLogger(RecommendationController.class);
 
     private final RecommendationService recommendationService;
     private final ChatGPTService chatGPTService;
+    private final UserService userService;
 
     @Autowired
-    public RecommendationController(RecommendationService recommendationService, ChatGPTService chatGPTService) {
+    public RecommendationController(RecommendationService recommendationService, ChatGPTService chatGPTService, UserService userService) {
         this.recommendationService = recommendationService;
         this.chatGPTService = chatGPTService;
+        this.userService = userService;
+    }
+
+    /**
+     * Get the current user ID from the authentication context
+     * @return the current user ID
+     * @throws IllegalStateException if the user is not authenticated or not found
+     */
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("User not authenticated");
+        }
+
+        String username = authentication.getName();
+        return userService.findByUsername(username)
+                .map(User::getId)
+                .orElseThrow(() -> new IllegalStateException("User not found: " + username));
     }
 
     /**
@@ -49,6 +72,21 @@ public class RecommendationController {
             return ResponseEntity.ok(recommendations);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * GET /recommendations : Get all recommendations for the current user
+     * @return the ResponseEntity with status 200 (OK) and the list of recommendations in body
+     */
+    @GetMapping
+    public ResponseEntity<List<Recommendation>> getAllRecommendations() {
+        try {
+            Long userId = getCurrentUserId();
+            List<Recommendation> recommendations = recommendationService.findAllByUser(userId);
+            return ResponseEntity.ok(recommendations);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -139,6 +177,26 @@ public class RecommendationController {
             return ResponseEntity.ok(recommendations);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * GET /recommendations/type/{type} : Find recommendations by type for the current user
+     * @param type the recommendation type (maps to category)
+     * @param pageable pagination information
+     * @return the ResponseEntity with status 200 (OK) and the page of recommendations in body
+     */
+    @GetMapping("/type/{type}")
+    public ResponseEntity<Page<Recommendation>> getRecommendationsByType(
+            @PathVariable String type,
+            Pageable pageable) {
+        try {
+            Long userId = getCurrentUserId();
+            // Map 'type' to 'category' for backward compatibility
+            Page<Recommendation> recommendations = recommendationService.findByUserAndCategory(userId, type, pageable);
+            return ResponseEntity.ok(recommendations);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -274,6 +332,21 @@ public class RecommendationController {
     }
 
     /**
+     * PUT /recommendations/{id}/read : Mark a recommendation as read (frontend compatibility)
+     * @param id the ID of the recommendation to mark as read
+     * @return the ResponseEntity with status 200 (OK) and the updated recommendation in body
+     */
+    @PutMapping("/{id}/read")
+    public ResponseEntity<Recommendation> markRecommendationAsReadPut(@PathVariable Long id) {
+        try {
+            Recommendation updatedRecommendation = recommendationService.markAsRead(id);
+            return ResponseEntity.ok(updatedRecommendation);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
      * PATCH /api/recommendations/{id}/mark-unread : Mark a recommendation as unread
      * @param id the ID of the recommendation to mark as unread
      * @return the ResponseEntity with status 200 (OK) and the updated recommendation in body
@@ -296,6 +369,22 @@ public class RecommendationController {
     @PatchMapping("/{id}/toggle-favorite")
     public ResponseEntity<Recommendation> toggleRecommendationFavorite(@PathVariable Long id) {
         try {
+            Recommendation updatedRecommendation = recommendationService.toggleFavorite(id);
+            return ResponseEntity.ok(updatedRecommendation);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * PUT /recommendations/{id}/helpful : Mark a recommendation as helpful (frontend compatibility)
+     * @param id the ID of the recommendation to mark as helpful
+     * @return the ResponseEntity with status 200 (OK) and the updated recommendation in body
+     */
+    @PutMapping("/{id}/helpful")
+    public ResponseEntity<Recommendation> markRecommendationAsHelpful(@PathVariable Long id) {
+        try {
+            // For frontend compatibility, "helpful" maps to "favorite"
             Recommendation updatedRecommendation = recommendationService.toggleFavorite(id);
             return ResponseEntity.ok(updatedRecommendation);
         } catch (IllegalArgumentException e) {
@@ -361,12 +450,17 @@ public class RecommendationController {
 
     /**
      * POST /api/recommendations/generate : Generate recommendations using ChatGPT
-     * @param userId the ID of the user
+     * @param userId the ID of the user (optional, uses current user if not provided)
      * @return the ResponseEntity with status 201 (Created) and the list of generated recommendations in body
      */
     @PostMapping("/generate")
-    public ResponseEntity<?> generateRecommendations(@RequestParam Long userId) {
+    public ResponseEntity<?> generateRecommendations(@RequestParam(required = false) Long userId) {
         try {
+            // If userId is not provided, use the current user's ID
+            if (userId == null) {
+                userId = getCurrentUserId();
+            }
+
             List<Recommendation> recommendations = chatGPTService.generateRecommendations(userId);
             return ResponseEntity.status(HttpStatus.CREATED).body(recommendations);
         } catch (Exception e) {

@@ -1,0 +1,190 @@
+/* Settings page styles */
+.settings-page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.settings-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.settings-title {
+  font-size: 32px;
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.settings-container {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+/* Settings sections */
+.settings-section {
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #eee;
+}
+
+.settings-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.settings-section h2 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Form styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.form-group select:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #666;
+}
+
+/* Checkbox styles */
+.checkbox-group {
+  display: flex;
+  align-items: flex-start;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
+}
+
+/* Account info styles */
+.account-info {
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.account-info p {
+  margin: 10px 0;
+  color: #333;
+}
+
+.account-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Settings actions */
+.settings-actions {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.success-message {
+  color: #4CAF50;
+  background-color: #E8F5E9;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  width: 100%;
+  text-align: center;
+}
+
+.error-message {
+  color: #f44336;
+  background-color: #FFEBEE;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .settings-content {
+    padding: 30px 15px;
+  }
+  
+  .settings-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  
+  .settings-container {
+    padding: 20px;
+  }
+  
+  .account-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .account-actions button {
+    width: 100%;
+  }
+  
+  .settings-actions {
+    align-items: stretch;
+  }
+  
+  .settings-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .settings-title {
+    font-size: 24px;
+  }
+  
+  .settings-section h2 {
+    font-size: 18px;
+  }
+  
+  .form-group select {
+    padding: 10px;
+    font-size: 14px;
+  }
+}

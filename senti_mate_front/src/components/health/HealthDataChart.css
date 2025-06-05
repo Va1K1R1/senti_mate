@@ -1,0 +1,164 @@
+/* HealthDataChart component styles */
+.health-data-chart {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.chart-title {
+  font-size: 18px;
+  color: #333;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.chart-container {
+  display: flex;
+  height: 250px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* Y-axis styles */
+.chart-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 10px;
+  width: 50px;
+}
+
+.y-axis-label {
+  font-size: 12px;
+  color: #666;
+  text-align: right;
+}
+
+/* Chart content styles */
+.chart-content {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  position: relative;
+  padding-top: 10px;
+}
+
+/* Bar chart styles */
+.chart-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.chart-bar {
+  width: 60%;
+  max-width: 30px;
+  border-radius: 3px 3px 0 0;
+  transition: height 0.3s ease;
+}
+
+.chart-bar:hover {
+  opacity: 0.8;
+}
+
+/* Line chart styles */
+.chart-point-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.chart-point {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+}
+
+.chart-line {
+  z-index: 1;
+}
+
+/* X-axis labels */
+.chart-x-label {
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+  text-align: center;
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* Chart legend */
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  margin-right: 5px;
+}
+
+.legend-label {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .chart-container {
+    height: 200px;
+  }
+  
+  .chart-title {
+    font-size: 16px;
+  }
+  
+  .y-axis-label {
+    font-size: 10px;
+  }
+  
+  .chart-x-label {
+    font-size: 10px;
+  }
+  
+  .legend-label {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .chart-container {
+    height: 180px;
+  }
+  
+  .chart-y-axis {
+    width: 40px;
+  }
+  
+  .chart-bar {
+    width: 50%;
+  }
+}

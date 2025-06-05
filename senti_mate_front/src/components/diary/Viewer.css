@@ -1,0 +1,126 @@
+/* Viewer component styles */
+.diary-viewer {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.diary-not-found {
+  text-align: center;
+  padding: 50px 30px;
+}
+
+.diary-not-found h2 {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.viewer-header {
+  margin-bottom: 25px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+
+.viewer-title {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.viewer-meta {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.viewer-emotion {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  text-transform: capitalize;
+}
+
+.viewer-date {
+  color: #666;
+  font-size: 14px;
+}
+
+.viewer-content {
+  margin-bottom: 30px;
+  line-height: 1.8;
+  color: #444;
+}
+
+.viewer-content p {
+  margin-bottom: 15px;
+}
+
+.viewer-content p:last-child {
+  margin-bottom: 0;
+}
+
+.viewer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.viewer-action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .diary-viewer {
+    padding: 20px;
+  }
+  
+  .viewer-title {
+    font-size: 24px;
+  }
+  
+  .viewer-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .viewer-actions {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .viewer-action-buttons {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 576px) {
+  .viewer-title {
+    font-size: 20px;
+  }
+  
+  .viewer-actions {
+    flex-direction: column-reverse;
+  }
+  
+  .viewer-action-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .viewer-action-buttons button {
+    flex: 1;
+  }
+}

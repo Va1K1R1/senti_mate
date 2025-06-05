@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .contentSecurityPolicy(csp -> csp
                     .policyDirectives("default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.openai.com https://api.samsung.com; frame-src 'none'; object-src 'none'")
                 )
-                .xssProtection(xss -> xss.block(true))
+                .xssProtection(xss -> xss.disable())
                 .contentTypeOptions(contentType -> {})
                 .frameOptions(frame -> frame.deny())
                 .httpStrictTransportSecurity(hsts -> hsts
@@ -53,7 +53,7 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints
-                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/auth/**", "/auth/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
                 // Admin endpoints
@@ -62,6 +62,11 @@ public class SecurityConfig {
                 .requestMatchers("/api/moderator/**").hasAnyRole("ADMIN", "MODERATOR")
                 // User endpoints
                 .requestMatchers("/api/user/**").hasAnyRole("ADMIN", "MODERATOR", "USER")
+                // Frontend compatibility endpoints
+                .requestMatchers("/diary/**").authenticated()
+                .requestMatchers("/emotions/**").authenticated()
+                .requestMatchers("/health-data/**").authenticated()
+                .requestMatchers("/recommendations/**").authenticated()
                 // Secured endpoints
                 .anyRequest().authenticated()
             )

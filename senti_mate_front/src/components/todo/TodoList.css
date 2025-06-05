@@ -1,0 +1,80 @@
+/* TodoList component styles */
+.todo-list {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.todo-header {
+  margin-bottom: 20px;
+}
+
+.todo-header h2 {
+  font-size: 24px;
+  color: #333;
+  margin: 0;
+}
+
+.todo-form {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px 0 0 5px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.todo-input:focus {
+  border-color: #4CAF50;
+}
+
+.todo-add-btn {
+  border-radius: 0 5px 5px 0;
+  padding: 12px 20px;
+}
+
+.todo-items {
+  margin-bottom: 20px;
+}
+
+.todo-empty {
+  text-align: center;
+  padding: 30px;
+  color: #888;
+  font-style: italic;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.todo-summary {
+  display: flex;
+  justify-content: flex-end;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .todo-form {
+    flex-direction: column;
+  }
+  
+  .todo-input {
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .todo-add-btn {
+    border-radius: 5px;
+    width: 100%;
+  }
+}

@@ -1,0 +1,96 @@
+import {createHotContext as __vite__createHotContext} from "/@vite/client";
+import.meta.hot = __vite__createHotContext("/src/styles/theme.jsx");
+import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=538bf3b3";
+const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import*as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+    if (!window.$RefreshReg$) {
+        throw new Error("@vitejs/plugin-react can't detect preamble. Something is wrong.");
+    }
+    prevRefreshReg = window.$RefreshReg$;
+    prevRefreshSig = window.$RefreshSig$;
+    window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/REACT/senti_mate/senti_mate_front_end/src/styles/theme.jsx");
+    window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$()
+  , _s2 = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=538bf3b3";
+const createContext = __vite__cjsImport3_react["createContext"];
+const useState = __vite__cjsImport3_react["useState"];
+const useContext = __vite__cjsImport3_react["useContext"];
+const useEffect = __vite__cjsImport3_react["useEffect"];
+export const ThemeContext = createContext();
+export const ThemeProvider = ({children}) => {
+    _s();
+    const getInitialTheme = () => {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) {
+            return savedTheme;
+        }
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        return prefersDark ? "dark" : "light";
+    }
+    ;
+    const [theme,setTheme] = useState(getInitialTheme);
+    useEffect( () => {
+        const body = document.body;
+        body.classList.remove("light-theme", "dark-theme");
+        body.classList.add(`${theme}-theme`);
+        localStorage.setItem("theme", theme);
+    }
+    , [theme]);
+    const toggleTheme = () => {
+        setTheme( (prevTheme) => prevTheme === "light" ? "dark" : "light");
+    }
+    ;
+    return /* @__PURE__ */
+    jsxDEV(ThemeContext.Provider, {
+        value: {
+            theme,
+            toggleTheme
+        },
+        children
+    }, void 0, false, {
+        fileName: "C:/REACT/senti_mate/senti_mate_front_end/src/styles/theme.jsx",
+        lineNumber: 63,
+        columnNumber: 5
+    }, this);
+}
+;
+_s(ThemeProvider, "DZ93y6MoushHNJ3xDqNSOypNhgY=");
+_c = ThemeProvider;
+export const useTheme = () => {
+    _s2();
+    const context = useContext(ThemeContext);
+    if (context === void 0) {
+        throw new Error("useTheme must be used within a ThemeProvider");
+    }
+    return context;
+}
+;
+_s2(useTheme, "b9L3QQ+jgeyIrH0NfHrJ8nn7VMU=");
+var _c;
+$RefreshReg$(_c, "ThemeProvider");
+if (import.meta.hot && !inWebWorker) {
+    window.$RefreshReg$ = prevRefreshReg;
+    window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+    RefreshRuntime.__hmr_import(import.meta.url).then( (currentExports) => {
+        RefreshRuntime.registerExportsForReactRefresh("C:/REACT/senti_mate/senti_mate_front_end/src/styles/theme.jsx", currentExports);
+        import.meta.hot.accept( (nextExports) => {
+            if (!nextExports)
+                return;
+            const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/REACT/senti_mate/senti_mate_front_end/src/styles/theme.jsx", currentExports, nextExports);
+            if (invalidateMessage)
+                import.meta.hot.invalidate(invalidateMessage);
+        }
+        );
+    }
+    );
+}
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBMkNJOzs7Ozs7Ozs7Ozs7Ozs7OztBQTNDSixTQUFTQSxlQUFlQyxVQUFVQyxZQUFZQyxpQkFBaUI7QUFHeEQsYUFBTUMsZUFBZUosY0FBYztBQUduQyxhQUFNSyxnQkFBZ0JBLENBQUMsRUFBRUMsU0FBUyxNQUFNO0FBQUFDLEtBQUE7QUFFN0MsUUFBTUMsa0JBQWtCQSxNQUFNO0FBQzVCLFVBQU1DLGFBQWFDLGFBQWFDLFFBQVEsT0FBTztBQUcvQyxRQUFJRixZQUFZO0FBQ2QsYUFBT0E7QUFBQUEsSUFDVDtBQUdBLFVBQU1HLGNBQWNDLE9BQU9DLFdBQVcsOEJBQThCLEVBQUVDO0FBQ3RFLFdBQU9ILGNBQWMsU0FBUztBQUFBLEVBQ2hDO0FBRUEsUUFBTSxDQUFDSSxPQUFPQyxRQUFRLElBQUloQixTQUFTTyxlQUFlO0FBR2xETCxZQUFVLE1BQU07QUFDZCxVQUFNZSxPQUFPQyxTQUFTRDtBQUd0QkEsU0FBS0UsVUFBVUMsT0FBTyxlQUFlLFlBQVk7QUFHakRILFNBQUtFLFVBQVVFLElBQUksR0FBR04sS0FBSyxRQUFRO0FBR25DTixpQkFBYWEsUUFBUSxTQUFTUCxLQUFLO0FBQUEsRUFDckMsR0FBRyxDQUFDQSxLQUFLLENBQUM7QUFHVixRQUFNUSxjQUFjQSxNQUFNO0FBQ3hCUCxhQUFTLENBQUFRLGNBQWFBLGNBQWMsVUFBVSxTQUFTLE9BQU87QUFBQSxFQUNoRTtBQUVBLFNBQ0UsdUJBQUMsYUFBYSxVQUFiLEVBQXNCLE9BQU8sRUFBRVQsT0FBT1EsWUFBWSxHQUNoRGxCLFlBREg7QUFBQTtBQUFBO0FBQUE7QUFBQSxTQUVBO0FBRUo7QUFFQUMsR0EzQ2FGLGVBQWE7QUFBQXFCLEtBQWJyQjtBQTRDTixhQUFNc0IsV0FBV0EsTUFBTTtBQUFBQyxNQUFBO0FBQzVCLFFBQU1DLFVBQVUzQixXQUFXRSxZQUFZO0FBQ3ZDLE1BQUl5QixZQUFZQyxRQUFXO0FBQ3pCLFVBQU0sSUFBSUMsTUFBTSw4Q0FBOEM7QUFBQSxFQUNoRTtBQUNBLFNBQU9GO0FBQ1Q7QUFBRUQsSUFOV0QsVUFBUTtBQUFBLElBQUFEO0FBQUFNLGFBQUFOLElBQUEiLCJuYW1lcyI6WyJjcmVhdGVDb250ZXh0IiwidXNlU3RhdGUiLCJ1c2VDb250ZXh0IiwidXNlRWZmZWN0IiwiVGhlbWVDb250ZXh0IiwiVGhlbWVQcm92aWRlciIsImNoaWxkcmVuIiwiX3MiLCJnZXRJbml0aWFsVGhlbWUiLCJzYXZlZFRoZW1lIiwibG9jYWxTdG9yYWdlIiwiZ2V0SXRlbSIsInByZWZlcnNEYXJrIiwid2luZG93IiwibWF0Y2hNZWRpYSIsIm1hdGNoZXMiLCJ0aGVtZSIsInNldFRoZW1lIiwiYm9keSIsImRvY3VtZW50IiwiY2xhc3NMaXN0IiwicmVtb3ZlIiwiYWRkIiwic2V0SXRlbSIsInRvZ2dsZVRoZW1lIiwicHJldlRoZW1lIiwiX2MiLCJ1c2VUaGVtZSIsIl9zMiIsImNvbnRleHQiLCJ1bmRlZmluZWQiLCJFcnJvciIsIiRSZWZyZXNoUmVnJCJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJ0aGVtZS5qc3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgY3JlYXRlQ29udGV4dCwgdXNlU3RhdGUsIHVzZUNvbnRleHQsIHVzZUVmZmVjdCB9IGZyb20gJ3JlYWN0JztcclxuXHJcbi8vIENyZWF0ZSBhIGNvbnRleHQgZm9yIHRoZSB0aGVtZVxyXG5leHBvcnQgY29uc3QgVGhlbWVDb250ZXh0ID0gY3JlYXRlQ29udGV4dCgpO1xyXG5cclxuLy8gVGhlbWUgcHJvdmlkZXIgY29tcG9uZW50XHJcbmV4cG9ydCBjb25zdCBUaGVtZVByb3ZpZGVyID0gKHsgY2hpbGRyZW4gfSkgPT4ge1xyXG4gIC8vIENoZWNrIGlmIHVzZXIgaGFzIGEgdGhlbWUgcHJlZmVyZW5jZSBpbiBsb2NhbFN0b3JhZ2VcclxuICBjb25zdCBnZXRJbml0aWFsVGhlbWUgPSAoKSA9PiB7XHJcbiAgICBjb25zdCBzYXZlZFRoZW1lID0gbG9jYWxTdG9yYWdlLmdldEl0ZW0oJ3RoZW1lJyk7XHJcbiAgICBcclxuICAgIC8vIElmIHVzZXIgaGFzIGEgc2F2ZWQgcHJlZmVyZW5jZSwgdXNlIGl0XHJcbiAgICBpZiAoc2F2ZWRUaGVtZSkge1xyXG4gICAgICByZXR1cm4gc2F2ZWRUaGVtZTtcclxuICAgIH1cclxuICAgIFxyXG4gICAgLy8gT3RoZXJ3aXNlLCBjaGVjayBmb3Igc3lzdGVtIHByZWZlcmVuY2VcclxuICAgIGNvbnN0IHByZWZlcnNEYXJrID0gd2luZG93Lm1hdGNoTWVkaWEoJyhwcmVmZXJzLWNvbG9yLXNjaGVtZTogZGFyayknKS5tYXRjaGVzO1xyXG4gICAgcmV0dXJuIHByZWZlcnNEYXJrID8gJ2RhcmsnIDogJ2xpZ2h0JztcclxuICB9O1xyXG5cclxuICBjb25zdCBbdGhlbWUsIHNldFRoZW1lXSA9IHVzZVN0YXRlKGdldEluaXRpYWxUaGVtZSk7XHJcblxyXG4gIC8vIFVwZGF0ZSB0aGUgdGhlbWUgY2xhc3Mgb24gdGhlIGRvY3VtZW50IGJvZHkgd2hlbiB0aGVtZSBjaGFuZ2VzXHJcbiAgdXNlRWZmZWN0KCgpID0+IHtcclxuICAgIGNvbnN0IGJvZHkgPSBkb2N1bWVudC5ib2R5O1xyXG4gICAgXHJcbiAgICAvLyBSZW1vdmUgYW55IGV4aXN0aW5nIHRoZW1lIGNsYXNzZXNcclxuICAgIGJvZHkuY2xhc3NMaXN0LnJlbW92ZSgnbGlnaHQtdGhlbWUnLCAnZGFyay10aGVtZScpO1xyXG4gICAgXHJcbiAgICAvLyBBZGQgdGhlIGN1cnJlbnQgdGhlbWUgY2xhc3NcclxuICAgIGJvZHkuY2xhc3NMaXN0LmFkZChgJHt0aGVtZX0tdGhlbWVgKTtcclxuICAgIFxyXG4gICAgLy8gU2F2ZSB0aGUgdGhlbWUgcHJlZmVyZW5jZSB0byBsb2NhbFN0b3JhZ2VcclxuICAgIGxvY2FsU3RvcmFnZS5zZXRJdGVtKCd0aGVtZScsIHRoZW1lKTtcclxuICB9LCBbdGhlbWVdKTtcclxuXHJcbiAgLy8gVG9nZ2xlIGJldHdlZW4gbGlnaHQgYW5kIGRhcmsgdGhlbWVzXHJcbiAgY29uc3QgdG9nZ2xlVGhlbWUgPSAoKSA9PiB7XHJcbiAgICBzZXRUaGVtZShwcmV2VGhlbWUgPT4gcHJldlRoZW1lID09PSAnbGlnaHQnID8gJ2RhcmsnIDogJ2xpZ2h0Jyk7XHJcbiAgfTtcclxuXHJcbiAgcmV0dXJuIChcclxuICAgIDxUaGVtZUNvbnRleHQuUHJvdmlkZXIgdmFsdWU9e3sgdGhlbWUsIHRvZ2dsZVRoZW1lIH19PlxyXG4gICAgICB7Y2hpbGRyZW59XHJcbiAgICA8L1RoZW1lQ29udGV4dC5Qcm92aWRlcj5cclxuICApO1xyXG59O1xyXG5cclxuLy8gQ3VzdG9tIGhvb2sgdG8gdXNlIHRoZSB0aGVtZSBjb250ZXh0XHJcbmV4cG9ydCBjb25zdCB1c2VUaGVtZSA9ICgpID0+IHtcclxuICBjb25zdCBjb250ZXh0ID0gdXNlQ29udGV4dChUaGVtZUNvbnRleHQpO1xyXG4gIGlmIChjb250ZXh0ID09PSB1bmRlZmluZWQpIHtcclxuICAgIHRocm93IG5ldyBFcnJvcigndXNlVGhlbWUgbXVzdCBiZSB1c2VkIHdpdGhpbiBhIFRoZW1lUHJvdmlkZXInKTtcclxuICB9XHJcbiAgcmV0dXJuIGNvbnRleHQ7XHJcbn07Il0sImZpbGUiOiJDOi9SRUFDVC9zZW50aV9tYXRlL3NlbnRpX21hdGVfZnJvbnRfZW5kL3NyYy9zdHlsZXMvdGhlbWUuanN4In0=

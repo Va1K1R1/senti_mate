@@ -83,7 +83,7 @@ public class DiaryEntryControllerE2ETest {
         registrationRequest.put("firstName", testUserFirstName);
         registrationRequest.put("lastName", testUserLastName);
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registrationRequest)))
                 .andExpect(status().isOk());
@@ -93,7 +93,7 @@ public class DiaryEntryControllerE2ETest {
         loginRequest.put("username", testUserEmail);
         loginRequest.put("password", testUserPassword);
 
-        MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
+        MvcResult loginResult = mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
@@ -143,7 +143,7 @@ public class DiaryEntryControllerE2ETest {
         diaryEntryRequest.put("isPrivate", true);
 
         // Perform create diary entry request
-        MvcResult result = mockMvc.perform(post("/api/diary-entries/user/" + testUser.getId())
+        MvcResult result = mockMvc.perform(post("/diary/user/" + testUser.getId())
                 .header("Authorization", "Bearer " + authToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(diaryEntryRequest)))
@@ -166,7 +166,7 @@ public class DiaryEntryControllerE2ETest {
         // Verify diary entry was created in the database
         DiaryEntry createdEntry = diaryEntryRepository.findById(diaryEntryId.longValue())
                 .orElseThrow(() -> new AssertionError("Diary entry was not created in the database"));
-        
+
         assertEquals("Test Diary Entry", createdEntry.getTitle());
         assertEquals("This is a test diary entry content.", createdEntry.getContent());
         assertEquals(8, createdEntry.getMoodScore());
@@ -194,11 +194,11 @@ public class DiaryEntryControllerE2ETest {
                 .isPrivate(true)
                 .user(testUser)
                 .build();
-        
+
         DiaryEntry savedEntry = diaryEntryRepository.save(diaryEntry);
 
         // Test getting all diary entries for the user
-        mockMvc.perform(get("/api/diary-entries/user/" + testUser.getId())
+        mockMvc.perform(get("/diary/user/" + testUser.getId())
                 .header("Authorization", "Bearer " + authToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
@@ -206,7 +206,7 @@ public class DiaryEntryControllerE2ETest {
                 .andExpect(jsonPath("$[0].content", is("This is a test diary entry content for reading test.")));
 
         // Test getting a specific diary entry by ID
-        mockMvc.perform(get("/api/diary-entries/" + savedEntry.getId())
+        mockMvc.perform(get("/diary/" + savedEntry.getId())
                 .header("Authorization", "Bearer " + authToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(savedEntry.getId().intValue())))
@@ -235,7 +235,7 @@ public class DiaryEntryControllerE2ETest {
                 .isPrivate(true)
                 .user(testUser)
                 .build();
-        
+
         DiaryEntry savedEntry = diaryEntryRepository.save(diaryEntry);
 
         // Create update request
@@ -249,7 +249,7 @@ public class DiaryEntryControllerE2ETest {
         updateRequest.put("isPrivate", false);
 
         // Perform update request
-        mockMvc.perform(put("/api/diary-entries/" + savedEntry.getId())
+        mockMvc.perform(put("/diary/" + savedEntry.getId())
                 .header("Authorization", "Bearer " + authToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateRequest)))
@@ -266,7 +266,7 @@ public class DiaryEntryControllerE2ETest {
         // Verify diary entry was updated in the database
         DiaryEntry updatedEntry = diaryEntryRepository.findById(savedEntry.getId())
                 .orElseThrow(() -> new AssertionError("Diary entry was not found in the database"));
-        
+
         assertEquals("Updated Diary Entry", updatedEntry.getTitle());
         assertEquals("This is an updated diary entry content.", updatedEntry.getContent());
         assertEquals(9, updatedEntry.getMoodScore());
@@ -293,11 +293,11 @@ public class DiaryEntryControllerE2ETest {
                 .isPrivate(true)
                 .user(testUser)
                 .build();
-        
+
         DiaryEntry savedEntry = diaryEntryRepository.save(diaryEntry);
 
         // Perform delete request
-        mockMvc.perform(delete("/api/diary-entries/" + savedEntry.getId())
+        mockMvc.perform(delete("/diary/" + savedEntry.getId())
                 .header("Authorization", "Bearer " + authToken))
                 .andExpect(status().isNoContent());
 
@@ -322,7 +322,7 @@ public class DiaryEntryControllerE2ETest {
         diaryEntryRequest.put("sleepHours", 7.5);
         diaryEntryRequest.put("isPrivate", true);
 
-        MvcResult createResult = mockMvc.perform(post("/api/diary-entries/user/" + testUser.getId())
+        MvcResult createResult = mockMvc.perform(post("/diary/user/" + testUser.getId())
                 .header("Authorization", "Bearer " + authToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(diaryEntryRequest)))
@@ -336,7 +336,7 @@ public class DiaryEntryControllerE2ETest {
         assertNotNull(diaryEntryId, "Diary entry ID should not be null");
 
         // 2. Read the created diary entry
-        mockMvc.perform(get("/api/diary-entries/" + diaryEntryId)
+        mockMvc.perform(get("/diary/" + diaryEntryId)
                 .header("Authorization", "Bearer " + authToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(diaryEntryId)))
@@ -353,7 +353,7 @@ public class DiaryEntryControllerE2ETest {
         updateRequest.put("sleepHours", 8.0);
         updateRequest.put("isPrivate", false);
 
-        mockMvc.perform(put("/api/diary-entries/" + diaryEntryId)
+        mockMvc.perform(put("/diary/" + diaryEntryId)
                 .header("Authorization", "Bearer " + authToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateRequest)))
@@ -365,7 +365,7 @@ public class DiaryEntryControllerE2ETest {
         // 4. Verify the update in the database
         DiaryEntry updatedEntry = diaryEntryRepository.findById(diaryEntryId.longValue())
                 .orElseThrow(() -> new AssertionError("Diary entry was not found in the database"));
-        
+
         assertEquals("Updated CRUD Test Entry", updatedEntry.getTitle());
         assertEquals("This content has been updated for the CRUD flow test.", updatedEntry.getContent());
         assertEquals(9, updatedEntry.getMoodScore());
@@ -375,7 +375,7 @@ public class DiaryEntryControllerE2ETest {
         assertFalse(updatedEntry.isPrivate());
 
         // 5. Delete the diary entry
-        mockMvc.perform(delete("/api/diary-entries/" + diaryEntryId)
+        mockMvc.perform(delete("/diary/" + diaryEntryId)
                 .header("Authorization", "Bearer " + authToken))
                 .andExpect(status().isNoContent());
 
@@ -384,7 +384,7 @@ public class DiaryEntryControllerE2ETest {
                 "Diary entry should have been deleted from the database");
 
         // 7. Attempt to read the deleted entry (should return 404)
-        mockMvc.perform(get("/api/diary-entries/" + diaryEntryId)
+        mockMvc.perform(get("/diary/" + diaryEntryId)
                 .header("Authorization", "Bearer " + authToken))
                 .andExpect(status().isNotFound());
     }

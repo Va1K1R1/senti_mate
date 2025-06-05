@@ -1,7 +1,9 @@
 package com.example.senti_mate_back_end.controller;
 
 import com.example.senti_mate_back_end.model.DiaryEntry;
+import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.service.DiaryEntryService;
+import com.example.senti_mate_back_end.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -18,14 +22,33 @@ import java.util.List;
  * REST controller for managing diary entry operations
  */
 @RestController
-@RequestMapping("/api/diary-entries")
+@RequestMapping("/diary")
 public class DiaryEntryController {
 
     private final DiaryEntryService diaryEntryService;
+    private final UserService userService;
 
     @Autowired
-    public DiaryEntryController(DiaryEntryService diaryEntryService) {
+    public DiaryEntryController(DiaryEntryService diaryEntryService, UserService userService) {
         this.diaryEntryService = diaryEntryService;
+        this.userService = userService;
+    }
+
+    /**
+     * Get the current user ID from the authentication context
+     * @return the current user ID
+     * @throws IllegalStateException if the user is not authenticated or not found
+     */
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("User not authenticated");
+        }
+
+        String username = authentication.getName();
+        return userService.findByUsername(username)
+                .map(User::getId)
+                .orElseThrow(() -> new IllegalStateException("User not found: " + username));
     }
 
     /**
@@ -40,6 +63,21 @@ public class DiaryEntryController {
             return ResponseEntity.ok(diaryEntries);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * GET /diary : Get all diary entries for the current user
+     * @return the ResponseEntity with status 200 (OK) and the list of diary entries in body
+     */
+    @GetMapping
+    public ResponseEntity<List<DiaryEntry>> getAllDiaryEntries() {
+        try {
+            Long userId = getCurrentUserId();
+            List<DiaryEntry> diaryEntries = diaryEntryService.findAllByUser(userId);
+            return ResponseEntity.ok(diaryEntries);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -136,6 +174,25 @@ public class DiaryEntryController {
     }
 
     /**
+     * GET /diary/range : Get diary entries by date range for the current user
+     * @param startDate the start date
+     * @param endDate the end date
+     * @return the ResponseEntity with status 200 (OK) and the list of diary entries in body
+     */
+    @GetMapping("/range")
+    public ResponseEntity<List<DiaryEntry>> getDiaryEntriesByDateRange(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+        try {
+            Long userId = getCurrentUserId();
+            Page<DiaryEntry> diaryEntries = diaryEntryService.findByDateRange(userId, startDate, endDate, Pageable.unpaged());
+            return ResponseEntity.ok(diaryEntries.getContent());
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
      * GET /api/diary-entries/user/{userId}/filter/mood : Filter diary entries by mood score range
      * @param userId the ID of the user
      * @param minScore the minimum mood score
@@ -171,6 +228,23 @@ public class DiaryEntryController {
             DiaryEntry createdDiaryEntry = diaryEntryService.createDiaryEntry(userId, diaryEntry);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdDiaryEntry);
         } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * POST /diary : Create a new diary entry for the current user
+     * @param diaryEntry the diary entry to create
+     * @return the ResponseEntity with status 201 (Created) and the new diary entry in body
+     */
+    @PostMapping
+    public ResponseEntity<DiaryEntry> createDiaryEntry(
+            @Valid @RequestBody DiaryEntry diaryEntry) {
+        try {
+            Long userId = getCurrentUserId();
+            DiaryEntry createdDiaryEntry = diaryEntryService.createDiaryEntry(userId, diaryEntry);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdDiaryEntry);
+        } catch (IllegalArgumentException | IllegalStateException e) {
             return ResponseEntity.badRequest().build();
         }
     }
