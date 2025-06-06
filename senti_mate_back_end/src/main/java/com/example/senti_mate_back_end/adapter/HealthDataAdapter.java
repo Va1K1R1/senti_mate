@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * Maps frontend API expectations to backend implementations.
  */
 @RestController
-@RequestMapping("/health-data")
+@RequestMapping("/api/adapters/health-data") // 이 부분을 변경
 public class HealthDataAdapter {
 
     private final HealthDataController healthDataController;

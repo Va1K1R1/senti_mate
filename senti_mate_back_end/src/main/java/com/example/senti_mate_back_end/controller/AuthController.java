@@ -1,6 +1,15 @@
 package com.example.senti_mate_back_end.controller;
 
 import com.example.senti_mate_back_end.config.JwtTokenProvider;
+import com.example.senti_mate_back_end.dto.request.LoginRequest;
+import com.example.senti_mate_back_end.dto.request.RefreshTokenRequest;
+import com.example.senti_mate_back_end.dto.request.RegisterRequest;
+import com.example.senti_mate_back_end.dto.response.JwtAuthenticationResponse;
+import com.example.senti_mate_back_end.dto.response.MessageResponse;
+import com.example.senti_mate_back_end.exception.DuplicateResourceException;
+import com.example.senti_mate_back_end.exception.ResourceNotFoundException;
+import com.example.senti_mate_back_end.exception.UnauthorizedException;
+import com.example.senti_mate_back_end.exception.ValidationException;
 import com.example.senti_mate_back_end.model.Role;
 import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.repository.RoleRepository;
@@ -18,11 +27,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
+/**
+ * Controller for authentication operations
+ */
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
@@ -37,6 +50,12 @@ public class AuthController {
     @Autowired
     private RoleRepository roleRepository;
 
+    /**
+     * Authenticate user and generate JWT token
+     *
+     * @param loginRequest the login request with username/email and password
+     * @return JWT authentication response with tokens and user info
+     */
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         String username = loginRequest.getUsername();
@@ -48,22 +67,21 @@ public class AuthController {
             if (userOpt.isPresent()) {
                 username = userOpt.get().getUsername();
             } else {
-                return ResponseEntity
-                        .badRequest()
-                        .body(new MessageResponse("Error: User not found with the provided email!"));
+                throw new ResourceNotFoundException("User", "email", email);
             }
         }
 
         // If neither username nor email is provided, return an error
         if ((username == null || username.isEmpty()) && (email == null || email.isEmpty())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username or email is required!"));
+            throw new ValidationException("username/email", "Username or email is required");
         }
+
+        // Store the final username for use in lambda expressions
+        final String finalUsername = username;
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        username,
+                        finalUsername,
                         loginRequest.getPassword()
                 )
         );
@@ -72,19 +90,34 @@ public class AuthController {
         String jwt = tokenProvider.generateToken(authentication);
 
         // Generate refresh token
-        String refreshToken = tokenProvider.generateRefreshToken(username);
+        String refreshToken = tokenProvider.generateRefreshToken(finalUsername);
+        
+        // Get user information
+        User user = userService.findByUsername(finalUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", finalUsername));
 
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, refreshToken));
+        // Build response with user information
+        JwtAuthenticationResponse response = JwtAuthenticationResponse.builder()
+                .accessToken(jwt)
+                .refreshToken(refreshToken)
+                .user(JwtAuthenticationResponse.UserInfo.fromUser(user))
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
+    /**
+     * Refresh JWT token using refresh token
+     *
+     * @param refreshTokenRequest the refresh token request
+     * @return new JWT authentication response with new tokens
+     */
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         // Validate refresh token
         String refreshToken = refreshTokenRequest.getRefreshToken();
         if (!tokenProvider.validateRefreshToken(refreshToken)) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Invalid refresh token!"));
+            throw new UnauthorizedException("Invalid refresh token");
         }
 
         // Get username from refresh token
@@ -95,48 +128,61 @@ public class AuthController {
 
         // Generate new refresh token
         String newRefreshToken = tokenProvider.generateRefreshToken(username);
+        
+        // Get user information
+        User user = userService.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        return ResponseEntity.ok(new JwtAuthenticationResponse(newAccessToken, newRefreshToken));
+        // Build response with user information
+        JwtAuthenticationResponse response = JwtAuthenticationResponse.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
+                .user(JwtAuthenticationResponse.UserInfo.fromUser(user))
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
+    /**
+     * Register a new user
+     *
+     * @param registerRequest the registration request
+     * @return success message if registration is successful
+     */
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         // Check if username is already taken
-        if (userService.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
+        if (userService.existsByUsername(registerRequest.getUsername())) {
+            throw new DuplicateResourceException("User", "username", registerRequest.getUsername());
         }
 
         // Check if email is already in use
-        if (userService.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+        if (userService.existsByEmail(registerRequest.getEmail())) {
+            throw new DuplicateResourceException("User", "email", registerRequest.getEmail());
         }
 
         // Create new user's account
         User user = User.builder()
-                .username(signUpRequest.getUsername())
-                .email(signUpRequest.getEmail())
-                .password(signUpRequest.getPassword())
-                .firstName(signUpRequest.getFirstName())
-                .lastName(signUpRequest.getLastName())
+                .username(registerRequest.getUsername())
+                .email(registerRequest.getEmail())
+                .password(registerRequest.getPassword())
+                .firstName(registerRequest.getFirstName())
+                .lastName(registerRequest.getLastName())
                 .isActive(true)
                 .isEmailVerified(false)
                 .build();
 
-        Set<String> strRoles = signUpRequest.getRoles();
+        Set<String> strRoles = registerRequest.getRoles();
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null || strRoles.isEmpty()) {
             Role userRole = roleRepository.findByName("USER")
-                    .orElseThrow(() -> new RuntimeException("Error: Role USER is not found."));
+                    .orElseThrow(() -> new ResourceNotFoundException("Role", "name", "USER"));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 Role userRole = roleRepository.findByName(role)
-                        .orElseThrow(() -> new RuntimeException("Error: Role " + role + " is not found."));
+                        .orElseThrow(() -> new ResourceNotFoundException("Role", "name", role));
                 roles.add(userRole);
             });
         }
@@ -146,159 +192,5 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new MessageResponse("User registered successfully!"));
-    }
-
-    public static class LoginRequest {
-        private String username;
-        private String email;
-        private String password;
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
-
-    public static class SignupRequest {
-        private String username;
-        private String email;
-        private String password;
-        private String firstName;
-        private String lastName;
-        private Set<String> roles;
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public Set<String> getRoles() {
-            return roles;
-        }
-
-        public void setRoles(Set<String> roles) {
-            this.roles = roles;
-        }
-    }
-
-    public static class JwtAuthenticationResponse {
-        private String token;
-        private String refreshToken;
-        private String type = "Bearer";
-
-        public JwtAuthenticationResponse(String token) {
-            this.token = token;
-        }
-
-        public JwtAuthenticationResponse(String token, String refreshToken) {
-            this.token = token;
-            this.refreshToken = refreshToken;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        public String getRefreshToken() {
-            return refreshToken;
-        }
-
-        public void setRefreshToken(String refreshToken) {
-            this.refreshToken = refreshToken;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-    }
-
-    public static class MessageResponse {
-        private String message;
-
-        public MessageResponse(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-    }
-
-    public static class RefreshTokenRequest {
-        private String refreshToken;
-
-        public String getRefreshToken() {
-            return refreshToken;
-        }
-
-        public void setRefreshToken(String refreshToken) {
-            this.refreshToken = refreshToken;
-        }
     }
 }

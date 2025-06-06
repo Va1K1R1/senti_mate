@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/senti_mate.iml" filepath="$PROJECT_DIR$/senti_mate.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/senti_mate_back_end.main.iml" filepath="$PROJECT_DIR$/.idea/modules/senti_mate_back_end.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/senti_mate_front/senti_mate_front.iml" filepath="$PROJECT_DIR$/senti_mate_front/senti_mate_front.iml" />
-      <module fileurl="file://$PROJECT_DIR$/senti_mate_front_end/senti_mate_front_end.iml" filepath="$PROJECT_DIR$/senti_mate_front_end/senti_mate_front_end.iml" />
     </modules>
   </component>
 </project>

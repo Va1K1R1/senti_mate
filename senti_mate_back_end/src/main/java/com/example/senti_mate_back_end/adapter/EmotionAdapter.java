@@ -24,7 +24,7 @@ import java.util.Map;
  * Maps frontend API expectations to backend implementations.
  */
 @RestController
-@RequestMapping("/emotions")
+@RequestMapping("/api/adapters/emotions")
 public class EmotionAdapter {
 
     private final EmotionController emotionController;
@@ -46,6 +46,7 @@ public class EmotionAdapter {
     /**
      * Get all emotions for the current user's diary entries.
      * Maps to multiple backend endpoints to collect emotions from all diary entries.
+     * This adapter endpoint is accessible at /api/adapters/emotions
      *
      * @return the ResponseEntity with the list of emotions
      */
@@ -58,7 +59,7 @@ public class EmotionAdapter {
         if (diaryEntries.isEmpty()) {
             return ResponseEntity.ok(List.of());
         }
-        
+
         // For simplicity, just get emotions from the first diary entry
         Long diaryEntryId = diaryEntries.get(0).getId();
         return emotionController.getAllEmotionsByDiaryEntry(diaryEntryId);
@@ -67,6 +68,7 @@ public class EmotionAdapter {
     /**
      * Get a specific emotion by ID.
      * Maps to the backend's /api/emotions/{id} endpoint.
+     * This adapter endpoint is accessible at /api/adapters/emotions/{id}
      *
      * @param id the ID of the emotion
      * @return the ResponseEntity with the emotion
@@ -79,6 +81,7 @@ public class EmotionAdapter {
     /**
      * Analyze text to detect emotions.
      * Maps to the backend's /api/recommendations/analyze-sentiment endpoint.
+     * This adapter endpoint is accessible at /api/adapters/emotions/analyze
      *
      * @param request the text analysis request
      * @return the ResponseEntity with the detected emotions
@@ -94,6 +97,7 @@ public class EmotionAdapter {
      * Get emotion statistics for the current user.
      * Maps to the backend's /api/emotions/user/{userId}/most-common and
      * /api/emotions/user/{userId}/average-intensity endpoints.
+     * This adapter endpoint is accessible at /api/adapters/emotions/stats
      *
      * @param startDate the start date
      * @param endDate the end date
@@ -104,22 +108,22 @@ public class EmotionAdapter {
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         Long userId = getCurrentUserId();
-        
+
         // Get most common emotions
         ResponseEntity<Map<String, Long>> mostCommonResponse = 
                 emotionController.getMostCommonEmotions(userId, 10);
-        
+
         // Get average intensity by emotion
         ResponseEntity<Map<String, Double>> intensityResponse = 
                 emotionController.getAverageIntensityByEmotion(userId);
-        
+
         // Combine the results
         Map<String, Object> stats = new HashMap<>();
         stats.put("mostCommon", mostCommonResponse.getBody());
         stats.put("averageIntensity", intensityResponse.getBody());
         stats.put("startDate", startDate);
         stats.put("endDate", endDate);
-        
+
         return ResponseEntity.ok(stats);
     }
 

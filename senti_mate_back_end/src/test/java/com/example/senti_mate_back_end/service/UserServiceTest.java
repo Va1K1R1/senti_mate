@@ -1,6 +1,12 @@
 package com.example.senti_mate_back_end.service;
 
+import com.example.senti_mate_back_end.dto.request.RegisterRequest;
+import com.example.senti_mate_back_end.dto.request.UpdateUserRequest;
+import com.example.senti_mate_back_end.exception.DuplicateResourceException;
+import com.example.senti_mate_back_end.exception.ResourceNotFoundException;
+import com.example.senti_mate_back_end.model.Role;
 import com.example.senti_mate_back_end.model.User;
+import com.example.senti_mate_back_end.repository.RoleRepository;
 import com.example.senti_mate_back_end.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,9 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,13 +32,18 @@ public class UserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private RoleRepository roleRepository;
+
     @InjectMocks
     private UserService userService;
 
     private User testUser;
+    private Role userRole;
 
     @BeforeEach
     void setUp() {
+        // Initialize test user
         testUser = User.builder()
                 .id(1L)
                 .username("testuser")
@@ -44,6 +53,13 @@ public class UserServiceTest {
                 .lastName("User")
                 .isActive(true)
                 .isEmailVerified(false)
+                .build();
+
+        // Initialize user role
+        userRole = Role.builder()
+                .id(1L)
+                .name("USER")
+                .description("Regular user role")
                 .build();
     }
 
@@ -125,7 +141,7 @@ public class UserServiceTest {
                 .email("new@example.com")
                 .password("password123")
                 .build();
-        
+
         when(userRepository.existsByUsername("newuser")).thenReturn(false);
         when(userRepository.existsByEmail("new@example.com")).thenReturn(false);
         when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
@@ -153,14 +169,14 @@ public class UserServiceTest {
                 .email("new@example.com")
                 .password("password123")
                 .build();
-        
+
         when(userRepository.existsByUsername("existinguser")).thenReturn(true);
 
         // When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             userService.createUser(newUser);
         });
-        
+
         assertEquals("Username already exists", exception.getMessage());
         verify(userRepository, times(1)).existsByUsername("existinguser");
         verify(userRepository, never()).existsByEmail(anyString());
@@ -176,7 +192,7 @@ public class UserServiceTest {
                 .email("existing@example.com")
                 .password("password123")
                 .build();
-        
+
         when(userRepository.existsByUsername("newuser")).thenReturn(false);
         when(userRepository.existsByEmail("existing@example.com")).thenReturn(true);
 
@@ -184,7 +200,7 @@ public class UserServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             userService.createUser(newUser);
         });
-        
+
         assertEquals("Email already exists", exception.getMessage());
         verify(userRepository, times(1)).existsByUsername("newuser");
         verify(userRepository, times(1)).existsByEmail("existing@example.com");
@@ -203,14 +219,14 @@ public class UserServiceTest {
                 .firstName("Old")
                 .lastName("Name")
                 .build();
-        
+
         User updatedDetails = User.builder()
                 .firstName("New")
                 .lastName("Name")
                 .email("existing@example.com") // Same email
                 .password("newPassword")
                 .build();
-        
+
         when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
         when(passwordEncoder.encode("newPassword")).thenReturn("encodedNewPassword");
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -253,7 +269,7 @@ public class UserServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             userService.deleteUser(99L);
         });
-        
+
         assertEquals("User not found with id: 99", exception.getMessage());
         verify(userRepository, times(1)).existsById(99L);
         verify(userRepository, never()).deleteById(anyLong());
@@ -289,5 +305,421 @@ public class UserServiceTest {
         assertTrue(result.isEmailVerified());
         verify(userRepository, times(1)).findById(1L);
         verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void createUser_WithRegisterRequest_ShouldReturnCreatedUser() {
+        // Given
+        RegisterRequest request = RegisterRequest.builder()
+                .username("newuser")
+                .email("new@example.com")
+                .password("Password1!")
+                .firstName("New")
+                .lastName("User")
+                .build();
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmail("new@example.com")).thenReturn(false);
+        when(passwordEncoder.encode("Password1!")).thenReturn("encodedPassword");
+        when(roleRepository.findByName("USER")).thenReturn(Optional.of(userRole));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User savedUser = invocation.getArgument(0);
+            savedUser.setId(2L);
+            return savedUser;
+        });
+
+        // When
+        User result = userService.createUser(request);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(2L, result.getId());
+        assertEquals("newuser", result.getUsername());
+        assertEquals("new@example.com", result.getEmail());
+        assertEquals("encodedPassword", result.getPassword());
+        assertEquals("New", result.getFirstName());
+        assertEquals("User", result.getLastName());
+        assertTrue(result.isActive());
+        assertFalse(result.isEmailVerified());
+        assertNotNull(result.getRoles());
+        assertEquals(1, result.getRoles().size());
+        assertTrue(result.getRoles().contains(userRole));
+
+        verify(userRepository, times(1)).existsByUsername("newuser");
+        verify(userRepository, times(1)).existsByEmail("new@example.com");
+        verify(passwordEncoder, times(1)).encode("Password1!");
+        verify(roleRepository, times(1)).findByName("USER");
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void updateUser_WithUpdateUserRequest_ShouldReturnUpdatedUser() {
+        // Given
+        UpdateUserRequest request = UpdateUserRequest.builder()
+                .firstName("Updated")
+                .lastName("Name")
+                .email("updated@example.com")
+                .password("NewPassword1!")
+                .profilePicture("profile.jpg")
+                .build();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(userRepository.existsByEmail("updated@example.com")).thenReturn(false);
+        when(passwordEncoder.encode("NewPassword1!")).thenReturn("encodedNewPassword");
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // When
+        User result = userService.updateUser(1L, request);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        assertEquals("testuser", result.getUsername()); // Username shouldn't change
+        assertEquals("updated@example.com", result.getEmail());
+        assertEquals("encodedNewPassword", result.getPassword());
+        assertEquals("Updated", result.getFirstName());
+        assertEquals("Name", result.getLastName());
+        assertEquals("profile.jpg", result.getProfilePicture());
+
+        verify(userRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).existsByEmail("updated@example.com");
+        verify(passwordEncoder, times(1)).encode("NewPassword1!");
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void validateUserRegistration_WithValidRequest_ShouldNotThrowException() {
+        // Given
+        RegisterRequest request = RegisterRequest.builder()
+                .username("newuser")
+                .email("new@example.com")
+                .password("Password1!")
+                .firstName("New")
+                .lastName("User")
+                .build();
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmail("new@example.com")).thenReturn(false);
+
+        // When & Then
+        assertDoesNotThrow(() -> userService.validateUserRegistration(request));
+
+        verify(userRepository, times(1)).existsByUsername("newuser");
+        verify(userRepository, times(1)).existsByEmail("new@example.com");
+    }
+
+    @Test
+    void validateUserRegistration_WithExistingUsername_ShouldThrowException() {
+        // Given
+        RegisterRequest request = RegisterRequest.builder()
+                .username("existinguser")
+                .email("new@example.com")
+                .password("Password1!")
+                .firstName("New")
+                .lastName("User")
+                .build();
+
+        when(userRepository.existsByUsername("existinguser")).thenReturn(true);
+
+        // When & Then
+        DuplicateResourceException exception = assertThrows(DuplicateResourceException.class, () -> {
+            userService.validateUserRegistration(request);
+        });
+
+        assertEquals("User already exists with username: existinguser", exception.getMessage());
+
+        verify(userRepository, times(1)).existsByUsername("existinguser");
+        verify(userRepository, never()).existsByEmail(anyString());
+    }
+
+    @Test
+    void validateUserRegistration_WithExistingEmail_ShouldThrowException() {
+        // Given
+        RegisterRequest request = RegisterRequest.builder()
+                .username("newuser")
+                .email("existing@example.com")
+                .password("Password1!")
+                .firstName("New")
+                .lastName("User")
+                .build();
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmail("existing@example.com")).thenReturn(true);
+
+        // When & Then
+        DuplicateResourceException exception = assertThrows(DuplicateResourceException.class, () -> {
+            userService.validateUserRegistration(request);
+        });
+
+        assertEquals("User already exists with email: existing@example.com", exception.getMessage());
+
+        verify(userRepository, times(1)).existsByUsername("newuser");
+        verify(userRepository, times(1)).existsByEmail("existing@example.com");
+    }
+
+    @Test
+    void assignDefaultRole_ShouldAddUserRole() {
+        // Given
+        User user = User.builder()
+                .id(2L)
+                .username("newuser")
+                .email("new@example.com")
+                .password("encodedPassword")
+                .firstName("New")
+                .lastName("User")
+                .isActive(true)
+                .isEmailVerified(false)
+                .roles(new HashSet<>())
+                .build();
+
+        when(roleRepository.findByName("USER")).thenReturn(Optional.of(userRole));
+
+        // When
+        userService.assignDefaultRole(user);
+
+        // Then
+        assertNotNull(user.getRoles());
+        assertEquals(1, user.getRoles().size());
+        assertTrue(user.getRoles().contains(userRole));
+
+        verify(roleRepository, times(1)).findByName("USER");
+    }
+
+    @Test
+    void assignDefaultRole_WhenRoleNotFound_ShouldThrowException() {
+        // Given
+        User user = User.builder()
+                .id(2L)
+                .username("newuser")
+                .email("new@example.com")
+                .password("encodedPassword")
+                .firstName("New")
+                .lastName("User")
+                .isActive(true)
+                .isEmailVerified(false)
+                .roles(new HashSet<>())
+                .build();
+
+        when(roleRepository.findByName("USER")).thenReturn(Optional.empty());
+
+        // When & Then
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            userService.assignDefaultRole(user);
+        });
+
+        assertEquals("Role not found with name: USER", exception.getMessage());
+
+        verify(roleRepository, times(1)).findByName("USER");
+    }
+
+    @Test
+    void createUser_WithRegisterRequest_ShouldReturnCreatedUser() {
+        // Given
+        RegisterRequest request = RegisterRequest.builder()
+                .username("newuser")
+                .email("new@example.com")
+                .password("Password1!")
+                .firstName("New")
+                .lastName("User")
+                .build();
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmail("new@example.com")).thenReturn(false);
+        when(passwordEncoder.encode("Password1!")).thenReturn("encodedPassword");
+        when(roleRepository.findByName("USER")).thenReturn(Optional.of(userRole));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User savedUser = invocation.getArgument(0);
+            savedUser.setId(2L);
+            return savedUser;
+        });
+
+        // When
+        User result = userService.createUser(request);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(2L, result.getId());
+        assertEquals("newuser", result.getUsername());
+        assertEquals("new@example.com", result.getEmail());
+        assertEquals("encodedPassword", result.getPassword());
+        assertEquals("New", result.getFirstName());
+        assertEquals("User", result.getLastName());
+        assertTrue(result.isActive());
+        assertFalse(result.isEmailVerified());
+        assertNotNull(result.getRoles());
+        assertEquals(1, result.getRoles().size());
+        assertTrue(result.getRoles().contains(userRole));
+
+        verify(userRepository, times(1)).existsByUsername("newuser");
+        verify(userRepository, times(1)).existsByEmail("new@example.com");
+        verify(passwordEncoder, times(1)).encode("Password1!");
+        verify(roleRepository, times(1)).findByName("USER");
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void updateUser_WithUpdateUserRequest_ShouldReturnUpdatedUser() {
+        // Given
+        UpdateUserRequest request = UpdateUserRequest.builder()
+                .firstName("Updated")
+                .lastName("Name")
+                .email("updated@example.com")
+                .password("NewPassword1!")
+                .profilePicture("profile.jpg")
+                .build();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(userRepository.existsByEmail("updated@example.com")).thenReturn(false);
+        when(passwordEncoder.encode("NewPassword1!")).thenReturn("encodedNewPassword");
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // When
+        User result = userService.updateUser(1L, request);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        assertEquals("testuser", result.getUsername()); // Username shouldn't change
+        assertEquals("updated@example.com", result.getEmail());
+        assertEquals("encodedNewPassword", result.getPassword());
+        assertEquals("Updated", result.getFirstName());
+        assertEquals("Name", result.getLastName());
+        assertEquals("profile.jpg", result.getProfilePicture());
+
+        verify(userRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).existsByEmail("updated@example.com");
+        verify(passwordEncoder, times(1)).encode("NewPassword1!");
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void validateUserRegistration_WithValidRequest_ShouldNotThrowException() {
+        // Given
+        RegisterRequest request = RegisterRequest.builder()
+                .username("newuser")
+                .email("new@example.com")
+                .password("Password1!")
+                .firstName("New")
+                .lastName("User")
+                .build();
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmail("new@example.com")).thenReturn(false);
+
+        // When & Then
+        assertDoesNotThrow(() -> userService.validateUserRegistration(request));
+
+        verify(userRepository, times(1)).existsByUsername("newuser");
+        verify(userRepository, times(1)).existsByEmail("new@example.com");
+    }
+
+    @Test
+    void validateUserRegistration_WithExistingUsername_ShouldThrowException() {
+        // Given
+        RegisterRequest request = RegisterRequest.builder()
+                .username("existinguser")
+                .email("new@example.com")
+                .password("Password1!")
+                .firstName("New")
+                .lastName("User")
+                .build();
+
+        when(userRepository.existsByUsername("existinguser")).thenReturn(true);
+
+        // When & Then
+        DuplicateResourceException exception = assertThrows(DuplicateResourceException.class, () -> {
+            userService.validateUserRegistration(request);
+        });
+
+        assertEquals("User", exception.getResourceName());
+        assertEquals("username", exception.getFieldName());
+        assertEquals("existinguser", exception.getFieldValue());
+
+        verify(userRepository, times(1)).existsByUsername("existinguser");
+        verify(userRepository, never()).existsByEmail(anyString());
+    }
+
+    @Test
+    void validateUserRegistration_WithExistingEmail_ShouldThrowException() {
+        // Given
+        RegisterRequest request = RegisterRequest.builder()
+                .username("newuser")
+                .email("existing@example.com")
+                .password("Password1!")
+                .firstName("New")
+                .lastName("User")
+                .build();
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmail("existing@example.com")).thenReturn(true);
+
+        // When & Then
+        DuplicateResourceException exception = assertThrows(DuplicateResourceException.class, () -> {
+            userService.validateUserRegistration(request);
+        });
+
+        assertEquals("User", exception.getResourceName());
+        assertEquals("email", exception.getFieldName());
+        assertEquals("existing@example.com", exception.getFieldValue());
+
+        verify(userRepository, times(1)).existsByUsername("newuser");
+        verify(userRepository, times(1)).existsByEmail("existing@example.com");
+    }
+
+    @Test
+    void assignDefaultRole_ShouldAddUserRole() {
+        // Given
+        User user = User.builder()
+                .id(2L)
+                .username("newuser")
+                .email("new@example.com")
+                .password("encodedPassword")
+                .firstName("New")
+                .lastName("User")
+                .isActive(true)
+                .isEmailVerified(false)
+                .roles(new HashSet<>())
+                .build();
+
+        when(roleRepository.findByName("USER")).thenReturn(Optional.of(userRole));
+
+        // When
+        userService.assignDefaultRole(user);
+
+        // Then
+        assertNotNull(user.getRoles());
+        assertEquals(1, user.getRoles().size());
+        assertTrue(user.getRoles().contains(userRole));
+
+        verify(roleRepository, times(1)).findByName("USER");
+    }
+
+    @Test
+    void assignDefaultRole_WhenRoleNotFound_ShouldThrowException() {
+        // Given
+        User user = User.builder()
+                .id(2L)
+                .username("newuser")
+                .email("new@example.com")
+                .password("encodedPassword")
+                .firstName("New")
+                .lastName("User")
+                .isActive(true)
+                .isEmailVerified(false)
+                .roles(new HashSet<>())
+                .build();
+
+        when(roleRepository.findByName("USER")).thenReturn(Optional.empty());
+
+        // When & Then
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            userService.assignDefaultRole(user);
+        });
+
+        assertEquals("Role", exception.getResourceName());
+        assertEquals("name", exception.getFieldName());
+        assertEquals("USER", exception.getFieldValue());
+
+        verify(roleRepository, times(1)).findByName("USER");
     }
 }

@@ -461,12 +461,28 @@ public class RecommendationController {
                 userId = getCurrentUserId();
             }
 
-            List<Recommendation> recommendations = chatGPTService.generateRecommendations(userId);
+            List<Recommendation> recommendations = recommendationService.generatePersonalizedRecommendations(userId);
             return ResponseEntity.status(HttpStatus.CREATED).body(recommendations);
         } catch (Exception e) {
             logger.error("Error generating recommendations", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to generate recommendations: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * GET /api/recommendations/user/{userId}/stats : Get recommendation statistics for a user
+     * @param userId the ID of the user
+     * @return the ResponseEntity with status 200 (OK) and the statistics in body
+     */
+    @GetMapping("/user/{userId}/stats")
+    public ResponseEntity<?> getRecommendationStats(@PathVariable Long userId) {
+        try {
+            return ResponseEntity.ok(recommendationService.getRecommendationStats(userId));
+        } catch (Exception e) {
+            logger.error("Error getting recommendation statistics", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to get recommendation statistics: " + e.getMessage()));
         }
     }
 

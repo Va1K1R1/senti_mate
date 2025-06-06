@@ -1,6 +1,5 @@
 package com.example.senti_mate_back_end.service;
 
-import com.example.senti_mate_back_end.model.Role;
 import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,57 +11,45 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Custom implementation of UserDetailsService that uses the database
+ * Service for loading user-specific data for authentication
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
-
     @Autowired
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private UserRepository userRepository;
 
+    /**
+     * Load user by username for authentication
+     *
+     * @param username the username to load
+     * @return UserDetails object for Spring Security
+     * @throws UsernameNotFoundException if user not found
+     */
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        return buildUserDetails(user);
-    }
+        // Convert User roles to Spring Security GrantedAuthority objects
+        List<GrantedAuthority> authorities = user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                .collect(Collectors.toList());
 
-    /**
-     * Build UserDetails from User entity
-     * @param user the user entity
-     * @return UserDetails object
-     */
-    private UserDetails buildUserDetails(User user) {
+        // Create and return a Spring Security User object
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
                 user.isActive(),
-                true, // accountNonExpired
-                true, // credentialsNonExpired
-                true, // accountNonLocked
-                getAuthorities(user)
+                true,  // accountNonExpired
+                true,  // credentialsNonExpired
+                true,  // accountNonLocked
+                authorities
         );
-    }
-
-    /**
-     * Get authorities from user roles
-     * @param user the user entity
-     * @return collection of granted authorities
-     */
-    private Collection<? extends GrantedAuthority> getAuthorities(User user) {
-        return user.getRoles().stream()
-                .map(Role::getName)
-                .map(roleName -> new SimpleGrantedAuthority("ROLE_" + roleName))
-                .collect(Collectors.toList());
     }
 }

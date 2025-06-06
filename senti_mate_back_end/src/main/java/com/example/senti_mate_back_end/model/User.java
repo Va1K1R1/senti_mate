@@ -1,5 +1,7 @@
 package com.example.senti_mate_back_end.model;
 
+import com.example.senti_mate_back_end.converter.StringListConverter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -45,6 +47,7 @@ public class User {
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters")
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column(name = "first_name")
@@ -57,10 +60,37 @@ public class User {
     private String profilePicture;
 
     @Column(name = "is_active", nullable = false)
+    @Builder.Default
     private boolean isActive = true;
 
     @Column(name = "is_email_verified", nullable = false)
+    @Builder.Default
     private boolean isEmailVerified = false;
+
+    // Samsung Health integration fields
+    @Column(name = "samsung_health_connected")
+    @Builder.Default
+    private Boolean samsungHealthConnected = false;
+
+    @Column(name = "samsung_health_user_id")
+    private String samsungHealthUserId;
+
+    @Column(name = "samsung_health_connected_at")
+    private LocalDateTime samsungHealthConnectedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "samsung_health_sync_status")
+    @Builder.Default
+    private SyncStatus samsungHealthSyncStatus = SyncStatus.NOT_CONNECTED;
+
+    @Column(name = "last_samsung_health_sync")
+    private LocalDateTime lastSamsungHealthSync;
+
+    // Health goals (stored as JSON)
+    @Column(name = "health_goals", columnDefinition = "TEXT")
+    @Convert(converter = StringListConverter.class)
+    @Builder.Default
+    private List<String> healthGoals = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -71,12 +101,15 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<DiaryEntry> diaryEntries = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<HealthData> healthData = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Recommendation> recommendations = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -85,5 +118,41 @@ public class User {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @Builder.Default
     private Set<Role> roles = new HashSet<>();
+
+    /**
+     * Connect Samsung Health account
+     * @param samsungHealthUserId the Samsung Health user ID
+     */
+    public void connectSamsungHealth(String samsungHealthUserId) {
+        this.samsungHealthConnected = true;
+        this.samsungHealthUserId = samsungHealthUserId;
+        this.samsungHealthConnectedAt = LocalDateTime.now();
+        this.samsungHealthSyncStatus = SyncStatus.CONNECTED;
+    }
+
+    /**
+     * Disconnect Samsung Health account
+     */
+    public void disconnectSamsungHealth() {
+        this.samsungHealthConnected = false;
+        this.samsungHealthUserId = null;
+        this.samsungHealthSyncStatus = SyncStatus.NOT_CONNECTED;
+    }
+
+    /**
+     * Update last sync time
+     */
+    public void updateLastSyncTime() {
+        this.lastSamsungHealthSync = LocalDateTime.now();
+        this.samsungHealthSyncStatus = SyncStatus.SYNCED;
+    }
+
+    /**
+     * Sync status enum
+     */
+    public enum SyncStatus {
+        NOT_CONNECTED, CONNECTED, SYNCING, SYNCED, ERROR
+    }
 }

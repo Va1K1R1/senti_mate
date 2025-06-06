@@ -22,7 +22,7 @@ import java.util.List;
  * REST controller for managing diary entry operations
  */
 @RestController
-@RequestMapping("/diary")
+@RequestMapping("/api/diary")
 public class DiaryEntryController {
 
     private final DiaryEntryService diaryEntryService;
