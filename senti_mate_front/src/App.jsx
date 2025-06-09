@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
 // Import context providers
+import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { DiaryProvider } from './context/DiaryContext';
 import { TodoProvider } from './context/TodoContext';
@@ -30,70 +31,72 @@ import ProtectedRoute from './components/common/ProtectedRoute';
  */
 function App() {
   return (
-    <AuthProvider>
-      <DiaryProvider>
-        <TodoProvider>
-          <HealthDataProvider>
-            <Router>
-              <div className="app">
-                <Routes>
-                  {/* Public routes */}
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
+    <ThemeProvider>
+      <AuthProvider>
+        <DiaryProvider>
+          <TodoProvider>
+            <HealthDataProvider>
+              <Router>
+                <div className="app">
+                  <Routes>
+                    {/* Public routes */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
 
-                  {/* Protected routes */}
-                  <Route path="/" element={
-                    <ProtectedRoute>
-                      <Home />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/todo" element={
-                    <ProtectedRoute>
-                      <Todo />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/dashboard" element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/settings" element={
-                    <ProtectedRoute>
-                      <Settings />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/profile" element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/health" element={
-                    <ProtectedRoute>
-                      <Health />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/diary/new" element={
-                    <ProtectedRoute>
-                      <New />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/diary/edit/:id" element={
-                    <ProtectedRoute>
-                      <Edit />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/diary/:id" element={
-                    <ProtectedRoute>
-                      <Diary />
-                    </ProtectedRoute>
-                  } />
-              </Routes>
-            </div>
-          </Router>
-          </HealthDataProvider>
-        </TodoProvider>
-      </DiaryProvider>
-    </AuthProvider>
+                    {/* Protected routes */}
+                    <Route path="/" element={
+                      <ProtectedRoute>
+                        <Home />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/todo" element={
+                      <ProtectedRoute>
+                        <Todo />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/dashboard" element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/settings" element={
+                      <ProtectedRoute>
+                        <Settings />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/profile" element={
+                      <ProtectedRoute>
+                        <Profile />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/health" element={
+                      <ProtectedRoute>
+                        <Health />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/diary/new" element={
+                      <ProtectedRoute>
+                        <New />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/diary/edit/:id" element={
+                      <ProtectedRoute>
+                        <Edit />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/diary/:id" element={
+                      <ProtectedRoute>
+                        <Diary />
+                      </ProtectedRoute>
+                    } />
+                  </Routes>
+                </div>
+              </Router>
+            </HealthDataProvider>
+          </TodoProvider>
+        </DiaryProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

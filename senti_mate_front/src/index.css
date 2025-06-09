@@ -11,6 +11,10 @@
   --background-color: #f5f5f5;
   --background-light: #ffffff;
   --background-dark: #e0e0e0;
+  --card-background: #ffffff;
+  --border-color: #e0e0e0;
+  --border-color-light: #f0f0f0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
 
   /* Emotion colors */
   --emotion-happy: #FFD700;
@@ -87,4 +91,64 @@ html, body, #root {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-light);
+}
+
+/* Light Theme (default) */
+.light-theme {
+  --text-color: #333333;
+  --text-light: #666666;
+  --text-lighter: #999999;
+  --background-color: #f5f5f5;
+  --background-light: #ffffff;
+  --background-dark: #e0e0e0;
+  --card-background: #ffffff;
+  --border-color: #e0e0e0;
+  --border-color-light: #f0f0f0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --primary-color: #4CAF50;
+  --primary-light: #80E27E;
+  --primary-dark: #087f23;
+}
+
+/* Dark Theme */
+.dark-theme {
+  --text-color: #f5f5f5;
+  --text-light: #e0e0e0;
+  --text-lighter: #b0b0b0;
+  --background-color: #121212;
+  --background-light: #1e1e1e;
+  --background-dark: #000000;
+  --card-background: #1e1e1e;
+  --border-color: #333333;
+  --border-color-light: #444444;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --primary-color: #80E27E;
+  --primary-light: #b0f7b0;
+  --primary-dark: #4CAF50;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-normal);
+}
+
+.theme-toggle:hover {
+  background-color: var(--background-dark);
+}
+
+.light-theme .theme-toggle {
+  color: var(--text-color);
+}
+
+.dark-theme .theme-toggle {
+  color: var(--text-light);
 }

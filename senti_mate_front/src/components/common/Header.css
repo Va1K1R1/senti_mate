@@ -1,7 +1,7 @@
 /* Header component styles */
 .header {
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--background-light);
+  box-shadow: 0 2px 4px var(--shadow-color);
   padding: 15px 0;
   position: sticky;
   top: 0;
@@ -24,13 +24,13 @@
 }
 
 .app-title a {
-  color: #4CAF50;
+  color: var(--primary-color);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .app-title a:hover {
-  color: #45a049;
+  color: var(--primary-dark);
 }
 
 .nav-menu {
@@ -56,7 +56,7 @@
 }
 
 .nav-menu li a {
-  color: #333;
+  color: var(--text-color);
   text-decoration: none;
   font-weight: 500;
   padding: 10px 0;
@@ -64,11 +64,11 @@
 }
 
 .nav-menu li a:hover {
-  color: #4CAF50;
+  color: var(--primary-color);
 }
 
 .nav-menu li.active a {
-  color: #4CAF50;
+  color: var(--primary-color);
 }
 
 .nav-menu li.active::after {
@@ -78,8 +78,18 @@
   left: 0;
   width: 100%;
   height: 3px;
-  background-color: #4CAF50;
+  background-color: var(--primary-color);
   border-radius: 3px;
+}
+
+/* Theme toggle container */
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle-container .theme-toggle {
+  margin-left: 5px;
 }
 
 /* Responsive styles */
@@ -104,7 +114,7 @@
     margin-left: 0;
     margin-top: 10px;
     padding-top: 10px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-color-light);
     width: 100%;
   }
 
