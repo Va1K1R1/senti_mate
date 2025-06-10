@@ -1,85 +1,65 @@
+// src/component/Login.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Login.css";
 import Header from "./Header.jsx";
 import AuthService from "../services/AuthService";
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLoginSuccess, onLoginError }) => {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
         rememberMe: false
     });
-
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData({
-            ...formData,
+        setFormData(prev => ({
+            ...prev,
             [name]: type === "checkbox" ? checked : value
-        });
-
-        // Clear error when user starts typing
+        }));
         if (errors[name]) {
-            setErrors({
-                ...errors,
-                [name]: ""
-            });
+            setErrors(prev => ({ ...prev, [name]: "" }));
         }
     };
 
     const validateForm = () => {
-        const newErrors = {};
-
-        if (!formData.email) {
-            newErrors.email = "Email is required";
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = "Email is invalid";
-        }
-
-        if (!formData.password) {
-            newErrors.password = "Password is required";
-        } else if (formData.password.length < 6) {
-            newErrors.password = "Password must be at least 6 characters";
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
+        const newErr = {};
+        if (!formData.email) newErr.email = "Email is required";
+        else if (!/\S+@\S+\.\S+/.test(formData.email)) newErr.email = "Email is invalid";
+        if (!formData.password) newErr.password = "Password is required";
+        else if (formData.password.length < 6) newErr.password = "Password must be at least 6 characters";
+        setErrors(newErr);
+        return Object.keys(newErr).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!validateForm()) {
-            return;
-        }
-
+        if (!validateForm()) return;
         setIsLoading(true);
-
         try {
-            // Use AuthService to login
-            const response = await AuthService.login(formData.email, formData.password);
-
-            // Call the onLogin callback with the user data
-            if (onLogin) {
-                onLogin(response);
-            }
-        } catch (error) {
-            console.error("Login error:", error);
-            setErrors({
-                form: "Login failed. Please try again."
-            });
+            // AuthService.login(username, password) 호출
+            await AuthService.login(formData.email, formData.password);
+            onLoginSuccess();
+        } catch (err) {
+            // 서버 메시지를 우선 보여주고, 없으면 기본 메시지 사용
+            const msg = err.response?.data?.message || err.message || "Login failed. Please try again.";
+            setErrors({ form: msg });
+            onLoginError(msg);
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div> <Header title="Login"
-                      leftChild={<Link to="/">← 홈으로</Link>}
-                      rightChild={null}/>
+        <div>
+            <Header
+                title="Login"
+                leftChild={<Link to="/">← 홈으로</Link>}
+                rightChild={null}
+            />
             <div className="Login">
                 <div className="LoginContainer">
                     <div className="LoginHeader">

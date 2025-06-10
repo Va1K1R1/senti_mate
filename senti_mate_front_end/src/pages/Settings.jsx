@@ -1,122 +1,82 @@
 import React, { useState } from "react";
-import Header from "../component/Header";
-import Footer from "../component/Footer";
+import Header from "../component/Header.jsx";
+import Footer from "../component/Footer.jsx";
 
-/**
- * Settings page component
- * Allows users to configure application preferences
- */
 const SettingsPage = () => {
-  // Sample settings state - in a real app, these would be saved to user preferences
   const [settings, setSettings] = useState({
     darkMode: false,
     emailNotifications: true,
     pushNotifications: false,
     language: "english",
-    privacyLevel: "friends"
+    privacyLevel: "private"
   });
 
-  const handleToggleSetting = (setting) => {
-    setSettings({
-      ...settings,
-      [setting]: !settings[setting]
-    });
-  };
-
-  const handleSelectChange = (setting, value) => {
-    setSettings({
-      ...settings,
-      [setting]: value
-    });
-  };
-
-  const handleSaveSettings = () => {
-    // In a real app, this would save settings to the backend
-    alert("Settings saved successfully!");
-  };
+  const toggle = key => setSettings(prev => ({ ...prev, [key]: !prev[key] }));
+  const change = (key, v) => setSettings(prev => ({ ...prev, [key]: v }));
 
   return (
-    <div className="settings-page">
-      <Header />
-      <div className="settings-container">
-        <h1>Settings</h1>
-        <p className="settings-subtitle">Customize your SentiMate experience</p>
-        
-        <div className="settings-section">
-          <h2>Appearance</h2>
-          <div className="setting-item">
-            <label htmlFor="darkMode">Dark Mode</label>
-            <input
-              type="checkbox"
-              id="darkMode"
-              checked={settings.darkMode}
-              onChange={() => handleToggleSetting("darkMode")}
-            />
-          </div>
-        </div>
-        
-        <div className="settings-section">
-          <h2>Notifications</h2>
-          <div className="setting-item">
-            <label htmlFor="emailNotifications">Email Notifications</label>
-            <input
-              type="checkbox"
-              id="emailNotifications"
-              checked={settings.emailNotifications}
-              onChange={() => handleToggleSetting("emailNotifications")}
-            />
-          </div>
-          <div className="setting-item">
-            <label htmlFor="pushNotifications">Push Notifications</label>
-            <input
-              type="checkbox"
-              id="pushNotifications"
-              checked={settings.pushNotifications}
-              onChange={() => handleToggleSetting("pushNotifications")}
-            />
-          </div>
-        </div>
-        
-        <div className="settings-section">
-          <h2>Language</h2>
-          <div className="setting-item">
-            <label htmlFor="language">Select Language</label>
+      <div className="settings-page">
+        <Header />
+        <div className="settings-container">
+          <h1>Settings</h1>
+          <section>
+            <h2>Appearance</h2>
+            <label>
+              <input
+                  type="checkbox"
+                  checked={settings.darkMode}
+                  onChange={() => toggle("darkMode")}
+              />
+              Dark Mode
+            </label>
+          </section>
+          <section>
+            <h2>Notifications</h2>
+            <label>
+              <input
+                  type="checkbox"
+                  checked={settings.emailNotifications}
+                  onChange={() => toggle("emailNotifications")}
+              />
+              Email Notifications
+            </label>
+            <label>
+              <input
+                  type="checkbox"
+                  checked={settings.pushNotifications}
+                  onChange={() => toggle("pushNotifications")}
+              />
+              Push Notifications
+            </label>
+          </section>
+          <section>
+            <h2>Language</h2>
             <select
-              id="language"
-              value={settings.language}
-              onChange={(e) => handleSelectChange("language", e.target.value)}
+                value={settings.language}
+                onChange={e => change("language", e.target.value)}
             >
               <option value="english">English</option>
-              <option value="spanish">Spanish</option>
-              <option value="french">French</option>
-              <option value="german">German</option>
               <option value="korean">Korean</option>
+              <option value="spanish">Spanish</option>
             </select>
-          </div>
-        </div>
-        
-        <div className="settings-section">
-          <h2>Privacy</h2>
-          <div className="setting-item">
-            <label htmlFor="privacyLevel">Who can see your diary</label>
+          </section>
+          <section>
+            <h2>Privacy</h2>
             <select
-              id="privacyLevel"
-              value={settings.privacyLevel}
-              onChange={(e) => handleSelectChange("privacyLevel", e.target.value)}
+                value={settings.privacyLevel}
+                onChange={e => change("privacyLevel", e.target.value)}
             >
               <option value="private">Only me</option>
               <option value="friends">Friends</option>
               <option value="public">Public</option>
             </select>
-          </div>
+          </section>
+          <button className="save-settings-button" onClick={() => alert("Settings saved!")}>
+            Save Settings
+          </button>
         </div>
-        
-        <button className="save-settings-button" onClick={handleSaveSettings}>
-          Save Settings
-        </button>
+        <Footer />
       </div>
-      <Footer />
-    </div>
   );
 };
 

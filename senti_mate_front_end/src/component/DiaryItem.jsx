@@ -18,7 +18,7 @@ const DiaryItem = ({ id, emotionId, date, content }) => {
                     <span>{emotionEmojiMap[emotionId]}</span>
                     <span>{new Date(date).toLocaleDateString()}</span>
                 </div>
-                <div className="content">{content.slice(0, 25) + "..."}</div>
+                <div className="content">{content}</div>
             </Link>
         </div>
     );

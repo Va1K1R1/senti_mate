@@ -1,34 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import Header from "../component/Header.jsx";
-import Button from "../component/Button.jsx";
-import Editor from "../component/Editor.jsx";
+import Footer from "../component/Footer.jsx";
+import DiaryService from "../services/DiaryService";
 
-const New = () => {
+const NewEntry = () => {
     const navigate = useNavigate();
+    const [title, setTitle]       = useState("");
+    const [content, setContent]   = useState("");
+    const [emotionId, setEmotion] = useState(null);
+    const [error, setError]       = useState("");
 
-    const goBack = () => {
-        navigate(-1);
-    };
-
-    // 실제 저장 로직 대신 예시로 alert 처리
-    const onSave = (data) => {
-        console.log("저장된 일기 데이터:", data);
-        alert("새 일기가 저장되었습니다!");
-        navigate("/", { replace: true });
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            // createEntry 사용
+            await DiaryService.createEntry({ title, content, emotionId });
+            navigate("/");
+        } catch (err) {
+            console.error(err);
+            setError(err.message);
+        }
     };
 
     return (
         <div>
             <Header
-                title="새로운 감정일기"
-                leftChild={<Button text="< 뒤로가기" onClick={goBack} />}
-                rightChild={<Button text="저장" onClick={() => onSave(/*임시 예시*/) } />}
+                title="새 일기 작성"
+                leftChild={<div onClick={() => navigate(-1)}>← 뒤로가기</div>}
+                rightChild={null}
             />
-            <Editor />
+            <form onSubmit={handleSubmit}>
+                {error && <p className="error-message">{error}</p>}
+                <input
+                    value={title}
+                    onChange={e => setTitle(e.target.value)}
+                    placeholder="제목"
+                />
+                <textarea
+                    value={content}
+                    onChange={e => setContent(e.target.value)}
+                    placeholder="내용"
+                />
+                {/* emotion 선택 UI */}
+                <button type="submit">저장</button>
+            </form>
+            <Footer />
         </div>
     );
 };
 
-export default New;
+export default NewEntry;

@@ -1,43 +1,45 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "../component/Header.jsx";
 import Editor from "../component/Editor.jsx";
-import { updateDiaryEntry } from "../store/slices/diarySlice";
+import DiaryService from "../services/DiaryService";
 
-const Edit = () => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+const EditEntry = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
+    const [entry, setEntry] = useState(null);
 
-    const diaryEntries = useSelector((state) => state.diary.diaryEntries);
-    const data = diaryEntries.find((entry) => String(entry.id) === id);
+    useEffect(() => {
+        DiaryService.getEntryById(id)
+            .then(data => setEntry(data))
+            .catch(console.error);
+    }, [id]);
 
-    if (!data) {
-        return (
-            <div style={{ padding: "20px", textAlign: "center" }}>
-                <p>수정할 일기를 찾을 수 없어요.</p>
-                <div className="left-child" onClick={() => navigate(-1)}>← 뒤로가기</div>
-            </div>
-        );
-    }
-
-    const onSubmitEdit = (updatedData) => {
-        dispatch(updateDiaryEntry(updatedData));
-        alert("일기가 수정되었습니다.");
-        navigate(`/diary/${id}`);
+    const handleSave = async (updated) => {
+        try {
+            // updateEntry 사용
+            await DiaryService.updateEntry(id, updated);
+            navigate(`/diary/${id}`);
+        } catch (err) {
+            alert(err.message);
+        }
     };
+
+    if (!entry) return <div>로딩 중…</div>;
 
     return (
         <>
             <Header
                 title="일기 수정"
-                leftChild={<div className="left-child" onClick={() => navigate(-1)}>← 뒤로가기</div>}
+                leftChild={<div onClick={() => navigate(-1)}>← 뒤로가기</div>}
             />
-            <Editor isEditMode initialData={data} onSubmit={onSubmitEdit} />
+            <Editor
+                isEditMode
+                initialData={entry}
+                onSubmit={handleSave}
+            />
         </>
     );
 };
 
-export default Edit;
+export default EditEntry;
