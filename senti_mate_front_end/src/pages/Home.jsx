@@ -34,7 +34,7 @@ const Home = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
                 <Header
                     title="Senti Mate"
                     leftChild={<Link to="/todo">To do</Link>}
-                    rightChild={<Link to="/diary">Diary</Link>}
+                    rightChild={<Link to="/DiaryPage">Diary</Link>}
                 />
 
                 {/* 메인 컨텐츠 */}
@@ -47,7 +47,7 @@ const Home = ({ todoList, addTodo, toggleTodo, deleteTodo }) => {
                                 <Clock />
                             </div>
                             <div className="AdviceBox">
-                                <span className="AdviceIcon">🤖</span>
+                                <span className="AdviceIcon">·̑.̮·̑</span>
                                 <p className="AdviceText">{advice}</p>
                             </div>
                         </div>

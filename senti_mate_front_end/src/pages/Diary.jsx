@@ -1,17 +1,19 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
-
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Header from "../component/Header.jsx";
-import useDiary from "../hooks/useDiary.jsx";
 import Viewer from "../component/Viewer.jsx";
 import { getFormattedDate } from "../util.jsx";
+import Footer from "../component/Footer.jsx";
 
 const Diary = () => {
-    const navigate = useNavigate();
     const { id } = useParams();
-    const data = useDiary(id);
+    const navigate = useNavigate();
+    const diaryEntries = useSelector((state) => state.diary.diaryEntries);
 
-    if (!data) {
+    const entry = diaryEntries.find((item) => String(item.id) === String(id));
+
+    if (!entry) {
         return (
             <div style={{ padding: "20px", textAlign: "center" }}>
                 <p>해당 일기를 찾을 수 없어요.</p>
@@ -26,14 +28,7 @@ const Diary = () => {
         );
     }
 
-    const goBack = () => {
-        navigate(-1);
-    };
-    const goEdit = () => {
-        navigate(`/edit/${id}`);
-    };
-
-    const { date, emotionId, content } = data;
+    const { date, emotionId, content } = entry;
     const title = `${getFormattedDate(new Date(date))}`;
 
     return (
@@ -41,25 +36,21 @@ const Diary = () => {
             <Header
                 title={title}
                 leftChild={
-                    <div
-                        className="left-child"
-                        onClick={goBack}
-                    >
+                    <div className="left-child" onClick={() => navigate(-1)}>
                         ← 뒤로가기
                     </div>
                 }
                 rightChild={
-                    <div
-                        className="right-child"
-                        onClick={goEdit}
-                    >
+                    <div className="right-child" onClick={() => navigate(`/diary/edit/${id}`)}>
                         수정하기
                     </div>
                 }
             />
-
             <Viewer content={content} emotionId={emotionId} />
         </div>
+
+
+
     );
 };
 

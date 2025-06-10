@@ -2,49 +2,63 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #8eb695;
+    background-color: #afceaf;
     color: white;
-    padding: 10px 20px;
-    margin-bottom: 2%;
+    padding: 14px 24px;
     position: relative;
+
+    border-radius: 0 0 20px 20px;
+    animation: fadeDown 0.4s ease-in-out;
 }
 
 .Header .title {
     margin: 0;
-    font-family: "Nothing You Could Do";
-    font-size: 1.5rem;
+    font-family: var(--font-accent);
+    font-size: 1.7rem;
+    letter-spacing: 1px;
     color: white;
 }
-.nav-left {
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
-}
+
+.nav-left,
 .nav-right {
     display: flex;
-    flex-direction: row;
-    gap: 12px;
-}
-.nav-button:hover {
-    transform: translateY(-2px);
-    color: var(--primary-color-dark);
+    gap: 14px;
+    align-items: center;
 }
 
 .left-child,
 .right-child {
-    background-color: var(--secondary-color);
-    color: white;
     font-size: 1rem;
-
+    background-color: #aecdae;
+    color: #4d774e;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
+
 .left-child:hover,
 .right-child:hover {
+    background-color: #8db594;
     transform: translateY(-2px);
-    color: var(--primary-color-dark);
+    color: #2f5c31;
 }
+
 .center-title {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;
+}
+
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

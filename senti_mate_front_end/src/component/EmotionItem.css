@@ -2,17 +2,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px;
+    padding: 8px;
     cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.2s;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
 }
 
-.EmotionItem img {
-    width: 50px;
-    height: 50px;
+.EmotionItem:hover {
+    background-color: #f0f0f0;
 }
 
 .EmotionItem.selected {
-    background-color: #dde8ff;
+    border: 2px solid var(--primary-color);
+    background-color: #e7fce7;
+}
+
+.emoji {
+    font-size: 32px;
+    margin-bottom: 6px;
 }

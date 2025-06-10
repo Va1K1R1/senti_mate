@@ -7,7 +7,7 @@ const EmotionItem = ({ emotion, isSelected, onClick }) => {
             className={["EmotionItem", isSelected ? "selected" : ""].join(" ")}
             onClick={() => onClick(emotion.id)}
         >
-            <img src={emotion.image} alt={emotion.name} />
+            <div className="emoji">{emotion.emoji}</div>
             <span>{emotion.name}</span>
         </div>
     );

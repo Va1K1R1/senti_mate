@@ -22,6 +22,7 @@ import ThemeToggle from "./component/ThemeToggle.jsx";
 import store from "./store/store";
 import { addTodo, toggleTodo, deleteTodo } from "./store/slices/todoSlice";
 import { ThemeProvider } from "./styles/theme.jsx";
+import DiaryPage from "./component/DiaryPage.jsx";
 
 function AppContent() {
     const todoList = useSelector((state) => state.todo.todoList);
@@ -53,8 +54,12 @@ function AppContent() {
                         />
                     }
                 />
-                <Route path="/diary/:id" element={<Diary />} />
-                <Route path="/diary/new" element={<New />} />
+                <Route
+                    path="/diary/:id"
+                    element={
+                        <Diary
+                            />} />
+                <Route path="/diarypage" element={<DiaryPage />} />
                 <Route path="/diary/edit/:id" element={<Edit />} />
                 <Route
                     path="/todo"

@@ -3,25 +3,32 @@ import EmotionItem from "./EmotionItem";
 import './Editor.css';
 
 const emotionList = [
-    { id: 1, image: "/src/img/very-happy.png", name: "매우 기쁨" },
-    { id: 2, image: "/src/img/happy.png", name: "기쁨" },
-    { id: 3, image: "/src/img/neutral.png", name: "보통" },
-    { id: 4, image: "/src/img/sad.png", name: "슬픔" },
-    { id: 5, image: "/src/img/very-sad.png", name: "매우 슬픔" },
+    { id: 1, emoji: "😁", name: "매우 기쁨" },
+    { id: 2, emoji: "🙂", name: "기쁨" },
+    { id: 3, emoji: "😐", name: "보통" },
+    { id: 4, emoji: "😢", name: "슬픔" },
+    { id: 5, emoji: "😭", name: "매우 슬픔" },
 ];
 
-const Editor = ({ isEditMode = false, initialData }) => {
+const Editor = ({ isEditMode = false, initialData = {}, onSubmit }) => {
     const [selectedEmotion, setSelectedEmotion] = useState(
         isEditMode ? initialData.emotionId : 3
     );
     const [content, setContent] = useState(isEditMode ? initialData.content : "");
 
-    const onChangeEmotion = (id) => {
-        setSelectedEmotion(id);
-    };
+    const handleSubmit = () => {
+        if (!content.trim()) {
+            alert("일기 내용을 입력해주세요.");
+            return;
+        }
 
-    const onChangeContent = (e) => {
-        setContent(e.target.value);
+        const updatedEntry = {
+            ...initialData,
+            emotionId: selectedEmotion,
+            content,
+        };
+
+        if (onSubmit) onSubmit(updatedEntry);
     };
 
     return (
@@ -33,16 +40,21 @@ const Editor = ({ isEditMode = false, initialData }) => {
                         key={it.id}
                         emotion={it}
                         isSelected={it.id === selectedEmotion}
-                        onClick={onChangeEmotion}
+                        onClick={setSelectedEmotion}
                     />
                 ))}
             </div>
+
             <textarea
                 className="content-input"
                 value={content}
-                onChange={onChangeContent}
+                onChange={(e) => setContent(e.target.value)}
                 placeholder="오늘 하루 어땠는지 자유롭게 기록해보세요."
             />
+
+            <button className="SubmitBtn" onClick={handleSubmit}>
+                {isEditMode ? "수정 완료" : "저장하기"}
+            </button>
         </div>
     );
 };

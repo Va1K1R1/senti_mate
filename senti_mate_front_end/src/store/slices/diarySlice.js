@@ -22,9 +22,9 @@ const diarySlice = createSlice({
     },
     updateDiaryEntry: (state, action) => {
       state.diaryEntries = state.diaryEntries.map((entry) =>
-        entry.id === action.payload.id ? action.payload : entry
+          entry.id === action.payload.id ? action.payload : entry
       );
-      if (state.currentEntry && state.currentEntry.id === action.payload.id) {
+      if (state.currentEntry?.id === action.payload.id) {
         state.currentEntry = action.payload;
       }
     },
