@@ -11,8 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -22,7 +20,7 @@ import java.util.List;
  * REST controller for managing diary entry operations
  */
 @RestController
-@RequestMapping("/diary")
+@RequestMapping("/api/diary-entries")  // Changed from "/diary"
 public class DiaryEntryController {
 
     private final DiaryEntryService diaryEntryService;
@@ -35,20 +33,19 @@ public class DiaryEntryController {
     }
 
     /**
-     * Get the current user ID from the authentication context
+     * Get the current user ID.
+     * Note: Spring Security has been removed, so this is a simplified version
      * @return the current user ID
-     * @throws IllegalStateException if the user is not authenticated or not found
+     * @throws IllegalStateException if no users are found
      */
     private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("User not authenticated");
-        }
-
-        String username = authentication.getName();
-        return userService.findByUsername(username)
+        // In a real application, you would get the user from the session or request
+        // For now, we'll just return the first user we find
+        return userService.findAllUsers()
+                .stream()
+                .findFirst()
                 .map(User::getId)
-                .orElseThrow(() -> new IllegalStateException("User not found: " + username));
+                .orElseThrow(() -> new IllegalStateException("No users found"));
     }
 
     /**
@@ -106,6 +103,11 @@ public class DiaryEntryController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<DiaryEntry> getDiaryEntryById(@PathVariable Long id) {
+        // Validate id parameter
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         return diaryEntryService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

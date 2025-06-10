@@ -81,6 +81,15 @@ SentiMate integrates with the Samsung Health SDK Web API for health data and the
 
 3. The frontend will be available at `http://localhost:5173`
 
+### Demo Credentials
+
+You can use the following demo credentials to log in to the application:
+
+- **Email**: user@example.com
+- **Password**: password
+
+These credentials are automatically created when the application starts for the first time.
+
 ## Project Structure
 
 ### Backend Structure

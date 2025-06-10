@@ -1,18 +1,14 @@
 package com.example.senti_mate_back_end.controller;
 
-import com.example.senti_mate_back_end.config.JwtTokenProvider;
 import com.example.senti_mate_back_end.model.Role;
 import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.repository.RoleRepository;
 import com.example.senti_mate_back_end.service.UserService;
+import com.example.senti_mate_back_end.util.SimplePasswordEncoder;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,15 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Controller for authentication endpoints
+ * Note: Spring Security has been removed, so this is a simplified version
+ */
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtTokenProvider tokenProvider;
 
     @Autowired
     private UserService userService;
@@ -37,10 +31,18 @@ public class AuthController {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private SimplePasswordEncoder passwordEncoder;
+
+    /**
+     * Login endpoint
+     * Note: This is a simplified version without Spring Security
+     */
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         String username = loginRequest.getUsername();
         String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
 
         // If email is provided but username is not, try to find the user by email
         if ((username == null || username.isEmpty()) && email != null && !email.isEmpty()) {
@@ -61,44 +63,34 @@ public class AuthController {
                     .body(new MessageResponse("Error: Username or email is required!"));
         }
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        username,
-                        loginRequest.getPassword()
-                )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.generateToken(authentication);
-
-        // Generate refresh token
-        String refreshToken = tokenProvider.generateRefreshToken(username);
-
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, refreshToken));
-    }
-
-    @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
-        // Validate refresh token
-        String refreshToken = refreshTokenRequest.getRefreshToken();
-        if (!tokenProvider.validateRefreshToken(refreshToken)) {
+        // Check if user exists and password matches
+        Optional<User> userOpt = userService.findByUsername(username);
+        if (userOpt.isEmpty() || !passwordEncoder.matches(password, userOpt.get().getPassword())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Invalid refresh token!"));
+                    .body(new MessageResponse("Error: Invalid username or password!"));
         }
 
-        // Get username from refresh token
-        String username = tokenProvider.getUsernameFromRefreshToken(refreshToken);
+        // Get the authenticated user
+        User authenticatedUser = userOpt.get();
 
-        // Generate new access token
-        String newAccessToken = tokenProvider.generateToken(username);
+        // Generate a simple token (in a real app, use a proper JWT library)
+        String token = generateToken(authenticatedUser);
 
-        // Generate new refresh token
-        String newRefreshToken = tokenProvider.generateRefreshToken(username);
-
-        return ResponseEntity.ok(new JwtAuthenticationResponse(newAccessToken, newRefreshToken));
+        // Return user data and token
+        return ResponseEntity.ok(new LoginResponse(
+                authenticatedUser.getId(),
+                authenticatedUser.getUsername(),
+                authenticatedUser.getEmail(),
+                authenticatedUser.getFirstName(),
+                authenticatedUser.getLastName(),
+                token
+        ));
     }
 
+    /**
+     * Register endpoint
+     */
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         // Check if username is already taken
@@ -148,6 +140,7 @@ public class AuthController {
                 .body(new MessageResponse("User registered successfully!"));
     }
 
+    // Updated LoginRequest to handle both email and username
     public static class LoginRequest {
         private String username;
         private String email;
@@ -235,45 +228,6 @@ public class AuthController {
         }
     }
 
-    public static class JwtAuthenticationResponse {
-        private String token;
-        private String refreshToken;
-        private String type = "Bearer";
-
-        public JwtAuthenticationResponse(String token) {
-            this.token = token;
-        }
-
-        public JwtAuthenticationResponse(String token, String refreshToken) {
-            this.token = token;
-            this.refreshToken = refreshToken;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        public String getRefreshToken() {
-            return refreshToken;
-        }
-
-        public void setRefreshToken(String refreshToken) {
-            this.refreshToken = refreshToken;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-    }
-
     public static class MessageResponse {
         private String message;
 
@@ -290,15 +244,102 @@ public class AuthController {
         }
     }
 
-    public static class RefreshTokenRequest {
-        private String refreshToken;
+    public static class LoginResponse {
+        private Long id;
+        private String username;
+        private String email;
+        private String firstName;
+        private String lastName;
+        private String token;
+        private Map<String, Object> user;
 
-        public String getRefreshToken() {
-            return refreshToken;
+        public LoginResponse(Long id, String username, String email, String firstName, String lastName, String token) {
+            this.id = id;
+            this.username = username;
+            this.email = email;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.token = token;
+
+            // Create a user object as a Map to match frontend expectations
+            this.user = new HashMap<>();
+            this.user.put("id", id);
+            this.user.put("username", username);
+            this.user.put("email", email);
+            this.user.put("firstName", firstName != null ? firstName : "");
+            this.user.put("lastName", lastName != null ? lastName : "");
         }
 
-        public void setRefreshToken(String refreshToken) {
-            this.refreshToken = refreshToken;
+        public Long getId() {
+            return id;
         }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        public Map<String, Object> getUser() {
+            return user;
+        }
+
+        public void setUser(Map<String, Object> user) {
+            this.user = user;
+        }
+    }
+
+    /**
+     * Generate a simple token for the user
+     * In a real application, use a proper JWT library
+     * @param user the user to generate a token for
+     * @return the generated token
+     */
+    private String generateToken(User user) {
+        // In a real application, use a proper JWT library
+        // This is a simplified version for demonstration purposes
+        String userInfo = user.getId() + ":" + user.getUsername() + ":" + 
+                          user.getRoles().stream().map(Role::getName).collect(Collectors.joining(","));
+
+        // Base64 encode the user info
+        return Base64.getEncoder().encodeToString(userInfo.getBytes());
     }
 }

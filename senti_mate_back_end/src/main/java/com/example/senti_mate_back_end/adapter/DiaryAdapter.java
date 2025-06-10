@@ -2,12 +2,12 @@ package com.example.senti_mate_back_end.adapter;
 
 import com.example.senti_mate_back_end.controller.DiaryEntryController;
 import com.example.senti_mate_back_end.model.DiaryEntry;
+import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -114,15 +114,18 @@ public class DiaryAdapter {
     }
 
     /**
-     * Helper method to get the current user ID from the security context.
+     * Helper method to get the current user ID.
+     * Note: Spring Security has been removed, so this is a simplified version
      *
      * @return the current user ID
      */
     private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        return userService.findByUsername(username)
-                .orElseThrow(() -> new IllegalStateException("User not found"))
+        // In a real application, you would get the user from the session or request
+        // For now, we'll just return the first user we find
+        return userService.findAllUsers()
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No users found"))
                 .getId();
     }
 }

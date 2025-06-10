@@ -48,6 +48,10 @@ export const DiaryProvider = ({ children }) => {
   const getDiaryById = async (id) => {
     setLoading(true);
     try {
+      // Check if id is undefined or invalid
+      if (!id) {
+        throw new Error('Diary ID is required');
+      }
       const diary = await DiaryService.getDiaryById(id);
       setCurrentDiary(diary);
       return diary;

@@ -6,11 +6,12 @@ import api from './api';
 const TodoService = {
   /**
    * Get all todo items
+   * @param {number} [userId=1] - User ID (defaults to 1 if not provided)
    * @returns {Promise<Array>} Array of todo items
    */
-  getAllTodos: async () => {
+  getAllTodos: async (userId = 1) => {
     try {
-      return await api.get('/todos');
+      return await api.get(`/todos?userId=${userId}`);
     } catch (error) {
       console.error('Get all todos error:', error);
       throw error;
@@ -36,11 +37,12 @@ const TodoService = {
    * @param {Object} todo - Todo item data
    * @param {string} todo.text - Todo item text
    * @param {boolean} [todo.completed=false] - Todo item completion status
+   * @param {number} [userId=1] - User ID (defaults to 1 if not provided)
    * @returns {Promise<Object>} Created todo item
    */
-  createTodo: async (todo) => {
+  createTodo: async (todo, userId = 1) => {
     try {
-      return await api.post('/todos', todo);
+      return await api.post(`/todos?userId=${userId}`, todo);
     } catch (error) {
       console.error('Create todo error:', error);
       throw error;
@@ -85,13 +87,8 @@ const TodoService = {
    */
   toggleTodo: async (id) => {
     try {
-      // First get the current todo to know its completion status
-      const todo = await api.get(`/todos/${id}`);
-      // Then update it with the opposite status
-      return await api.put(`/todos/${id}`, {
-        ...todo,
-        completed: !todo.completed
-      });
+      // Use the PATCH endpoint specifically for toggling completion status
+      return await api.patch(`/todos/${id}/toggle`);
     } catch (error) {
       console.error(`Toggle todo ${id} error:`, error);
       throw error;
@@ -100,11 +97,12 @@ const TodoService = {
 
   /**
    * Get completed todo items
+   * @param {number} [userId=1] - User ID (defaults to 1 if not provided)
    * @returns {Promise<Array>} Array of completed todo items
    */
-  getCompletedTodos: async () => {
+  getCompletedTodos: async (userId = 1) => {
     try {
-      return await api.get('/todos/completed');
+      return await api.get(`/todos/user/${userId}/completed`);
     } catch (error) {
       console.error('Get completed todos error:', error);
       throw error;
@@ -113,11 +111,12 @@ const TodoService = {
 
   /**
    * Get incomplete todo items
+   * @param {number} [userId=1] - User ID (defaults to 1 if not provided)
    * @returns {Promise<Array>} Array of incomplete todo items
    */
-  getIncompleteTodos: async () => {
+  getIncompleteTodos: async (userId = 1) => {
     try {
-      return await api.get('/todos/incomplete');
+      return await api.get(`/todos/user/${userId}/incomplete`);
     } catch (error) {
       console.error('Get incomplete todos error:', error);
       throw error;
@@ -126,11 +125,21 @@ const TodoService = {
 
   /**
    * Clear all completed todo items
+   * Note: This endpoint is not currently supported by the backend.
+   * To clear completed todos, you'll need to get all completed todos
+   * and delete them one by one using the deleteTodo method.
    * @returns {Promise<void>}
    */
   clearCompletedTodos: async () => {
     try {
-      return await api.delete('/todos/completed');
+      // This endpoint doesn't exist in the backend, so this will fail
+      // A proper implementation would be:
+      // 1. Get all completed todos for the user
+      // 2. Delete each todo one by one
+      console.warn('clearCompletedTodos is not supported by the backend');
+
+      // For now, we'll just throw an error
+      throw new Error('clearCompletedTodos is not supported by the backend');
     } catch (error) {
       console.error('Clear completed todos error:', error);
       throw error;

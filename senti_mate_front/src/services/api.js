@@ -94,6 +94,22 @@ export const put = async (endpoint, data, options = {}) => {
 };
 
 /**
+ * Make a PATCH request to the API
+ * @param {string} endpoint - API endpoint
+ * @param {Object} data - Request body data
+ * @param {Object} options - Additional axios options
+ * @returns {Promise<any>} Response data
+ */
+export const patch = async (endpoint, data, options = {}) => {
+  try {
+    return await axiosInstance.patch(endpoint, data, options);
+  } catch (error) {
+    console.error(`PATCH request failed for ${endpoint}:`, error);
+    throw error;
+  }
+};
+
+/**
  * Make a DELETE request to the API
  * @param {string} endpoint - API endpoint
  * @param {Object} options - Additional axios options
@@ -112,5 +128,6 @@ export default {
   get,
   post,
   put,
+  patch,
   delete: del
 };

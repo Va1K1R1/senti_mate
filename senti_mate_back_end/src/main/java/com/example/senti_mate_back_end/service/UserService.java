@@ -2,8 +2,8 @@ package com.example.senti_mate_back_end.service;
 
 import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.repository.UserRepository;
+import com.example.senti_mate_back_end.util.SimplePasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +17,10 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final SimplePasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, SimplePasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -92,10 +92,10 @@ public class UserService {
         if (existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-        
+
         // Encode the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        
+
         return userRepository.save(user);
     }
 
@@ -110,12 +110,12 @@ public class UserService {
     public User updateUser(Long id, User userDetails) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
-        
+
         // Update user fields
         user.setFirstName(userDetails.getFirstName());
         user.setLastName(userDetails.getLastName());
         user.setProfilePicture(userDetails.getProfilePicture());
-        
+
         // Only update email if it's changed and doesn't already exist
         if (!user.getEmail().equals(userDetails.getEmail())) {
             if (existsByEmail(userDetails.getEmail())) {
@@ -123,12 +123,12 @@ public class UserService {
             }
             user.setEmail(userDetails.getEmail());
         }
-        
+
         // Only update password if it's provided
         if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         }
-        
+
         return userRepository.save(user);
     }
 
@@ -156,7 +156,7 @@ public class UserService {
     public User setUserActiveStatus(Long id, boolean active) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
-        
+
         user.setActive(active);
         return userRepository.save(user);
     }
@@ -171,7 +171,7 @@ public class UserService {
     public User verifyUserEmail(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
-        
+
         user.setEmailVerified(true);
         return userRepository.save(user);
     }

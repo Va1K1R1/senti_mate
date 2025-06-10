@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.senti_mate_back_end.util.SimplePasswordEncoder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +26,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private SimplePasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserService userService;
@@ -125,7 +125,7 @@ public class UserServiceTest {
                 .email("new@example.com")
                 .password("password123")
                 .build();
-        
+
         when(userRepository.existsByUsername("newuser")).thenReturn(false);
         when(userRepository.existsByEmail("new@example.com")).thenReturn(false);
         when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
@@ -153,14 +153,14 @@ public class UserServiceTest {
                 .email("new@example.com")
                 .password("password123")
                 .build();
-        
+
         when(userRepository.existsByUsername("existinguser")).thenReturn(true);
 
         // When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             userService.createUser(newUser);
         });
-        
+
         assertEquals("Username already exists", exception.getMessage());
         verify(userRepository, times(1)).existsByUsername("existinguser");
         verify(userRepository, never()).existsByEmail(anyString());
@@ -176,7 +176,7 @@ public class UserServiceTest {
                 .email("existing@example.com")
                 .password("password123")
                 .build();
-        
+
         when(userRepository.existsByUsername("newuser")).thenReturn(false);
         when(userRepository.existsByEmail("existing@example.com")).thenReturn(true);
 
@@ -184,7 +184,7 @@ public class UserServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             userService.createUser(newUser);
         });
-        
+
         assertEquals("Email already exists", exception.getMessage());
         verify(userRepository, times(1)).existsByUsername("newuser");
         verify(userRepository, times(1)).existsByEmail("existing@example.com");
@@ -203,14 +203,14 @@ public class UserServiceTest {
                 .firstName("Old")
                 .lastName("Name")
                 .build();
-        
+
         User updatedDetails = User.builder()
                 .firstName("New")
                 .lastName("Name")
                 .email("existing@example.com") // Same email
                 .password("newPassword")
                 .build();
-        
+
         when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
         when(passwordEncoder.encode("newPassword")).thenReturn("encodedNewPassword");
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -253,7 +253,7 @@ public class UserServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             userService.deleteUser(99L);
         });
-        
+
         assertEquals("User not found with id: 99", exception.getMessage());
         verify(userRepository, times(1)).existsById(99L);
         verify(userRepository, never()).deleteById(anyLong());

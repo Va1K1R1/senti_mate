@@ -10,7 +10,7 @@ const DiaryService = {
    */
   getAllDiaries: async () => {
     try {
-      return await api.get('/diaries');
+      return await api.get('/diary-entries');
     } catch (error) {
       console.error('Get all diaries error:', error);
       throw error;
@@ -21,10 +21,15 @@ const DiaryService = {
    * Get a diary entry by ID
    * @param {number} id - Diary entry ID
    * @returns {Promise<Object>} Diary entry
+   * @throws {Error} If id is undefined or invalid
    */
   getDiaryById: async (id) => {
     try {
-      return await api.get(`/diaries/${id}`);
+      // Validate id parameter
+      if (id === undefined || id === null) {
+        throw new Error('Diary ID is required');
+      }
+      return await api.get(`/diary-entries/${id}`);
     } catch (error) {
       console.error(`Get diary by ID ${id} error:`, error);
       throw error;
@@ -41,7 +46,7 @@ const DiaryService = {
    */
   createDiary: async (diary) => {
     try {
-      return await api.post('/diaries', diary);
+      return await api.post('/diary-entries', diary);
     } catch (error) {
       console.error('Create diary error:', error);
       throw error;
@@ -59,7 +64,7 @@ const DiaryService = {
    */
   updateDiary: async (id, diary) => {
     try {
-      return await api.put(`/diaries/${id}`, diary);
+      return await api.put(`/diary-entries/${id}`, diary);
     } catch (error) {
       console.error(`Update diary ${id} error:`, error);
       throw error;
@@ -73,7 +78,7 @@ const DiaryService = {
    */
   deleteDiary: async (id) => {
     try {
-      return await api.delete(`/diaries/${id}`);
+      return await api.delete(`/diary-entries/${id}`);
     } catch (error) {
       console.error(`Delete diary ${id} error:`, error);
       throw error;
@@ -87,7 +92,7 @@ const DiaryService = {
    */
   getDiariesByEmotion: async (emotion) => {
     try {
-      return await api.get(`/diaries/emotion/${emotion}`);
+      return await api.get(`/diary-entries/emotion/${emotion}`);
     } catch (error) {
       console.error(`Get diaries by emotion ${emotion} error:`, error);
       throw error;
@@ -102,7 +107,7 @@ const DiaryService = {
    */
   getDiariesByDateRange: async (startDate, endDate) => {
     try {
-      return await api.get(`/diaries/date-range?startDate=${startDate}&endDate=${endDate}`);
+      return await api.get(`/diary-entries/range?startDate=${startDate}&endDate=${endDate}`);
     } catch (error) {
       console.error(`Get diaries by date range error:`, error);
       throw error;

@@ -8,8 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -21,7 +20,7 @@ import java.util.Map;
  * REST controller for managing emotion operations
  */
 @RestController
-@RequestMapping("/emotions")
+@RequestMapping("/api/emotions")
 public class EmotionController {
 
     private final EmotionService emotionService;
@@ -34,20 +33,19 @@ public class EmotionController {
     }
 
     /**
-     * Get the current user ID from the authentication context
+     * Get the current user ID.
+     * Note: Spring Security has been removed, so this is a simplified version
      * @return the current user ID
-     * @throws IllegalStateException if the user is not authenticated or not found
+     * @throws IllegalStateException if no users are found
      */
     private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("User not authenticated");
-        }
-
-        String username = authentication.getName();
-        return userService.findByUsername(username)
+        // In a real application, you would get the user from the session or request
+        // For now, we'll just return the first user we find
+        return userService.findAllUsers()
+                .stream()
+                .findFirst()
                 .map(User::getId)
-                .orElseThrow(() -> new IllegalStateException("User not found: " + username));
+                .orElseThrow(() -> new IllegalStateException("No users found"));
     }
 
     /**
