@@ -1,0 +1,161 @@
+.Register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /*background-color: #f5f5f5;*/
+    padding: 20px;
+}
+
+.RegisterContainer {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    padding: 30px;
+}
+
+.RegisterHeader {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.RegisterHeader h2 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+}
+
+.RegisterHeader p {
+    color: #666;
+    font-size: 1rem;
+}
+
+.FormGroup {
+    margin-bottom: 20px;
+}
+
+.FormGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.FormGroup input[type="text"],
+.FormGroup input[type="email"],
+.FormGroup input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.FormGroup input[type="text"]:focus,
+.FormGroup input[type="email"]:focus,
+.FormGroup input[type="password"]:focus {
+    border-color: #8eb695;
+    outline: none;
+}
+
+.FormGroup input.error {
+    border-color: #e74c3c;
+}
+
+.ErrorMessage {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+.FormGroup.Checkbox {
+    display: flex;
+    align-items: flex-start;
+}
+
+.FormGroup.Checkbox input {
+    margin-right: 10px;
+    margin-top: 3px;
+}
+
+.FormGroup.Checkbox label {
+    margin-bottom: 0;
+    font-weight: normal;
+    line-height: 1.4;
+}
+
+.TermsLink {
+    color: #8eb695;
+    text-decoration: none;
+}
+
+.TermsLink:hover {
+    text-decoration: underline;
+}
+
+.RegisterButton {
+    width: 100%;
+    padding: 12px;
+    background-color: #8eb695;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.RegisterButton:hover {
+    background-color: #7da584;
+}
+
+.RegisterButton:disabled {
+    background-color: #b5b5b5;
+    cursor: not-allowed;
+}
+
+.RegisterFooter {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.RegisterFooter p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.LoginLink {
+    color: #8eb695;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.LoginLink:hover {
+    text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .RegisterContainer {
+        padding: 20px;
+    }
+    
+    .RegisterHeader h2 {
+        font-size: 1.5rem;
+    }
+    
+    .FormGroup input[type="text"],
+    .FormGroup input[type="email"],
+    .FormGroup input[type="password"] {
+        padding: 10px;
+    }
+    
+    .RegisterButton {
+        padding: 10px;
+    }
+}

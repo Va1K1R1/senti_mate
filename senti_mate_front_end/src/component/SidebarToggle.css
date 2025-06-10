@@ -1,0 +1,73 @@
+.SidebarToggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.SidebarToggle:hover {
+    opacity: 0.8;
+}
+
+.SidebarToggle:focus {
+    outline: none;
+}
+
+.SidebarToggleIcon {
+    width: 24px;
+    height: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.SidebarToggleIcon span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: white;
+    border-radius: 3px;
+    transition: all 0.3s;
+}
+
+/* Animation for hamburger to X */
+.SidebarToggle.active .SidebarToggleIcon span:nth-child(1) {
+    transform: translateY(8.5px) rotate(45deg);
+}
+
+.SidebarToggle.active .SidebarToggleIcon span:nth-child(2) {
+    opacity: 0;
+}
+
+.SidebarToggle.active .SidebarToggleIcon span:nth-child(3) {
+    transform: translateY(-8.5px) rotate(-45deg);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .SidebarToggle {
+        padding: 8px;
+    }
+    
+    .SidebarToggleIcon {
+        width: 20px;
+        height: 16px;
+    }
+    
+    .SidebarToggleIcon span {
+        height: 2px;
+    }
+    
+    .SidebarToggle.active .SidebarToggleIcon span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+    
+    .SidebarToggle.active .SidebarToggleIcon span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+}

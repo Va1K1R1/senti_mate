@@ -1,0 +1,58 @@
+.Footer {
+    background-color: #afceaf;
+    color: #fff;
+    padding: 40px 20px 20px;
+    margin-top: 60px;
+    border-top-left-radius: 32px;
+    border-top-right-radius: 32px;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+.FooterContent {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.FooterSection {
+    flex: 1;
+    min-width: 200px;
+}
+
+.FooterSection h3 {
+    font-family: var(--font-accent);
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+}
+
+.FooterSection p,
+.FooterSection a {
+    font-size: 0.95rem;
+    color: white;
+    opacity: 0.9;
+}
+
+.FooterSection a:hover {
+    text-decoration: underline;
+    opacity: 1;
+}
+
+.FooterBottom {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.85rem;
+    color: white;
+    opacity: 0.8;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
