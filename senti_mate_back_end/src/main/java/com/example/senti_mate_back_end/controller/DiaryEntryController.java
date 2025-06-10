@@ -4,6 +4,8 @@ import com.example.senti_mate_back_end.model.DiaryEntry;
 import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.service.DiaryEntryService;
 import com.example.senti_mate_back_end.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,21 +34,40 @@ public class DiaryEntryController {
         this.userService = userService;
     }
 
-    /**
-     * Get the current user ID.
-     * Note: Spring Security has been removed, so this is a simplified version
-     * @return the current user ID
-     * @throws IllegalStateException if no users are found
-     */
-    private Long getCurrentUserId() {
-        // In a real application, you would get the user from the session or request
-        // For now, we'll just return the first user we find
-        return userService.findAllUsers()
-                .stream()
-                .findFirst()
-                .map(User::getId)
-                .orElseThrow(() -> new IllegalStateException("No users found"));
-    }
+        /**
+         * Get the current user ID from various sources
+         * @param request the HTTP request
+         * @param userIdParam optional user ID parameter (for testing)
+         * @return the current user ID
+         * @throws IllegalStateException if user is not authenticated
+         */
+        private Long getCurrentUserId(HttpServletRequest request, Long userIdParam) {
+            // For development/testing: allow user ID as parameter
+            if (userIdParam != null) {
+                return userIdParam;
+            }
+
+            // Production: get from session
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                Long userId = (Long) session.getAttribute("userId");
+                if (userId != null) {
+                    return userId;
+                }
+            }
+
+            // Alternative: get from header
+            String userIdHeader = request.getHeader("X-User-Id");
+            if (userIdHeader != null && !userIdHeader.isEmpty()) {
+                try {
+                    return Long.parseLong(userIdHeader);
+                } catch (NumberFormatException e) {
+                    throw new IllegalStateException("Invalid user ID in header");
+                }
+            }
+
+            throw new IllegalStateException("User not authenticated");
+        }
 
     /**
      * GET /api/diary-entries/user/{userId} : Get all diary entries for a user
@@ -68,13 +89,15 @@ public class DiaryEntryController {
      * @return the ResponseEntity with status 200 (OK) and the list of diary entries in body
      */
     @GetMapping
-    public ResponseEntity<List<DiaryEntry>> getAllDiaryEntries() {
+    public ResponseEntity<List<DiaryEntry>> getAllDiaryEntries(
+            HttpServletRequest request,
+            @RequestParam(required = false) Long userId) {
         try {
-            Long userId = getCurrentUserId();
-            List<DiaryEntry> diaryEntries = diaryEntryService.findAllByUser(userId);
+            Long currentUserId = getCurrentUserId(request, userId);
+            List<DiaryEntry> diaryEntries = diaryEntryService.findAllByUser(currentUserId);
             return ResponseEntity.ok(diaryEntries);
         } catch (IllegalArgumentException | IllegalStateException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
@@ -183,14 +206,16 @@ public class DiaryEntryController {
      */
     @GetMapping("/range")
     public ResponseEntity<List<DiaryEntry>> getDiaryEntriesByDateRange(
+            HttpServletRequest request,
+            @RequestParam(required = false) Long userId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         try {
-            Long userId = getCurrentUserId();
-            Page<DiaryEntry> diaryEntries = diaryEntryService.findByDateRange(userId, startDate, endDate, Pageable.unpaged());
+            Long currentUserId = getCurrentUserId(request, userId);
+            Page<DiaryEntry> diaryEntries = diaryEntryService.findByDateRange(currentUserId, startDate, endDate, Pageable.unpaged());
             return ResponseEntity.ok(diaryEntries.getContent());
         } catch (IllegalArgumentException | IllegalStateException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
@@ -216,23 +241,23 @@ public class DiaryEntryController {
         }
     }
 
-    /**
-     * POST /api/diary-entries/user/{userId} : Create a new diary entry
-     * @param userId the ID of the user
-     * @param diaryEntry the diary entry to create
-     * @return the ResponseEntity with status 201 (Created) and the new diary entry in body
-     */
-    @PostMapping("/user/{userId}")
-    public ResponseEntity<DiaryEntry> createDiaryEntry(
-            @PathVariable Long userId,
-            @Valid @RequestBody DiaryEntry diaryEntry) {
-        try {
-            DiaryEntry createdDiaryEntry = diaryEntryService.createDiaryEntry(userId, diaryEntry);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdDiaryEntry);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+/**
+ * POST /api/diary-entries/user/{userId} : Create a new diary entry for a user
+ * @param userId the ID of the user
+ * @param diaryEntry the diary entry to create
+ * @return the ResponseEntity with status 201 (Created) and the diary entry in body
+ */
+@PostMapping("/user/{userId}")
+public ResponseEntity<DiaryEntry> createDiaryEntry(@PathVariable Long userId, @Valid @RequestBody DiaryEntry diaryEntry) {
+    try {
+        DiaryEntry createdDiaryEntry = diaryEntryService.createDiaryEntry(userId, diaryEntry);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdDiaryEntry);
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.badRequest().build();
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+}
 
     /**
      * POST /diary : Create a new diary entry for the current user
@@ -241,13 +266,15 @@ public class DiaryEntryController {
      */
     @PostMapping
     public ResponseEntity<DiaryEntry> createDiaryEntry(
+            HttpServletRequest request,
+            @RequestParam(required = false) Long userId,
             @Valid @RequestBody DiaryEntry diaryEntry) {
         try {
-            Long userId = getCurrentUserId();
-            DiaryEntry createdDiaryEntry = diaryEntryService.createDiaryEntry(userId, diaryEntry);
+            Long currentUserId = getCurrentUserId(request, userId);
+            DiaryEntry createdDiaryEntry = diaryEntryService.createDiaryEntry(currentUserId, diaryEntry);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdDiaryEntry);
         } catch (IllegalArgumentException | IllegalStateException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 

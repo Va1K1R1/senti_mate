@@ -13,7 +13,13 @@ public class CorsFilterConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:5173");
+        
+        // Allow both common Vite ports
+        config.setAllowedOrigins(Arrays.asList(
+            "http://localhost:5173",
+            "http://localhost:5174"
+        ));
+        
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);

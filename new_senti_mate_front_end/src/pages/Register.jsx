@@ -49,7 +49,17 @@ const Register = () => {
       await register({ username, email, password });
       navigate('/');
     } catch (err) {
-      setError(err.message || 'Failed to register. Please try again.');
+      // Handle specific error messages from backend
+      let errorMessage = err.message || 'Failed to register. Please try again.';
+      
+      // Make error messages more user-friendly
+      if (errorMessage.includes('Email is already in use')) {
+        errorMessage = 'This email is already registered. Please use a different email or try logging in.';
+      } else if (errorMessage.includes('Username is already taken')) {
+        errorMessage = 'This username is already taken. Please choose a different username.';
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

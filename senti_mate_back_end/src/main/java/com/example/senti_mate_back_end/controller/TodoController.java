@@ -80,6 +80,21 @@ public class TodoController {
     }
 
     /**
+     * GET /api/todos/user/{userId} : Get all todos for a specific user
+     * @param userId the ID of the user
+     * @return the ResponseEntity with status 200 (OK) and the list of todos
+     */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Todo>> getTodosByUserId(@PathVariable Long userId) {
+        try {
+            List<Todo> todos = todoService.findAllByUser(userId);
+            return ResponseEntity.ok(todos);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
      * GET /api/todos/user/{userId}/completed : Get completed todos for a user
      * @param userId the ID of the user
      * @param pageable pagination information
@@ -124,6 +139,24 @@ public class TodoController {
     @PostMapping
     public ResponseEntity<Todo> createTodo(
             @RequestParam Long userId,
+            @RequestBody Todo todo) {
+        try {
+            Todo createdTodo = todoService.createTodo(userId, todo);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdTodo);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * POST /api/todos/user/{userId} : Create a new todo for a specific user
+     * @param userId the ID of the user
+     * @param todo the todo to create
+     * @return the ResponseEntity with status 201 (Created) and the new todo
+     */
+    @PostMapping("/user/{userId}")
+    public ResponseEntity<Todo> createTodoForUser(
+            @PathVariable Long userId,
             @RequestBody Todo todo) {
         try {
             Todo createdTodo = todoService.createTodo(userId, todo);
@@ -180,4 +213,16 @@ public class TodoController {
             return ResponseEntity.badRequest().build();
         }
     }
+// Add this to your TodoController
+@GetMapping("/user/{userId}/list")
+public ResponseEntity<List<Todo>> getTodosListByUserId(@PathVariable Long userId) {
+    try {
+        // Use unpaged to get all results
+        Page<Todo> todosPage = todoService.findAllByUser(userId, Pageable.unpaged());
+        List<Todo> todos = todosPage.getContent();
+        return ResponseEntity.ok(todos);
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.badRequest().build();
+    }
+}
 }

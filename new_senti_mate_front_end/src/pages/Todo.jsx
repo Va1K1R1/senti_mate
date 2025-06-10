@@ -27,6 +27,10 @@ const Todo = () => {
     try {
       const data = await TodoService.getAllTodos();
       setTodos(data);
+      // Move debug logs here to see the actual data received
+      console.log('Data received from API:', data);
+      console.log('Type of data:', typeof data);
+      console.log('Is array?', Array.isArray(data));
     } catch (err) {
       setError(err.message || 'Failed to load todos');
     } finally {
@@ -34,33 +38,33 @@ const Todo = () => {
     }
   };
 
-  const handleAddTodo = async (e) => {
-    e.preventDefault();
+const handleAddTodo = async (e) => {
+  e.preventDefault();
+  
+  if (!newTodoText.trim()) return;
+  
+  setLoading(true);
+  try {
+    const newTodo = {
+      title: newTodoText,  // Changed from 'text' to 'title'
+      completed: false
+    };
     
-    if (!newTodoText.trim()) return;
-    
-    setLoading(true);
-    try {
-      const newTodo = {
-        text: newTodoText,
-        completed: false
-      };
-      
-      const createdTodo = await TodoService.createTodo(newTodo);
-      setTodos([...todos, createdTodo]);
-      setNewTodoText('');
-    } catch (err) {
-      setError(err.message || 'Failed to add todo');
-    } finally {
-      setLoading(false);
-    }
-  };
+    const createdTodo = await TodoService.createTodo(newTodo);
+    setTodos([...safeTodos, createdTodo]);
+    setNewTodoText('');
+  } catch (err) {
+    setError(err.message || 'Failed to add todo');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleToggleTodo = async (id) => {
     setLoading(true);
     try {
       const updatedTodo = await TodoService.toggleTodoCompleted(id);
-      setTodos(todos.map(todo => 
+      setTodos(safeTodos.map(todo => 
         todo.id === id ? updatedTodo : todo
       ));
     } catch (err) {
@@ -74,7 +78,7 @@ const Todo = () => {
     setLoading(true);
     try {
       await TodoService.deleteTodo(id);
-      setTodos(todos.filter(todo => todo.id !== id));
+      setTodos(safeTodos.filter(todo => todo.id !== id));
     } catch (err) {
       setError(err.message || 'Failed to delete todo');
     } finally {
@@ -82,16 +86,18 @@ const Todo = () => {
     }
   };
 
-  const filteredTodos = todos.filter(todo => {
+  // Always ensure todos is an array before using .filter()
+  const safeTodos = Array.isArray(todos) ? todos : [];
+  const filteredTodos = safeTodos.filter(todo => {
     if (filter === 'active') return !todo.completed;
     if (filter === 'completed') return todo.completed;
     return true; // 'all'
   });
 
-  const completedCount = todos.filter(todo => todo.completed).length;
-  const activeCount = todos.length - completedCount;
+  const completedCount = safeTodos.filter(todo => todo.completed).length;
+  const activeCount = safeTodos.length - completedCount;
 
-  if (loading && todos.length === 0) {
+  if (loading && safeTodos.length === 0) {
     return <div className="loading">Loading your todos...</div>;
   }
 
@@ -165,7 +171,7 @@ const Todo = () => {
                   disabled={loading}
                   className="todo-checkbox"
                 />
-                <span className="todo-text">{todo.text}</span>
+                <span className="todo-text">{todo.title}</span>
               </div>
               <button
                 onClick={() => handleDeleteTodo(todo.id)}

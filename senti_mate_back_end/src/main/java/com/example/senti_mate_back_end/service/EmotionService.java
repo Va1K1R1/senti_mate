@@ -103,13 +103,11 @@ public class EmotionService {
     public Emotion updateEmotion(Long id, Emotion emotionDetails) {
         Emotion emotion = emotionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Emotion not found with id: " + id));
-        
-        // Update emotion fields
+
         emotion.setName(emotionDetails.getName());
         emotion.setIntensity(emotionDetails.getIntensity());
-        emotion.setDescription(emotionDetails.getDescription());
-        emotion.setColorCode(emotionDetails.getColorCode());
-        
+        // Removed setDescription and setColorCode calls
+
         return emotionRepository.save(emotion);
     }
 

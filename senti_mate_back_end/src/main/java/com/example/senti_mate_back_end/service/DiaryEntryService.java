@@ -18,6 +18,7 @@ import java.util.Optional;
  * Service for managing diary entry operations
  */
 @Service
+@Transactional
 public class DiaryEntryService {
 
     private final DiaryEntryRepository diaryEntryRepository;
@@ -134,30 +135,31 @@ public class DiaryEntryService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
         
         diaryEntry.setUser(user);
+        
+        // Handle emotions if they exist
+        if (diaryEntry.getEmotions() != null) {
+            diaryEntry.getEmotions().forEach(emotion -> {
+                emotion.setDiaryEntry(diaryEntry);
+                emotion.setUser(user);
+            });
+        }
+        
         return diaryEntryRepository.save(diaryEntry);
     }
 
-    /**
-     * Update an existing diary entry
-     * @param id the diary entry ID
-     * @param diaryEntryDetails the updated diary entry details
-     * @return the updated diary entry
-     * @throws IllegalArgumentException if the diary entry is not found
-     */
     @Transactional
     public DiaryEntry updateDiaryEntry(Long id, DiaryEntry diaryEntryDetails) {
         DiaryEntry diaryEntry = diaryEntryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Diary entry not found with id: " + id));
-        
-        // Update diary entry fields
+                .orElseThrow(() -> new IllegalArgumentException("DiaryEntry not found with id: " + id));
+
         diaryEntry.setTitle(diaryEntryDetails.getTitle());
         diaryEntry.setContent(diaryEntryDetails.getContent());
         diaryEntry.setMoodScore(diaryEntryDetails.getMoodScore());
         diaryEntry.setEnergyLevel(diaryEntryDetails.getEnergyLevel());
         diaryEntry.setStressLevel(diaryEntryDetails.getStressLevel());
         diaryEntry.setSleepHours(diaryEntryDetails.getSleepHours());
-        diaryEntry.setPrivate(diaryEntryDetails.isPrivate());
-        
+        diaryEntry.setIsPrivate(diaryEntryDetails.getIsPrivate()); // Changed from setPrivate to setIsPrivate
+
         return diaryEntryRepository.save(diaryEntry);
     }
 
