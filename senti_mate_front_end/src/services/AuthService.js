@@ -2,16 +2,20 @@ import apiService from './apiService';
 
 const AuthService = {
   /**
-   * Login user with email and password
-   * @param {string} email - User email
+   * Login user with username and password
+   * @param {string} username - Username
    * @param {string} password - User password
    * @returns {Promise} - Promise with user data
    */
-  login: async (email, password) => {
-    const response = await apiService.post('/auth/login', { email, password });
+  login: async (username, password) => {
+    const response = await apiService.post('/auth/login', { username, password });
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+      localStorage.setItem('user', JSON.stringify({
+        id: response.data.id,
+        username: response.data.username,
+        email: response.data.email
+      }));
     }
     return response.data;
   },

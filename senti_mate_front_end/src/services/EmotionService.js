@@ -6,39 +6,89 @@ const EmotionService = {
    * @returns {Promise} - Promise with array of emotions
    */
   getAllEmotions: async () => {
-    const response = await apiService.get('/emotions');
-    return response.data;
+    try {
+      const response = await apiService.get('/emotions');
+      return response.data;
+    } catch (error) {
+      console.error('Get all emotions error:', error);
+      throw error;
+    }
   },
 
   /**
    * Get a specific emotion by ID
-   * @param {string} id - Emotion ID
+   * @param {number} id - Emotion ID
    * @returns {Promise} - Promise with emotion data
    */
   getEmotionById: async (id) => {
-    const response = await apiService.get(`/emotions/${id}`);
-    return response.data;
+    try {
+      const response = await apiService.get(`/emotions/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Get emotion by ID ${id} error:`, error);
+      throw error;
+    }
   },
 
   /**
-   * Analyze text to detect emotions
-   * @param {string} text - Text to analyze
-   * @returns {Promise} - Promise with detected emotions
+   * Get emotions for a specific diary entry
+   * @param {number} diaryId - Diary entry ID
+   * @returns {Promise} - Promise with array of emotions
    */
-  analyzeText: async (text) => {
-    const response = await apiService.post('/emotions/analyze', { text });
-    return response.data;
+  getEmotionsForDiary: async (diaryId) => {
+    try {
+      const response = await apiService.get(`/emotions/diary/${diaryId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Get emotions for diary ${diaryId} error:`, error);
+      throw error;
+    }
   },
 
   /**
-   * Get emotion statistics for a user
-   * @param {string} startDate - Start date in ISO format
-   * @param {string} endDate - End date in ISO format
-   * @returns {Promise} - Promise with emotion statistics
+   * Create a new emotion
+   * @param {Object} emotionData - Emotion data
+   * @returns {Promise} - Promise with created emotion data
    */
-  getEmotionStats: async (startDate, endDate) => {
-    const response = await apiService.get(`/emotions/stats?start=${startDate}&end=${endDate}`);
-    return response.data;
+  createEmotion: async (emotionData) => {
+    try {
+      const response = await apiService.post('/emotions', emotionData);
+      return response.data;
+    } catch (error) {
+      console.error('Create emotion error:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Update an existing emotion
+   * @param {number} id - Emotion ID
+   * @param {Object} emotionData - Updated emotion data
+   * @returns {Promise} - Promise with updated emotion data
+   */
+  updateEmotion: async (id, emotionData) => {
+    try {
+      const response = await apiService.put(`/emotions/${id}`, emotionData);
+      return response.data;
+    } catch (error) {
+      console.error(`Update emotion ${id} error:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Delete an emotion
+   * @param {number} id - Emotion ID
+   * @returns {Promise} - Promise with success message
+   */
+  deleteEmotion: async (id) => {
+    try {
+      const response = await apiService.delete(`/emotions/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Delete emotion ${id} error:`, error);
+      throw error;
+    }
   }
 };
 
