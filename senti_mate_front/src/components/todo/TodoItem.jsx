@@ -50,7 +50,7 @@ const TodoItem = ({ todo, onToggle, onDelete }) => {
           disabled={isToggling}
           className="todo-checkbox"
         />
-        <span className="todo-text">{todo.text}</span>
+        <span className="todo-text">{todo.title}</span>
       </div>
       <div className="todo-actions">
         <Button 

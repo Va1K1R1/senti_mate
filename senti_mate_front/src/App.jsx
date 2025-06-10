@@ -15,6 +15,7 @@ import Todo from './pages/Todo';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Diary from './pages/Diary';
+import DiaryListPage from './pages/DiaryList';
 import New from './pages/New';
 import Edit from './pages/Edit';
 import Dashboard from './pages/Dashboard';
@@ -72,6 +73,11 @@ function App() {
                     <Route path="/health" element={
                       <ProtectedRoute>
                         <Health />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/diary" element={
+                      <ProtectedRoute>
+                        <DiaryListPage />
                       </ProtectedRoute>
                     } />
                     <Route path="/diary/new" element={

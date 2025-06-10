@@ -13,13 +13,13 @@ import { useDiary } from '../../context/DiaryContext';
 const Viewer = ({ diary }) => {
   const navigate = useNavigate();
   const { deleteDiary } = useDiary();
-  
+
   // Function to format date
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
-  
+
   // Get emotion color based on emotion type
   const getEmotionColor = (emotion) => {
     const emotionColors = {
@@ -30,15 +30,15 @@ const Viewer = ({ diary }) => {
       calm: '#98FB98',   // Pale Green
       default: '#A9A9A9'  // Dark Gray
     };
-    
+
     return emotionColors[emotion?.toLowerCase()] || emotionColors.default;
   };
-  
+
   // Handle edit button
   const handleEdit = () => {
     navigate(`/diary/edit/${diary.id}`);
   };
-  
+
   // Handle delete button with confirmation
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this diary entry?')) {
@@ -46,12 +46,12 @@ const Viewer = ({ diary }) => {
       navigate('/');
     }
   };
-  
+
   // Handle back button
   const handleBack = () => {
     navigate('/');
   };
-  
+
   if (!diary) {
     return (
       <div className="diary-viewer diary-not-found">
@@ -62,7 +62,7 @@ const Viewer = ({ diary }) => {
       </div>
     );
   }
-  
+
   return (
     <div className="diary-viewer">
       <div className="viewer-header">
@@ -77,13 +77,13 @@ const Viewer = ({ diary }) => {
           <div className="viewer-date">{formatDate(diary.date)}</div>
         </div>
       </div>
-      
+
       <div className="viewer-content">
-        {diary.content.split('\n').map((paragraph, index) => (
+        {diary.content ? diary.content.split('\n').map((paragraph, index) => (
           <p key={index}>{paragraph}</p>
-        ))}
+        )) : <p>No content available</p>}
       </div>
-      
+
       <div className="viewer-actions">
         <Button type="secondary" onClick={handleBack}>
           Back

@@ -67,12 +67,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Register function
-  const register = async (name, email, password) => {
+  const register = async (username, name, email, password) => {
     setLoading(true);
     setError(null);
     try {
       // Call register API
-      const response = await AuthService.register(name, email, password);
+      const response = await AuthService.register(username, name, email, password);
       setCurrentUser(response.user);
       return response.user;
     } catch (error) {

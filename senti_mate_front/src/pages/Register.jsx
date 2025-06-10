@@ -9,6 +9,7 @@ import './Register.css';
  * @returns {JSX.Element} Register page
  */
 const Register = () => {
+  const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,25 +21,30 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     // Validate form inputs
-    if (!name || !email || !password || !confirmPassword) {
+    if (!username || !name || !email || !password || !confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
-    
+
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-    
+
     if (password.length < 6) {
       setError('Password must be at least 6 characters long');
       return;
     }
-    
+
+    if (username.length < 3) {
+      setError('Username must be at least 3 characters long');
+      return;
+    }
+
     try {
-      await register(name, email, password);
+      await register(username, name, email, password);
       navigate('/'); // Redirect to home page after successful registration
     } catch (error) {
       setError(error.message || 'Failed to register. Please try again.');
@@ -50,10 +56,23 @@ const Register = () => {
       <div className="register-container">
         <h1 className="register-title">Create an Account</h1>
         <p className="register-subtitle">Join SentiMate to track your emotions and improve your well-being</p>
-        
+
         {error && <div className="register-error">{error}</div>}
-        
+
         <form className="register-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Choose a username"
+              required
+            />
+            <small className="form-hint">Username must be at least 3 characters long</small>
+          </div>
+
           <div className="form-group">
             <label htmlFor="name">Full Name</label>
             <input
@@ -65,7 +84,7 @@ const Register = () => {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -77,7 +96,7 @@ const Register = () => {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
@@ -90,7 +109,7 @@ const Register = () => {
             />
             <small className="form-hint">Password must be at least 6 characters long</small>
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="confirmPassword">Confirm Password</label>
             <input
@@ -102,7 +121,7 @@ const Register = () => {
               required
             />
           </div>
-          
+
           <Button
             type="primary"
             className="register-button"
@@ -111,7 +130,7 @@ const Register = () => {
             {loading ? 'Creating Account...' : 'Create Account'}
           </Button>
         </form>
-        
+
         <div className="register-footer">
           <p>
             Already have an account? <Link to="/login">Sign in</Link>

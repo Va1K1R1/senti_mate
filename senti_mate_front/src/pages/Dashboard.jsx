@@ -14,47 +14,47 @@ const Dashboard = () => {
   const { diaries, loading: diaryLoading, error: diaryError } = useDiary();
   const { todos, loading: todoLoading, error: todoError } = useTodo();
   const navigate = useNavigate();
-  
+
   // Calculate statistics
   const completedTodos = todos.filter(todo => todo.completed).length;
   const totalTodos = todos.length;
   const completionRate = totalTodos > 0 ? Math.round((completedTodos / totalTodos) * 100) : 0;
-  
+
   // Get emotion counts
   const emotionCounts = diaries.reduce((counts, diary) => {
     const emotion = diary.emotion?.toLowerCase() || 'unknown';
     counts[emotion] = (counts[emotion] || 0) + 1;
     return counts;
   }, {});
-  
+
   // Get most frequent emotion
   const mostFrequentEmotion = Object.entries(emotionCounts).reduce(
     (max, [emotion, count]) => (count > max.count ? { emotion, count } : max),
     { emotion: 'none', count: 0 }
   );
-  
+
   // Get recent diaries (last 3)
   const recentDiaries = [...diaries]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 3);
-  
+
   // Format date
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
-  
+
   // Navigate to diary detail
   const handleDiaryClick = (id) => {
     navigate(`/diary/${id}`);
   };
-  
+
   return (
     <div className="dashboard-page">
       <Header />
       <div className="dashboard-content">
         <h1 className="dashboard-title">Health Dashboard</h1>
-        
+
         <div className="dashboard-summary">
           <div className="summary-card">
             <h3>Mood Summary</h3>
@@ -74,7 +74,7 @@ const Dashboard = () => {
               </>
             )}
           </div>
-          
+
           <div className="summary-card">
             <h3>Task Progress</h3>
             {todoLoading ? (
@@ -89,7 +89,7 @@ const Dashboard = () => {
               </>
             )}
           </div>
-          
+
           <div className="summary-card">
             <h3>Health Status</h3>
             <p className="stat-large">Coming Soon</p>
@@ -97,7 +97,7 @@ const Dashboard = () => {
             <p className="stat-small">Connect with Samsung Health</p>
           </div>
         </div>
-        
+
         <div className="dashboard-sections">
           <div className="dashboard-section">
             <div className="section-header">
@@ -106,7 +106,7 @@ const Dashboard = () => {
                 New Entry
               </Button>
             </div>
-            
+
             {diaryLoading ? (
               <div className="loading-indicator">Loading diary entries...</div>
             ) : diaryError ? (
@@ -145,7 +145,7 @@ const Dashboard = () => {
               </div>
             )}
           </div>
-          
+
           <div className="dashboard-section">
             <div className="section-header">
               <h2>Upcoming Tasks</h2>
@@ -153,7 +153,7 @@ const Dashboard = () => {
                 View All
               </Button>
             </div>
-            
+
             {todoLoading ? (
               <div className="loading-indicator">Loading tasks...</div>
             ) : todoError ? (
@@ -180,7 +180,7 @@ const Dashboard = () => {
                         onChange={() => {}} // This will be handled in the Todo page
                         className="todo-checkbox"
                       />
-                      <span className="todo-text">{todo.text}</span>
+                      <span className="todo-text">{todo.title}</span>
                     </div>
                   ))}
                 {todos.filter(todo => !todo.completed).length > 5 && (

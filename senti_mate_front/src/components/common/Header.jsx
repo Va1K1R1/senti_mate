@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
-import ThemeToggle from './ThemeToggle';
 
 /**
  * Header component for navigation
@@ -46,9 +45,6 @@ const Header = () => {
             </li>
             <li className={isActive('/settings') ? 'active' : ''}>
               <Link to="/settings">Settings</Link>
-            </li>
-            <li className="theme-toggle-container">
-              <ThemeToggle />
             </li>
           </ul>
         </nav>

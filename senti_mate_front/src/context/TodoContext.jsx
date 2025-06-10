@@ -47,7 +47,7 @@ export const TodoProvider = ({ children }) => {
   const addTodo = async (text) => {
     setLoading(true);
     try {
-      const newTodo = await TodoService.createTodo({ text, completed: false });
+      const newTodo = await TodoService.createTodo({ title: text, completed: false });
       setTodos([...todos, newTodo]);
       return newTodo;
     } catch (error) {

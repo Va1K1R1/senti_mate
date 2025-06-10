@@ -49,10 +49,21 @@ export const DiaryProvider = ({ children }) => {
     setLoading(true);
     try {
       // Check if id is undefined or invalid
-      if (!id) {
-        throw new Error('Diary ID is required');
+      if (id === undefined || id === null || id === 'undefined' || id === 'null' || !id) {
+        setError('Diary ID is required and must be a valid value');
+        console.error('Error getting diary: Invalid ID provided', id);
+        return null;
       }
-      const diary = await DiaryService.getDiaryById(id);
+
+      // Ensure id is a number or can be converted to one
+      const diaryId = parseInt(id, 10);
+      if (isNaN(diaryId)) {
+        setError(`Invalid diary ID: ${id} is not a number`);
+        console.error(`Error getting diary: Invalid ID format`, id);
+        return null;
+      }
+
+      const diary = await DiaryService.getDiaryById(diaryId);
       setCurrentDiary(diary);
       return diary;
     } catch (error) {
@@ -84,13 +95,28 @@ export const DiaryProvider = ({ children }) => {
   const updateDiary = async (id, updatedDiary) => {
     setLoading(true);
     try {
-      const updated = await DiaryService.updateDiary(id, updatedDiary);
+      // Check if id is undefined or invalid
+      if (id === undefined || id === null || id === 'undefined' || id === 'null' || !id) {
+        setError('Diary ID is required and must be a valid value for update');
+        console.error('Error updating diary: Invalid ID provided', id);
+        throw new Error('Diary ID is required and must be a valid value for update');
+      }
+
+      // Ensure id is a number or can be converted to one
+      const diaryId = parseInt(id, 10);
+      if (isNaN(diaryId)) {
+        setError(`Invalid diary ID: ${id} is not a number`);
+        console.error(`Error updating diary: Invalid ID format`, id);
+        throw new Error(`Invalid diary ID: ${id} is not a number`);
+      }
+
+      const updated = await DiaryService.updateDiary(diaryId, updatedDiary);
       setDiaries(
         diaries.map(diary =>
-          diary.id === parseInt(id) ? updated : diary
+          diary.id === diaryId ? updated : diary
         )
       );
-      if (currentDiary && currentDiary.id === parseInt(id)) {
+      if (currentDiary && currentDiary.id === diaryId) {
         setCurrentDiary(updated);
       }
       return updated;
@@ -107,9 +133,24 @@ export const DiaryProvider = ({ children }) => {
   const deleteDiary = async (id) => {
     setLoading(true);
     try {
-      await DiaryService.deleteDiary(id);
-      setDiaries(diaries.filter(diary => diary.id !== parseInt(id)));
-      if (currentDiary && currentDiary.id === parseInt(id)) {
+      // Check if id is undefined or invalid
+      if (id === undefined || id === null || id === 'undefined' || id === 'null' || !id) {
+        setError('Diary ID is required and must be a valid value for deletion');
+        console.error('Error deleting diary: Invalid ID provided', id);
+        throw new Error('Diary ID is required and must be a valid value for deletion');
+      }
+
+      // Ensure id is a number or can be converted to one
+      const diaryId = parseInt(id, 10);
+      if (isNaN(diaryId)) {
+        setError(`Invalid diary ID: ${id} is not a number`);
+        console.error(`Error deleting diary: Invalid ID format`, id);
+        throw new Error(`Invalid diary ID: ${id} is not a number`);
+      }
+
+      await DiaryService.deleteDiary(diaryId);
+      setDiaries(diaries.filter(diary => diary.id !== diaryId));
+      if (currentDiary && currentDiary.id === diaryId) {
         setCurrentDiary(null);
       }
     } catch (error) {

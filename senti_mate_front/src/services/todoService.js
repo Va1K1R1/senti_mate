@@ -1,17 +1,48 @@
 import api from './api';
+import AuthService from './authService';
 
 /**
  * Todo service for handling todo-related API calls
  */
 const TodoService = {
   /**
+   * Get the current user ID
+   * @returns {Promise<number>} Current user ID
+   * @private
+   */
+  _getCurrentUserId: async () => {
+    try {
+      const user = await AuthService.getCurrentUser();
+      return user.id;
+    } catch (error) {
+      console.error('Error getting current user ID:', error);
+      throw new Error('User must be authenticated to perform this action');
+    }
+  },
+  /**
    * Get all todo items
-   * @param {number} [userId=1] - User ID (defaults to 1 if not provided)
+   * @param {number} [userId] - User ID (if not provided, gets current user ID)
    * @returns {Promise<Array>} Array of todo items
    */
-  getAllTodos: async (userId = 1) => {
+  getAllTodos: async (userId) => {
     try {
-      return await api.get(`/todos?userId=${userId}`);
+      // If userId is not provided, get the current user ID
+      if (!userId) {
+        userId = await TodoService._getCurrentUserId();
+      }
+
+      const response = await api.get(`/todos?userId=${userId}`);
+      // Check if response is a pagination object and extract the content array
+      if (response && typeof response === 'object' && Array.isArray(response.content)) {
+        return response.content;
+      }
+      // If response is already an array, return it
+      if (Array.isArray(response)) {
+        return response;
+      }
+      // If response is neither a pagination object nor an array, return an empty array
+      console.warn('Unexpected response format from /todos endpoint:', response);
+      return [];
     } catch (error) {
       console.error('Get all todos error:', error);
       throw error;
@@ -35,13 +66,18 @@ const TodoService = {
   /**
    * Create a new todo item
    * @param {Object} todo - Todo item data
-   * @param {string} todo.text - Todo item text
+   * @param {string} todo.title - Todo item title
    * @param {boolean} [todo.completed=false] - Todo item completion status
-   * @param {number} [userId=1] - User ID (defaults to 1 if not provided)
+   * @param {number} [userId] - User ID (if not provided, gets current user ID)
    * @returns {Promise<Object>} Created todo item
    */
-  createTodo: async (todo, userId = 1) => {
+  createTodo: async (todo, userId) => {
     try {
+      // If userId is not provided, get the current user ID
+      if (!userId) {
+        userId = await TodoService._getCurrentUserId();
+      }
+
       return await api.post(`/todos?userId=${userId}`, todo);
     } catch (error) {
       console.error('Create todo error:', error);
@@ -53,7 +89,7 @@ const TodoService = {
    * Update a todo item
    * @param {number} id - Todo item ID
    * @param {Object} todo - Updated todo item data
-   * @param {string} [todo.text] - Updated todo item text
+   * @param {string} [todo.title] - Updated todo item title
    * @param {boolean} [todo.completed] - Updated todo item completion status
    * @returns {Promise<Object>} Updated todo item
    */
@@ -97,12 +133,28 @@ const TodoService = {
 
   /**
    * Get completed todo items
-   * @param {number} [userId=1] - User ID (defaults to 1 if not provided)
+   * @param {number} [userId] - User ID (if not provided, gets current user ID)
    * @returns {Promise<Array>} Array of completed todo items
    */
-  getCompletedTodos: async (userId = 1) => {
+  getCompletedTodos: async (userId) => {
     try {
-      return await api.get(`/todos/user/${userId}/completed`);
+      // If userId is not provided, get the current user ID
+      if (!userId) {
+        userId = await TodoService._getCurrentUserId();
+      }
+
+      const response = await api.get(`/todos/user/${userId}/completed`);
+      // Check if response is a pagination object and extract the content array
+      if (response && typeof response === 'object' && Array.isArray(response.content)) {
+        return response.content;
+      }
+      // If response is already an array, return it
+      if (Array.isArray(response)) {
+        return response;
+      }
+      // If response is neither a pagination object nor an array, return an empty array
+      console.warn(`Unexpected response format from /todos/user/${userId}/completed endpoint:`, response);
+      return [];
     } catch (error) {
       console.error('Get completed todos error:', error);
       throw error;
@@ -111,12 +163,28 @@ const TodoService = {
 
   /**
    * Get incomplete todo items
-   * @param {number} [userId=1] - User ID (defaults to 1 if not provided)
+   * @param {number} [userId] - User ID (if not provided, gets current user ID)
    * @returns {Promise<Array>} Array of incomplete todo items
    */
-  getIncompleteTodos: async (userId = 1) => {
+  getIncompleteTodos: async (userId) => {
     try {
-      return await api.get(`/todos/user/${userId}/incomplete`);
+      // If userId is not provided, get the current user ID
+      if (!userId) {
+        userId = await TodoService._getCurrentUserId();
+      }
+
+      const response = await api.get(`/todos/user/${userId}/incomplete`);
+      // Check if response is a pagination object and extract the content array
+      if (response && typeof response === 'object' && Array.isArray(response.content)) {
+        return response.content;
+      }
+      // If response is already an array, return it
+      if (Array.isArray(response)) {
+        return response;
+      }
+      // If response is neither a pagination object nor an array, return an empty array
+      console.warn(`Unexpected response format from /todos/user/${userId}/incomplete endpoint:`, response);
+      return [];
     } catch (error) {
       console.error('Get incomplete todos error:', error);
       throw error;

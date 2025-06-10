@@ -54,6 +54,10 @@ axiosInstance.interceptors.response.use(
  */
 export const get = async (endpoint, options = {}) => {
   try {
+    // Check if endpoint contains 'undefined' or 'null' as a parameter
+    if (endpoint.includes('/undefined') || endpoint.includes('/null')) {
+      throw new Error(`Invalid endpoint parameter in ${endpoint}`);
+    }
     return await axiosInstance.get(endpoint, options);
   } catch (error) {
     console.error(`GET request failed for ${endpoint}:`, error);
@@ -70,6 +74,10 @@ export const get = async (endpoint, options = {}) => {
  */
 export const post = async (endpoint, data, options = {}) => {
   try {
+    // Check if endpoint contains 'undefined' or 'null' as a parameter
+    if (endpoint.includes('/undefined') || endpoint.includes('/null')) {
+      throw new Error(`Invalid endpoint parameter in ${endpoint}`);
+    }
     return await axiosInstance.post(endpoint, data, options);
   } catch (error) {
     console.error(`POST request failed for ${endpoint}:`, error);
@@ -86,6 +94,10 @@ export const post = async (endpoint, data, options = {}) => {
  */
 export const put = async (endpoint, data, options = {}) => {
   try {
+    // Check if endpoint contains 'undefined' or 'null' as a parameter
+    if (endpoint.includes('/undefined') || endpoint.includes('/null')) {
+      throw new Error(`Invalid endpoint parameter in ${endpoint}`);
+    }
     return await axiosInstance.put(endpoint, data, options);
   } catch (error) {
     console.error(`PUT request failed for ${endpoint}:`, error);
@@ -102,6 +114,10 @@ export const put = async (endpoint, data, options = {}) => {
  */
 export const patch = async (endpoint, data, options = {}) => {
   try {
+    // Check if endpoint contains 'undefined' or 'null' as a parameter
+    if (endpoint.includes('/undefined') || endpoint.includes('/null')) {
+      throw new Error(`Invalid endpoint parameter in ${endpoint}`);
+    }
     return await axiosInstance.patch(endpoint, data, options);
   } catch (error) {
     console.error(`PATCH request failed for ${endpoint}:`, error);
@@ -117,6 +133,10 @@ export const patch = async (endpoint, data, options = {}) => {
  */
 export const del = async (endpoint, options = {}) => {
   try {
+    // Check if endpoint contains 'undefined' or 'null' as a parameter
+    if (endpoint.includes('/undefined') || endpoint.includes('/null')) {
+      throw new Error(`Invalid endpoint parameter in ${endpoint}`);
+    }
     return await axiosInstance.delete(endpoint, options);
   } catch (error) {
     console.error(`DELETE request failed for ${endpoint}:`, error);

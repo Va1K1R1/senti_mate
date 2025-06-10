@@ -82,15 +82,6 @@
   border-radius: 3px;
 }
 
-/* Theme toggle container */
-.theme-toggle-container {
-  display: flex;
-  align-items: center;
-}
-
-.theme-toggle-container .theme-toggle {
-  margin-left: 5px;
-}
 
 /* Responsive styles */
 @media (max-width: 768px) {

@@ -1,40 +1,21 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 
-// Create a context for theme management
+// Create a context for theme management (light theme only)
 export const ThemeContext = createContext();
 
 // ThemeProvider component to wrap the application
 export const ThemeProvider = ({ children }) => {
-  // Function to get the initial theme from localStorage or system preference
-  const getInitialTheme = () => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      return savedTheme;
-    }
-    // Check if user's system prefers dark mode
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return prefersDark ? 'dark' : 'light';
-  };
-
-  // State to track current theme
-  const [theme, setTheme] = useState(getInitialTheme);
-
-  // Effect to apply theme class to body and save to localStorage
+  // Effect to apply light theme class to body
   useEffect(() => {
     const body = document.body;
-    body.classList.remove('light-theme', 'dark-theme');
-    body.classList.add(`${theme}-theme`);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  // Function to toggle between light and dark themes
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
+    body.classList.remove('dark-theme');
+    body.classList.add('light-theme');
+    localStorage.setItem('theme', 'light');
+  }, []);
 
   // Provide theme context to children components
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme: 'light' }}>
       {children}
     </ThemeContext.Provider>
   );
