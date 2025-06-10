@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Register.css";
 import Header from "./Header.jsx";
+import AuthService from "../services/AuthService";
 
 const Register = ({ onRegister }) => {
     const [formData, setFormData] = useState({
@@ -11,17 +12,17 @@ const Register = ({ onRegister }) => {
         confirmPassword: "",
         agreeTerms: false
     });
-    
+
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
-    
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData({
             ...formData,
             [name]: type === "checkbox" ? checked : value
         });
-        
+
         // Clear error when user starts typing
         if (errors[name]) {
             setErrors({
@@ -30,56 +31,62 @@ const Register = ({ onRegister }) => {
             });
         }
     };
-    
+
     const validateForm = () => {
         const newErrors = {};
-        
+
         if (!formData.name.trim()) {
             newErrors.name = "Name is required";
         }
-        
+
         if (!formData.email) {
             newErrors.email = "Email is required";
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = "Email is invalid";
         }
-        
+
         if (!formData.password) {
             newErrors.password = "Password is required";
         } else if (formData.password.length < 6) {
             newErrors.password = "Password must be at least 6 characters";
         }
-        
+
         if (!formData.confirmPassword) {
             newErrors.confirmPassword = "Please confirm your password";
         } else if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = "Passwords do not match";
         }
-        
+
         if (!formData.agreeTerms) {
             newErrors.agreeTerms = "You must agree to the terms and conditions";
         }
-        
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!validateForm()) {
             return;
         }
-        
+
         setIsLoading(true);
-        
+
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // Call the onRegister callback with the form data
+            // Use AuthService to register
+            const userData = {
+                name: formData.name,
+                email: formData.email,
+                password: formData.password
+            };
+
+            const response = await AuthService.register(userData);
+
+            // Call the onRegister callback with the response data
             if (onRegister) {
-                onRegister(formData);
+                onRegister(response);
             }
         } catch (error) {
             console.error("Registration error:", error);
@@ -90,7 +97,7 @@ const Register = ({ onRegister }) => {
             setIsLoading(false);
         }
     };
-    
+
     return (
         <div> <Header title="Register"
                       leftChild={<Link to="/">← 홈으로</Link>}

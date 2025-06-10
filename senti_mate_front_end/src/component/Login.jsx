@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Login.css";
 import Header from "./Header.jsx";
+import AuthService from "../services/AuthService";
 
 const Login = ({ onLogin }) => {
     const [formData, setFormData] = useState({
@@ -58,12 +59,12 @@ const Login = ({ onLogin }) => {
         setIsLoading(true);
 
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Use AuthService to login
+            const response = await AuthService.login(formData.email, formData.password);
 
-            // Call the onLogin callback with the form data
+            // Call the onLogin callback with the user data
             if (onLogin) {
-                onLogin(formData);
+                onLogin(response);
             }
         } catch (error) {
             console.error("Login error:", error);
