@@ -986,6 +986,170 @@ textarea:focus {
   60% { transform: translateY(-5px); }
 }
 
+/* Health Data Page Styles */
+.health-data-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+  animation: fadeIn var(--transition-normal);
+}
+
+.health-data-container h1 {
+  margin-bottom: var(--spacing-xl);
+  color: var(--primary-color);
+  text-align: center;
+}
+
+.health-data-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.health-data-tabs button {
+  background-color: var(--background-alt);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  transition: all var(--transition-fast);
+}
+
+.health-data-tabs button:hover {
+  background-color: var(--primary-light);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.health-data-tabs button.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.health-data-list {
+  margin-top: var(--spacing-lg);
+}
+
+.health-data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.health-data-card {
+  background-color: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-lg);
+  transition: all var(--transition-fast);
+  border-left: 3px solid var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.health-data-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.health-data-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.health-data-type {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  text-transform: capitalize;
+}
+
+.delete-button {
+  background-color: transparent;
+  color: var(--error-color);
+  border: none;
+  font-size: 1.5rem;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+}
+
+.delete-button:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  transform: none;
+  box-shadow: none;
+}
+
+.health-data-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: var(--spacing-md) 0;
+  text-align: center;
+}
+
+.health-data-date {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-bottom: var(--spacing-sm);
+  text-align: center;
+}
+
+.health-data-source {
+  color: var(--text-lighter);
+  font-size: 0.8rem;
+  margin-top: auto;
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--border-color);
+  text-align: right;
+}
+
+.no-health-data {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-light);
+  background-color: var(--background-alt);
+  border-radius: var(--radius-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.health-data-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-xl);
+}
+
+.back-button {
+  background-color: var(--background-alt);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.back-button:hover {
+  background-color: var(--primary-light);
+  color: white;
+  border-color: var(--primary-light);
+}
+
 /* Apply animations to elements */
 .diary-card:nth-child(odd) {
   animation: slideInLeft var(--transition-normal);
@@ -1078,6 +1242,30 @@ textarea:focus {
   .form-actions button {
     width: 100%;
   }
+
+  /* Health Data responsive styles */
+  .health-data-container {
+    padding: var(--spacing-md);
+  }
+
+  .health-data-tabs {
+    gap: var(--spacing-xs);
+  }
+
+  .health-data-tabs button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.8rem;
+  }
+
+  .health-data-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .health-data-card-header {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 
 /* Small screens */
@@ -1093,5 +1281,24 @@ textarea:focus {
   .diary-card-metrics {
     flex-direction: column;
     gap: var(--spacing-xs);
+  }
+
+  /* Health Data small screen styles */
+  .health-data-tabs {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .health-data-tabs button {
+    width: 100%;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .health-data-value {
+    font-size: 1.5rem;
+  }
+
+  .health-data-card {
+    padding: var(--spacing-md);
   }
 }
