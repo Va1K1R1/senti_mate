@@ -39,7 +39,8 @@ public class Emotion {
     private String colorCode;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "diary_entry_id", nullable = false)
+    @JoinColumn(name = "diary_entry_id")
+    @JsonIgnore  // 백 레퍼런스 무시
     private DiaryEntry diaryEntry;
     
     @ManyToOne(fetch = FetchType.LAZY)

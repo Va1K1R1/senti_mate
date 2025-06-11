@@ -68,7 +68,7 @@ public class DiaryEntry {
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "diaryEntry", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "diaryEntry", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore  // 또는 @JsonManagedReference 제거
     private List<Emotion> emotions = new ArrayList<>();
 }
