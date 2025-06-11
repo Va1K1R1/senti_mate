@@ -8,15 +8,8 @@ const HealthData = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'steps', 'sleep', 'heart', 'weight', 'custom'
-  const [newHealthData, setNewHealthData] = useState({
-    dataType: 'steps',
-    value: '',
-    unit: '',
-    timestamp: new Date().toISOString().split('T')[0],
-    source: 'Manual Entry'
-  });
-  const [showAddForm, setShowAddForm] = useState(false);
-  
+  // Health data will be retrieved from API, no need for manual input
+
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -25,7 +18,7 @@ const HealthData = () => {
       navigate('/login');
       return;
     }
-    
+
     loadHealthData();
   }, [isAuthenticated, navigate]);
 
@@ -41,44 +34,7 @@ const HealthData = () => {
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewHealthData({
-      ...newHealthData,
-      [name]: value
-    });
-  };
-
-  const handleAddHealthData = async (e) => {
-    e.preventDefault();
-    
-    if (!newHealthData.value || !newHealthData.unit) {
-      setError('Please provide a value and unit');
-      return;
-    }
-    
-    setLoading(true);
-    try {
-      const createdHealthData = await HealthDataService.createHealthData({
-        ...newHealthData,
-        value: parseFloat(newHealthData.value)
-      });
-      
-      setHealthData([...healthData, createdHealthData]);
-      setNewHealthData({
-        dataType: 'steps',
-        value: '',
-        unit: '',
-        timestamp: new Date().toISOString().split('T')[0],
-        source: 'Manual Entry'
-      });
-      setShowAddForm(false);
-    } catch (err) {
-      setError(err.message || 'Failed to add health data');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Health data input functions removed as data will be retrieved from API
 
   const handleDeleteHealthData = async (id) => {
     setLoading(true);
@@ -106,29 +62,9 @@ const HealthData = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  const getUnitForDataType = (dataType) => {
-    switch (dataType) {
-      case 'steps':
-        return 'steps';
-      case 'sleep':
-        return 'hours';
-      case 'heart':
-        return 'bpm';
-      case 'weight':
-        return 'kg';
-      default:
-        return '';
-    }
-  };
+  // Unit function removed as health data will be retrieved from API
 
-  useEffect(() => {
-    if (newHealthData.dataType) {
-      setNewHealthData({
-        ...newHealthData,
-        unit: getUnitForDataType(newHealthData.dataType)
-      });
-    }
-  }, [newHealthData.dataType]);
+  // Unit setting effect removed as health data will be retrieved from API
 
   if (loading && healthData.length === 0) {
     return <div className="loading">Loading your health data...</div>;
@@ -137,9 +73,9 @@ const HealthData = () => {
   return (
     <div className="health-data-container">
       <h1>Health Data</h1>
-      
+
       {error && <div className="error-message">{error}</div>}
-      
+
       <div className="health-data-tabs">
         <button 
           className={activeTab === 'all' ? 'active' : ''}
@@ -178,119 +114,13 @@ const HealthData = () => {
           Custom
         </button>
       </div>
-      
-      <div className="health-data-actions">
-        <button 
-          onClick={() => setShowAddForm(!showAddForm)}
-          className="add-health-data-button"
-        >
-          {showAddForm ? 'Cancel' : 'Add Health Data'}
-        </button>
-      </div>
-      
-      {showAddForm && (
-        <form onSubmit={handleAddHealthData} className="health-data-form">
-          <div className="form-group">
-            <label htmlFor="dataType">Data Type</label>
-            <select
-              id="dataType"
-              name="dataType"
-              value={newHealthData.dataType}
-              onChange={handleInputChange}
-              disabled={loading}
-              required
-            >
-              <option value="steps">Steps</option>
-              <option value="sleep">Sleep</option>
-              <option value="heart">Heart Rate</option>
-              <option value="weight">Weight</option>
-              <option value="custom">Custom</option>
-            </select>
-          </div>
-          
-          {newHealthData.dataType === 'custom' && (
-            <div className="form-group">
-              <label htmlFor="customType">Custom Type Name</label>
-              <input
-                type="text"
-                id="customType"
-                name="customType"
-                value={newHealthData.customType || ''}
-                onChange={handleInputChange}
-                disabled={loading}
-                required={newHealthData.dataType === 'custom'}
-                placeholder="e.g., Blood Pressure, Glucose, etc."
-              />
-            </div>
-          )}
-          
-          <div className="form-group">
-            <label htmlFor="value">Value</label>
-            <input
-              type="number"
-              id="value"
-              name="value"
-              value={newHealthData.value}
-              onChange={handleInputChange}
-              disabled={loading}
-              required
-              step="0.01"
-            />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="unit">Unit</label>
-            <input
-              type="text"
-              id="unit"
-              name="unit"
-              value={newHealthData.unit}
-              onChange={handleInputChange}
-              disabled={loading}
-              required
-            />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="timestamp">Date</label>
-            <input
-              type="date"
-              id="timestamp"
-              name="timestamp"
-              value={newHealthData.timestamp}
-              onChange={handleInputChange}
-              disabled={loading}
-              required
-            />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="source">Source</label>
-            <input
-              type="text"
-              id="source"
-              name="source"
-              value={newHealthData.source}
-              onChange={handleInputChange}
-              disabled={loading}
-              required
-            />
-          </div>
-          
-          <button 
-            type="submit" 
-            disabled={loading}
-            className="submit-button"
-          >
-            {loading ? 'Adding...' : 'Add Health Data'}
-          </button>
-        </form>
-      )}
-      
+
+      {/* Health data input form removed as data will be retrieved from API */}
+
       <div className="health-data-list">
         {filteredHealthData.length === 0 ? (
           <div className="no-health-data">
-            No health data available. Add some data to get started!
+            No health data available. Health data will be automatically synced from connected devices and services.
           </div>
         ) : (
           <div className="health-data-grid">
@@ -323,7 +153,7 @@ const HealthData = () => {
           </div>
         )}
       </div>
-      
+
       <div className="health-data-actions">
         <button 
           onClick={() => navigate('/')}
