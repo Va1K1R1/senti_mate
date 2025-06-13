@@ -6,8 +6,7 @@ import com.example.senti_mate_back_end.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -16,11 +15,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Adapter controller for health data operations.
+ * Adapter for health data operations.
  * Maps frontend API expectations to backend implementations.
  */
-@RestController
-@RequestMapping("/health-data")
+@Component
 public class HealthDataAdapter {
 
     private final HealthDataController healthDataController;
@@ -38,7 +36,6 @@ public class HealthDataAdapter {
      *
      * @return the ResponseEntity with the list of health data
      */
-    @GetMapping
     public ResponseEntity<List<HealthData>> getAllHealthData() {
         Long userId = getCurrentUserId();
         return healthDataController.getAllHealthDataByUser(userId);
@@ -51,8 +48,7 @@ public class HealthDataAdapter {
      * @param type the health data type (e.g., 'steps', 'heart_rate', 'sleep', 'exercise')
      * @return the ResponseEntity with the filtered list of health data
      */
-    @GetMapping("/type/{type}")
-    public ResponseEntity<List<HealthData>> getHealthDataByType(@PathVariable String type) {
+    public ResponseEntity<List<HealthData>> getHealthDataByType(String type) {
         Long userId = getCurrentUserId();
         ResponseEntity<List<HealthData>> response = healthDataController.getAllHealthDataByUser(userId);
 
@@ -89,10 +85,9 @@ public class HealthDataAdapter {
      * @param endDate the end date
      * @return the ResponseEntity with the list of health data within the date range
      */
-    @GetMapping("/range")
     public ResponseEntity<List<HealthData>> getHealthDataByDateRange(
-            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         Long userId = getCurrentUserId();
         return healthDataController.getHealthDataByUserAndDateRange(userId, startDate, endDate);
     }
@@ -103,7 +98,6 @@ public class HealthDataAdapter {
      *
      * @return the ResponseEntity with the sync status
      */
-    @PostMapping("/sync")
     public ResponseEntity<?> syncHealthData() {
         Long userId = getCurrentUserId();
         // Get the access token from the user or a token service
@@ -121,11 +115,10 @@ public class HealthDataAdapter {
      * @param endDate the end date
      * @return the ResponseEntity with the health data statistics
      */
-    @GetMapping("/stats/{type}")
     public ResponseEntity<Map<String, Object>> getHealthDataStats(
-            @PathVariable String type,
-            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            String type,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         Long userId = getCurrentUserId();
 
         Map<String, Object> stats = new HashMap<>();

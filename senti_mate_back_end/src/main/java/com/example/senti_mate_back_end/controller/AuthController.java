@@ -1,18 +1,24 @@
 package com.example.senti_mate_back_end.controller;
 
+import com.example.senti_mate_back_end.config.JwtTokenProvider;
 import com.example.senti_mate_back_end.model.Role;
 import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.repository.RoleRepository;
 import com.example.senti_mate_back_end.service.UserService;
-import com.example.senti_mate_back_end.util.SimplePasswordEncoder;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,6 +29,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
 public class AuthController {
 
     @Autowired
@@ -32,11 +39,16 @@ public class AuthController {
     private RoleRepository roleRepository;
 
     @Autowired
-    private SimplePasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 
     /**
      * Login endpoint
-     * Note: This is a simplified version without Spring Security
      */
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -63,29 +75,36 @@ public class AuthController {
                     .body(new MessageResponse("Error: Username or email is required!"));
         }
 
-        // Check if user exists and password matches
-        Optional<User> userOpt = userService.findByUsername(username);
-        if (userOpt.isEmpty() || !passwordEncoder.matches(password, userOpt.get().getPassword())) {
+        try {
+            // Authenticate the user
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
+
+            // Set authentication in security context
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // Generate JWT token
+            String token = tokenProvider.generateToken(authentication);
+
+            // Get user details
+            final String finalUsername = username;
+            User user = userService.findByUsername(finalUsername)
+                    .orElseThrow(() -> new RuntimeException("User not found with username: " + finalUsername));
+
+            // Return user data and token
+            return ResponseEntity.ok(new LoginResponse(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    token
+            ));
+        } catch (Exception e) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Invalid username or password!"));
         }
-
-        // Get the authenticated user
-        User authenticatedUser = userOpt.get();
-
-        // Generate a simple token (in a real app, use a proper JWT library)
-        String token = generateToken(authenticatedUser);
-
-        // Return user data and token
-        return ResponseEntity.ok(new LoginResponse(
-                authenticatedUser.getId(),
-                authenticatedUser.getUsername(),
-                authenticatedUser.getEmail(),
-                authenticatedUser.getFirstName(),
-                authenticatedUser.getLastName(),
-                token
-        ));
     }
 
     /**
@@ -111,7 +130,7 @@ public class AuthController {
         User user = User.builder()
                 .username(signUpRequest.getUsername())
                 .email(signUpRequest.getEmail())
-                .password(signUpRequest.getPassword())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .firstName(signUpRequest.getFirstName())
                 .lastName(signUpRequest.getLastName())
                 .isActive(true)
@@ -327,19 +346,4 @@ public class AuthController {
         }
     }
 
-    /**
-     * Generate a simple token for the user
-     * In a real application, use a proper JWT library
-     * @param user the user to generate a token for
-     * @return the generated token
-     */
-    private String generateToken(User user) {
-        // In a real application, use a proper JWT library
-        // This is a simplified version for demonstration purposes
-        String userInfo = user.getId() + ":" + user.getUsername() + ":" + 
-                          user.getRoles().stream().map(Role::getName).collect(Collectors.joining(","));
-
-        // Base64 encode the user info
-        return Base64.getEncoder().encodeToString(userInfo.getBytes());
-    }
 }

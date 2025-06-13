@@ -4,6 +4,8 @@ import com.example.senti_mate_back_end.model.DiaryEntry;
 import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.repository.DiaryEntryRepository;
 import com.example.senti_mate_back_end.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -21,13 +24,17 @@ import java.util.Optional;
 @Transactional
 public class DiaryEntryService {
 
+    private static final Logger logger = LoggerFactory.getLogger(DiaryEntryService.class);
+
     private final DiaryEntryRepository diaryEntryRepository;
     private final UserRepository userRepository;
+    private final ChatGPTService chatGPTService;
 
     @Autowired
-    public DiaryEntryService(DiaryEntryRepository diaryEntryRepository, UserRepository userRepository) {
+    public DiaryEntryService(DiaryEntryRepository diaryEntryRepository, UserRepository userRepository, ChatGPTService chatGPTService) {
         this.diaryEntryRepository = diaryEntryRepository;
         this.userRepository = userRepository;
+        this.chatGPTService = chatGPTService;
     }
 
     /**
@@ -133,9 +140,60 @@ public class DiaryEntryService {
     public DiaryEntry createDiaryEntry(Long userId, DiaryEntry diaryEntry) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
-        
+
         diaryEntry.setUser(user);
-        
+
+        // Extract health metrics from diary content using ChatGPT
+        try {
+            Map<String, Object> healthMetrics = chatGPTService.extractHealthMetrics(
+                    diaryEntry.getTitle() != null ? diaryEntry.getTitle() : "",
+                    diaryEntry.getContent() != null ? diaryEntry.getContent() : "");
+
+            // Set health metrics on diary entry if the map is not null
+            if (healthMetrics != null) {
+                // Set mood score if available and valid
+                if (healthMetrics.containsKey("moodScore") && healthMetrics.get("moodScore") instanceof Integer) {
+                    diaryEntry.setMoodScore((Integer) healthMetrics.get("moodScore"));
+                } else {
+                    diaryEntry.setMoodScore(5); // Default value
+                }
+
+                // Set energy level if available and valid
+                if (healthMetrics.containsKey("energyLevel") && healthMetrics.get("energyLevel") instanceof Integer) {
+                    diaryEntry.setEnergyLevel((Integer) healthMetrics.get("energyLevel"));
+                } else {
+                    diaryEntry.setEnergyLevel(5); // Default value
+                }
+
+                // Set stress level if available and valid
+                if (healthMetrics.containsKey("stressLevel") && healthMetrics.get("stressLevel") instanceof Integer) {
+                    diaryEntry.setStressLevel((Integer) healthMetrics.get("stressLevel"));
+                } else {
+                    diaryEntry.setStressLevel(5); // Default value
+                }
+
+                // Set sleep hours if available and valid
+                if (healthMetrics.containsKey("sleepHours") && healthMetrics.get("sleepHours") instanceof Float) {
+                    diaryEntry.setSleepHours((Float) healthMetrics.get("sleepHours"));
+                } else {
+                    diaryEntry.setSleepHours(7.0f); // Default value
+                }
+            } else {
+                // Set default values if healthMetrics is null
+                diaryEntry.setMoodScore(5);
+                diaryEntry.setEnergyLevel(5);
+                diaryEntry.setStressLevel(5);
+                diaryEntry.setSleepHours(7.0f);
+            }
+        } catch (Exception e) {
+            // Log the error and set default values
+            logger.error("Error setting health metrics: {}", e.getMessage());
+            diaryEntry.setMoodScore(5);
+            diaryEntry.setEnergyLevel(5);
+            diaryEntry.setStressLevel(5);
+            diaryEntry.setSleepHours(7.0f);
+        }
+
         // Handle emotions if they exist
         if (diaryEntry.getEmotions() != null) {
             diaryEntry.getEmotions().forEach(emotion -> {
@@ -143,7 +201,7 @@ public class DiaryEntryService {
                 emotion.setUser(user);
             });
         }
-        
+
         return diaryEntryRepository.save(diaryEntry);
     }
 

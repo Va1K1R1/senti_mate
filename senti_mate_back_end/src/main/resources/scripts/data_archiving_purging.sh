@@ -5,8 +5,8 @@
 
 # Configuration
 DB_NAME="sentimate_db"
-DB_USER="root"
-DB_PASSWORD="password"
+DB_USER="j"
+DB_PASSWORD="4820"
 ARCHIVE_DIR="/var/archives/sentimate"
 LOG_FILE="/var/log/sentimate/data_archiving.log"
 

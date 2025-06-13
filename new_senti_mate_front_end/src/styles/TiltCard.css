@@ -1,0 +1,215 @@
+/* TiltCard.css - Enhanced with advanced 3D effects */
+
+.tilt-card {
+  position: relative;
+  overflow: visible; /* Allow for glow effects to extend beyond card */
+  border-radius: var(--border-radius-lg);
+  transform-style: preserve-3d;
+  will-change: transform;
+  height: 100%;
+  display: flex;
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.1));
+  transition: filter var(--transition-normal);
+}
+
+.tilt-card.dark {
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.3));
+}
+
+.tilt-card:hover {
+  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.15));
+  z-index: 10; /* Ensure hovered cards appear above others */
+}
+
+.tilt-card.dark:hover {
+  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.4));
+}
+
+/* Inner container for 3D transformations */
+.tilt-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform var(--transition-normal);
+}
+
+.tilt-card-inner.light {
+  background-color: var(--background-color-card);
+  box-shadow: 
+    0 10px 30px -15px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.tilt-card-inner.dark {
+  background-color: var(--dark-bg-color-card);
+  box-shadow: 
+    0 10px 30px -15px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Content container for parallax effect */
+.tilt-card-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  transform-style: preserve-3d;
+  transform: translateZ(20px); /* Subtle 3D effect */
+}
+
+/* Glare effect */
+.glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  mix-blend-mode: overlay;
+  z-index: 3;
+  border-radius: var(--border-radius-lg);
+}
+
+.glare.visible {
+  opacity: 1;
+}
+
+/* Border glow effect */
+.border-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: var(--border-radius-lg);
+  border: 2px solid transparent;
+  transition: all 0.5s ease;
+  z-index: 1;
+  opacity: 0;
+}
+
+.border-glow.active {
+  opacity: 1;
+}
+
+/* Card content styling */
+.card-content {
+  padding: var(--spacing-lg);
+  z-index: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-sm);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.card-date {
+  font-size: 0.875rem;
+  color: var(--text-color-light);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.tilt-card.dark .card-date {
+  color: var(--dark-text-color-muted);
+}
+
+.card-body {
+  margin: var(--spacing-md) 0;
+  line-height: 1.6;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: var(--spacing-md);
+  margin-top: auto;
+}
+
+.tilt-card.dark .card-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-metrics {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.card-metrics span {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  gap: var(--spacing-xs);
+}
+
+.card-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+}
+
+/* Card border gradient effect */
+.tilt-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(74, 144, 226, 0.5) 0%,
+    rgba(80, 227, 194, 0.5) 100%
+  );
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tilt-card:hover::before {
+  opacity: 1;
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+  .card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  .card-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

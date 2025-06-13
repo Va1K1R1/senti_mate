@@ -9,7 +9,7 @@ const Todo = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all'); // 'all', 'active', 'completed'
-  
+
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ const Todo = () => {
       navigate('/login');
       return;
     }
-    
+
     loadTodos();
   }, [isAuthenticated, navigate]);
 
@@ -38,27 +38,30 @@ const Todo = () => {
     }
   };
 
-const handleAddTodo = async (e) => {
-  e.preventDefault();
-  
-  if (!newTodoText.trim()) return;
-  
-  setLoading(true);
-  try {
-    const newTodo = {
-      title: newTodoText,  // Changed from 'text' to 'title'
-      completed: false
-    };
-    
-    const createdTodo = await TodoService.createTodo(newTodo);
-    setTodos([...safeTodos, createdTodo]);
-    setNewTodoText('');
-  } catch (err) {
-    setError(err.message || 'Failed to add todo');
-  } finally {
-    setLoading(false);
-  }
-};
+  // Always ensure todos is an array before using .filter()
+  const safeTodos = Array.isArray(todos) ? todos : [];
+
+  const handleAddTodo = async (e) => {
+    e.preventDefault();
+
+    if (!newTodoText.trim()) return;
+
+    setLoading(true);
+    try {
+      const newTodo = {
+        title: newTodoText,  // Changed from 'text' to 'title'
+        completed: false
+      };
+
+      const createdTodo = await TodoService.createTodo(newTodo);
+      setTodos([...safeTodos, createdTodo]);
+      setNewTodoText('');
+    } catch (err) {
+      setError(err.message || 'Failed to add todo');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleToggleTodo = async (id) => {
     setLoading(true);
@@ -86,8 +89,6 @@ const handleAddTodo = async (e) => {
     }
   };
 
-  // Always ensure todos is an array before using .filter()
-  const safeTodos = Array.isArray(todos) ? todos : [];
   const filteredTodos = safeTodos.filter(todo => {
     if (filter === 'active') return !todo.completed;
     if (filter === 'completed') return todo.completed;
@@ -104,9 +105,9 @@ const handleAddTodo = async (e) => {
   return (
     <div className="todo-container">
       <h1>Todo List</h1>
-      
+
       {error && <div className="error-message">{error}</div>}
-      
+
       <div className="todo-stats">
         <span className="todo-count">
           {activeCount} active, {completedCount} completed
@@ -132,7 +133,7 @@ const handleAddTodo = async (e) => {
           </button>
         </div>
       </div>
-      
+
       <form onSubmit={handleAddTodo} className="todo-form">
         <input
           type="text"
@@ -150,7 +151,7 @@ const handleAddTodo = async (e) => {
           Add
         </button>
       </form>
-      
+
       <ul className="todo-list">
         {filteredTodos.length === 0 ? (
           <li className="todo-empty">
@@ -185,7 +186,7 @@ const handleAddTodo = async (e) => {
           ))
         )}
       </ul>
-      
+
       <div className="todo-actions">
         <button 
           onClick={() => navigate('/')}

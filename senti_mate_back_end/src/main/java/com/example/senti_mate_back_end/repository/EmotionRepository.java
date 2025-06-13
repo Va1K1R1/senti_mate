@@ -52,11 +52,12 @@ public interface EmotionRepository extends JpaRepository<Emotion, Long> {
      * @param limit the maximum number of results to return
      * @return a list of emotion names and their counts, ordered by count descending
      */
-    @Query("SELECT e.name, COUNT(e.id) as count FROM Emotion e " +
-            "JOIN e.diaryEntry d " +
-            "WHERE d.user.id = :userId " +
+    @Query(value = "SELECT e.name, COUNT(e.id) as count FROM emotions e " +
+            "JOIN diary_entries d ON e.diary_entry_id = d.id " +
+            "WHERE d.user_id = :userId " +
             "GROUP BY e.name " +
-            "ORDER BY count DESC")
+            "ORDER BY count DESC " +
+            "LIMIT :limit", nativeQuery = true)
     List<Object[]> findMostCommonEmotionsByUserId(@Param("userId") Long userId, @Param("limit") int limit);
 
     /**

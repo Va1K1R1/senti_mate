@@ -1,0 +1,162 @@
+/* Home.css - Styled with ReactBits components */
+
+.home-container {
+  padding-top: 20px;
+}
+
+.home-header {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.home-header h1 {
+  font-size: 2rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0;
+}
+
+.stats-container {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.search-container {
+  margin-bottom: 30px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 30px;
+  border: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+}
+
+.action-buttons a {
+  text-decoration: none;
+  display: block;
+  height: 100%;
+}
+
+.action-buttons .magnetic-button {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50px;
+  text-align: center;
+}
+
+/* Override default link hover behavior */
+.action-buttons a:hover {
+  text-decoration: none;
+}
+
+.diary-list {
+  margin-top: 40px;
+}
+
+.diary-list h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.diary-list h2::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+.no-entries {
+  text-align: center;
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+/* Responsive layout for diary cards */
+.diary-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+}
+
+.diary-list h2 {
+  grid-column: 1 / -1;
+  margin-bottom: var(--spacing-md);
+}
+
+.no-entries {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .diary-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .diary-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

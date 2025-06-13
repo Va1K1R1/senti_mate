@@ -3,13 +3,12 @@ package com.example.senti_mate_back_end.adapter;
 import com.example.senti_mate_back_end.controller.UserController;
 import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.service.UserService;
-import com.example.senti_mate_back_end.util.SimplePasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -17,16 +16,15 @@ import java.util.Map;
  * Adapter controller for user operations.
  * Maps frontend API expectations to backend implementations.
  */
-@RestController
-@RequestMapping("/users")
+@Component
 public class UserAdapter {
 
     private final UserController userController;
     private final UserService userService;
-    private final SimplePasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserAdapter(UserController userController, UserService userService, SimplePasswordEncoder passwordEncoder) {
+    public UserAdapter(UserController userController, UserService userService, PasswordEncoder passwordEncoder) {
         this.userController = userController;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
@@ -38,7 +36,6 @@ public class UserAdapter {
      *
      * @return the ResponseEntity with the user profile
      */
-    @GetMapping("/profile")
     public ResponseEntity<User> getProfile() {
         Long userId = getCurrentUserId();
         return userController.getUserById(userId);
@@ -51,8 +48,7 @@ public class UserAdapter {
      * @param user the updated user profile
      * @return the ResponseEntity with the updated user profile
      */
-    @PutMapping("/profile")
-    public ResponseEntity<User> updateProfile(@Valid @RequestBody User user) {
+    public ResponseEntity<User> updateProfile(User user) {
         Long userId = getCurrentUserId();
 
         // Ensure the ID in the path matches the ID in the request body
@@ -68,8 +64,7 @@ public class UserAdapter {
      * @param request the password change request
      * @return the ResponseEntity with a success message
      */
-    @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@Valid @RequestBody PasswordChangeRequest request) {
+    public ResponseEntity<?> changePassword(PasswordChangeRequest request) {
         Long userId = getCurrentUserId();
         User user = userService.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("User not found"));

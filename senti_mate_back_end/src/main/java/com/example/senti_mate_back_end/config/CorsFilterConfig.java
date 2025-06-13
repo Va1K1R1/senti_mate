@@ -1,25 +1,18 @@
 package com.example.senti_mate_back_end.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-import java.util.Arrays;
-
-@Configuration
+// @Configuration  // 주석 처리하여 비활성화
 public class CorsFilterConfig {
-
+/*
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        
+
         // Allow both common Vite ports
         config.setAllowedOrigins(Arrays.asList(
             "http://localhost:5173",
             "http://localhost:5174"
         ));
-        
+
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
@@ -34,5 +27,5 @@ public class CorsFilterConfig {
         source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);
-    }
+    }*/
 }

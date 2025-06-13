@@ -7,8 +7,7 @@ import com.example.senti_mate_back_end.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Component;
 
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
@@ -18,8 +17,7 @@ import java.util.List;
  * Adapter controller for diary entry operations.
  * Maps frontend API expectations to backend implementations.
  */
-@RestController
-@RequestMapping("/diary")
+@Component
 public class DiaryAdapter {
 
     private final DiaryEntryController diaryEntryController;
@@ -37,7 +35,6 @@ public class DiaryAdapter {
      *
      * @return the ResponseEntity with the list of diary entries
      */
-    @GetMapping
     public ResponseEntity<List<DiaryEntry>> getAllEntries() {
         Long userId = getCurrentUserId();
         return diaryEntryController.getAllDiaryEntriesByUser(userId);
@@ -50,8 +47,7 @@ public class DiaryAdapter {
      * @param id the ID of the diary entry
      * @return the ResponseEntity with the diary entry
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<DiaryEntry> getEntryById(@PathVariable Long id) {
+    public ResponseEntity<DiaryEntry> getEntryById(Long id) {
         return diaryEntryController.getDiaryEntryById(id);
     }
 
@@ -62,8 +58,7 @@ public class DiaryAdapter {
      * @param diaryEntry the diary entry to create
      * @return the ResponseEntity with the created diary entry
      */
-    @PostMapping
-    public ResponseEntity<DiaryEntry> createEntry(@Valid @RequestBody DiaryEntry diaryEntry) {
+    public ResponseEntity<DiaryEntry> createEntry(DiaryEntry diaryEntry) {
         Long userId = getCurrentUserId();
         return diaryEntryController.createDiaryEntry(userId, diaryEntry);
     }
@@ -76,8 +71,7 @@ public class DiaryAdapter {
      * @param diaryEntry the updated diary entry
      * @return the ResponseEntity with the updated diary entry
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<DiaryEntry> updateEntry(@PathVariable Long id, @Valid @RequestBody DiaryEntry diaryEntry) {
+    public ResponseEntity<DiaryEntry> updateEntry(Long id, DiaryEntry diaryEntry) {
         return diaryEntryController.updateDiaryEntry(id, diaryEntry);
     }
 
@@ -88,8 +82,7 @@ public class DiaryAdapter {
      * @param id the ID of the diary entry to delete
      * @return the ResponseEntity with no content
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEntry(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEntry(Long id) {
         return diaryEntryController.deleteDiaryEntry(id);
     }
 
@@ -101,10 +94,9 @@ public class DiaryAdapter {
      * @param endDate the end date
      * @return the ResponseEntity with the list of diary entries
      */
-    @GetMapping("/range")
     public ResponseEntity<List<DiaryEntry>> getEntriesByDateRange(
-            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+            LocalDateTime startDate,
+            LocalDateTime endDate) {
         Long userId = getCurrentUserId();
         // The backend returns a Page, but we need a List to match the frontend expectation
         return ResponseEntity.ok(

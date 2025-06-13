@@ -9,8 +9,7 @@ import com.example.senti_mate_back_end.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Component;
 
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
@@ -22,8 +21,7 @@ import java.util.Map;
  * Adapter controller for emotion operations.
  * Maps frontend API expectations to backend implementations.
  */
-@RestController
-@RequestMapping("/emotions")
+@Component
 public class EmotionAdapter {
 
     private final EmotionController emotionController;
@@ -48,7 +46,6 @@ public class EmotionAdapter {
      *
      * @return the ResponseEntity with the list of emotions
      */
-    @GetMapping
     public ResponseEntity<List<Emotion>> getAllEmotions() {
         Long userId = getCurrentUserId();
         // This is a simplification - in a real implementation, we would need to
@@ -66,24 +63,24 @@ public class EmotionAdapter {
     /**
      * Get a specific emotion by ID.
      * Maps to the backend's /api/emotions/{id} endpoint.
+     * Accessible at /emotions/detail/{id}
      *
      * @param id the ID of the emotion
      * @return the ResponseEntity with the emotion
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<Emotion> getEmotionById(@PathVariable Long id) {
+    public ResponseEntity<Emotion> getEmotionById(Long id) {
         return emotionController.getEmotionById(id);
     }
 
     /**
      * Analyze text to detect emotions.
      * Maps to the backend's /api/recommendations/analyze-sentiment endpoint.
+     * Accessible at /emotions/analyze-text
      *
      * @param request the text analysis request
      * @return the ResponseEntity with the detected emotions
      */
-    @PostMapping("/analyze")
-    public ResponseEntity<?> analyzeText(@Valid @RequestBody TextAnalysisRequest request) {
+    public ResponseEntity<?> analyzeText(TextAnalysisRequest request) {
         DiaryEntry diaryEntry = new DiaryEntry();
         diaryEntry.setContent(request.getText());
         return recommendationController.analyzeSentiment(diaryEntry);
@@ -93,15 +90,15 @@ public class EmotionAdapter {
      * Get emotion statistics for the current user.
      * Maps to the backend's /api/emotions/user/{userId}/most-common and
      * /api/emotions/user/{userId}/average-intensity endpoints.
+     * Accessible at /emotions/statistics
      *
      * @param startDate the start date
      * @param endDate the end date
      * @return the ResponseEntity with the emotion statistics
      */
-    @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getEmotionStats(
-            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+            LocalDateTime startDate,
+            LocalDateTime endDate) {
         Long userId = getCurrentUserId();
 
         // Get most common emotions

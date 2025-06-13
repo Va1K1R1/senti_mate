@@ -22,7 +22,8 @@ import java.util.List;
  * REST controller for managing diary entry operations
  */
 @RestController
-@RequestMapping("/api/diary-entries")  // Changed from "/diary"
+@RequestMapping("/api/diary-entries")  // Changed from "/diary-entries"
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
 public class DiaryEntryController {
 
     private final DiaryEntryService diaryEntryService;

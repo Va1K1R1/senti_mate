@@ -1,0 +1,78 @@
+/* ThemeToggle.css - Styled for better visibility and standard design */
+
+.theme-toggle {
+  position: fixed;
+  bottom: var(--spacing-lg);
+  right: var(--spacing-lg);
+  width: 50px;
+  height: 50px;
+  border-radius: var(--border-radius-circle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all var(--transition-normal);
+  border: none;
+  outline: none;
+  box-shadow: var(--shadow-md);
+  font-size: 1.2rem;
+}
+
+.theme-toggle:focus {
+  box-shadow: 0 0 0 3px var(--primary-color);
+  outline: none;
+}
+
+.theme-toggle.light {
+  background-color: var(--background-color-card);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.theme-toggle.dark {
+  background-color: var(--dark-bg-color-card);
+  color: var(--dark-text-color);
+  border: 1px solid var(--border-color-dark);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: var(--shadow-lg);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle .icon {
+  transition: transform var(--transition-slow);
+}
+
+.theme-toggle:hover .icon {
+  transform: rotate(360deg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .theme-toggle {
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    width: 45px;
+    height: 45px;
+    font-size: 1rem;
+  }
+}
+
+/* Accessibility */
+.theme-toggle .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

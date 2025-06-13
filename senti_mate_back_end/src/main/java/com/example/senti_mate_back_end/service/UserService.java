@@ -2,11 +2,13 @@ package com.example.senti_mate_back_end.service;
 
 import com.example.senti_mate_back_end.model.User;
 import com.example.senti_mate_back_end.repository.UserRepository;
-import com.example.senti_mate_back_end.util.SimplePasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,12 +19,14 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final SimplePasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public UserService(UserRepository userRepository, SimplePasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FileStorageService fileStorageService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.fileStorageService = fileStorageService;
     }
 
     /**
@@ -173,6 +177,33 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
 
         user.setEmailVerified(true);
+        return userRepository.save(user);
+    }
+
+    /**
+     * Upload a profile picture for a user
+     * @param id the user ID
+     * @param file the profile picture file
+     * @return the updated user
+     * @throws IllegalArgumentException if the user is not found
+     * @throws IOException if an I/O error occurs
+     */
+    @Transactional
+    public User uploadProfilePicture(Long id, MultipartFile file) throws IOException {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
+
+        // Delete old profile picture if it exists
+        if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
+            fileStorageService.deleteFile(user.getProfilePicture());
+        }
+
+        // Store the new profile picture
+        String fileName = fileStorageService.storeFile(file);
+
+        // Update user's profile picture
+        user.setProfilePicture(fileName);
+
         return userRepository.save(user);
     }
 }

@@ -87,8 +87,9 @@ public class EmotionService {
     public Emotion createEmotion(Long diaryEntryId, Emotion emotion) {
         DiaryEntry diaryEntry = diaryEntryRepository.findById(diaryEntryId)
                 .orElseThrow(() -> new IllegalArgumentException("Diary entry not found with id: " + diaryEntryId));
-        
+
         emotion.setDiaryEntry(diaryEntry);
+        emotion.setUser(diaryEntry.getUser());
         return emotionRepository.save(emotion);
     }
 
@@ -145,13 +146,13 @@ public class EmotionService {
     public Map<String, Long> getMostCommonEmotions(Long userId, int limit) {
         List<Object[]> results = emotionRepository.findMostCommonEmotionsByUserId(userId, limit);
         Map<String, Long> emotionCounts = new HashMap<>();
-        
+
         for (Object[] result : results) {
             String emotionName = (String) result[0];
             Long count = ((Number) result[1]).longValue();
             emotionCounts.put(emotionName, count);
         }
-        
+
         return emotionCounts;
     }
 
@@ -163,13 +164,13 @@ public class EmotionService {
     public Map<String, Double> getAverageIntensityByEmotion(Long userId) {
         List<Object[]> results = emotionRepository.findAverageIntensityByEmotionForUserId(userId);
         Map<String, Double> emotionIntensities = new HashMap<>();
-        
+
         for (Object[] result : results) {
             String emotionName = (String) result[0];
             Double avgIntensity = ((Number) result[1]).doubleValue();
             emotionIntensities.put(emotionName, avgIntensity);
         }
-        
+
         return emotionIntensities;
     }
 
@@ -184,8 +185,11 @@ public class EmotionService {
     public List<Emotion> createEmotions(Long diaryEntryId, List<Emotion> emotions) {
         DiaryEntry diaryEntry = diaryEntryRepository.findById(diaryEntryId)
                 .orElseThrow(() -> new IllegalArgumentException("Diary entry not found with id: " + diaryEntryId));
-        
-        emotions.forEach(emotion -> emotion.setDiaryEntry(diaryEntry));
+
+        emotions.forEach(emotion -> {
+            emotion.setDiaryEntry(diaryEntry);
+            emotion.setUser(diaryEntry.getUser());
+        });
         return emotionRepository.saveAll(emotions);
     }
 }

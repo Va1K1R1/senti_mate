@@ -10,6 +10,40 @@ const EmotionService = {
     }
   },
 
+  getMostCommonEmotions: async (limit = 5) => {
+    try {
+      return await api.get(`/emotions/most-common?limit=${limit}`);
+    } catch (error) {
+      console.error('Get most common emotions error:', error);
+      throw error;
+    }
+  },
+
+  getEmotionStats: async (startDate, endDate) => {
+    try {
+      let url = '/emotions/stats';
+      if (startDate || endDate) {
+        url += '?';
+        if (startDate) url += `startDate=${startDate}`;
+        if (startDate && endDate) url += '&';
+        if (endDate) url += `endDate=${endDate}`;
+      }
+      return await api.get(url);
+    } catch (error) {
+      console.error('Get emotion stats error:', error);
+      throw error;
+    }
+  },
+
+  analyzeText: async (text) => {
+    try {
+      return await api.post('/emotions/analyze', { text });
+    } catch (error) {
+      console.error('Analyze text error:', error);
+      throw error;
+    }
+  },
+
   getEmotionById: async (id) => {
     try {
       return await api.get(`/emotions/${id}`);
@@ -28,9 +62,9 @@ const EmotionService = {
     }
   },
 
-  createEmotion: async (emotion) => {
+  createEmotion: async (diaryEntryId, emotion) => {
     try {
-      return await api.post('/emotions', emotion);
+      return await api.post(`/emotions/diary/${diaryEntryId}`, emotion);
     } catch (error) {
       console.error('Create emotion error:', error);
       throw error;

@@ -27,6 +27,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/health-data")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
 public class HealthDataController {
 
     private static final Logger logger = LoggerFactory.getLogger(HealthDataController.class);
@@ -158,12 +159,12 @@ public class HealthDataController {
     }
 
     /**
-     * GET /health-data/range : Get health data by date range for the current user
+     * GET /health-data/date-range : Get health data by date range for the current user
      * @param startDate the start date
      * @param endDate the end date
      * @return the ResponseEntity with status 200 (OK) and the list of health data in body
      */
-    @GetMapping("/range")
+    @GetMapping("/date-range")
     public ResponseEntity<List<HealthData>> getHealthDataByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {

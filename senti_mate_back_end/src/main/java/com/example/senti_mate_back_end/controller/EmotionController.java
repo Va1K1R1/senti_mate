@@ -21,6 +21,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/emotions")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
 public class EmotionController {
 
     private final EmotionService emotionService;
@@ -210,11 +211,11 @@ public class EmotionController {
     }
 
     /**
-     * GET /emotions : Get most common emotions for the current user
+     * GET /emotions/most-common : Get most common emotions for the current user
      * @param limit the maximum number of results to return
      * @return the ResponseEntity with status 200 (OK) and the map of emotion names to their counts in body
      */
-    @GetMapping
+    @GetMapping("/most-common")
     public ResponseEntity<Map<String, Long>> getMostCommonEmotions(
             @RequestParam(defaultValue = "5") int limit) {
         try {

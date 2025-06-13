@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -16,8 +16,7 @@ import java.util.Map;
  * Adapter controller for recommendation operations.
  * Maps frontend API expectations to backend implementations.
  */
-@RestController
-@RequestMapping("/recommendations")
+@Component
 public class RecommendationAdapter {
 
     private final RecommendationController recommendationController;
@@ -35,7 +34,6 @@ public class RecommendationAdapter {
      *
      * @return the ResponseEntity with the list of recommendations
      */
-    @GetMapping
     public ResponseEntity<List<Recommendation>> getAllRecommendations() {
         Long userId = getCurrentUserId();
         return recommendationController.getAllRecommendationsByUser(userId);
@@ -48,8 +46,7 @@ public class RecommendationAdapter {
      * @param id the ID of the recommendation
      * @return the ResponseEntity with the recommendation
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<Recommendation> getRecommendationById(@PathVariable Long id) {
+    public ResponseEntity<Recommendation> getRecommendationById(Long id) {
         return recommendationController.getRecommendationById(id);
     }
 
@@ -60,9 +57,8 @@ public class RecommendationAdapter {
      * @param type the recommendation type (frontend) / category (backend)
      * @return the ResponseEntity with the list of recommendations
      */
-    @GetMapping("/type/{type}")
     public ResponseEntity<Page<Recommendation>> getRecommendationsByType(
-            @PathVariable String type,
+            String type,
             Pageable pageable) {
         Long userId = getCurrentUserId();
         return recommendationController.getRecommendationsByCategory(userId, type, pageable);
@@ -74,7 +70,6 @@ public class RecommendationAdapter {
      *
      * @return the ResponseEntity with the generated recommendation
      */
-    @PostMapping("/generate")
     public ResponseEntity<?> generateRecommendation() {
         Long userId = getCurrentUserId();
         return recommendationController.generateRecommendations(userId);
@@ -87,8 +82,7 @@ public class RecommendationAdapter {
      * @param id the ID of the recommendation
      * @return the ResponseEntity with the updated recommendation
      */
-    @PutMapping("/{id}/read")
-    public ResponseEntity<Recommendation> markAsRead(@PathVariable Long id) {
+    public ResponseEntity<Recommendation> markAsRead(Long id) {
         return recommendationController.markRecommendationAsRead(id);
     }
 
@@ -100,10 +94,9 @@ public class RecommendationAdapter {
      * @param request the helpfulness request
      * @return the ResponseEntity with the updated recommendation
      */
-    @PutMapping("/{id}/helpful")
     public ResponseEntity<Recommendation> markHelpfulness(
-            @PathVariable Long id,
-            @RequestBody HelpfulnessRequest request) {
+            Long id,
+            HelpfulnessRequest request) {
         // If the recommendation is marked as helpful, toggle it to favorite
         if (request.isHelpful()) {
             return recommendationController.toggleRecommendationFavorite(id);

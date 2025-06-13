@@ -1,0 +1,159 @@
+/* DiaryCard.css - Inspired by ReactBits Cards */
+
+.diary-tilt-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.diary-tilt-card .card-content {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.diary-tilt-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-sm);
+}
+
+.diary-tilt-card .card-title {
+  color: var(--primary-color);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.diary-tilt-card .card-date {
+  font-size: 0.875rem;
+  color: var(--text-color-light);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.tilt-card.dark .card-date {
+  color: #aaa;
+}
+
+.diary-tilt-card .card-body {
+  margin: var(--spacing-md) 0;
+  line-height: 1.6;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.diary-tilt-card .card-body p {
+  margin: 0;
+  color: inherit;
+  flex: 1;
+}
+
+.diary-tilt-card .card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: var(--spacing-md);
+  margin-top: auto;
+}
+
+.tilt-card.dark .card-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.diary-tilt-card .card-metrics {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.diary-tilt-card .card-metrics span {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  gap: var(--spacing-xs);
+}
+
+.diary-tilt-card .mood,
+.diary-tilt-card .energy {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-xl);
+  background-color: rgba(0, 0, 0, 0.05);
+  transition: background-color var(--transition-fast);
+}
+
+.diary-tilt-card .mood:hover,
+.diary-tilt-card .energy:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.tilt-card.dark .mood,
+.tilt-card.dark .energy {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.tilt-card.dark .mood:hover,
+.tilt-card.dark .energy:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.view-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-xl);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all var(--transition-normal);
+  min-width: 100px;
+}
+
+.view-button.light {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: var(--text-color-inverted);
+  box-shadow: var(--shadow-md);
+}
+
+.view-button.dark {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: var(--text-color-inverted);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.view-button:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.view-button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+  .diary-tilt-card .card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  .diary-tilt-card .card-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .view-button {
+    width: 100%;
+  }
+}

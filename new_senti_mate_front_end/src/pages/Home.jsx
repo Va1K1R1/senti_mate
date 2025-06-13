@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDiary } from '../context/DiaryContext';
 import { useAuth } from '../context/AuthContext';
+import DiaryCard from '../components/diary/DiaryCard';
+import MagneticButton from '../components/common/MagneticButton';
+import '../styles/Home.css';
 
 const Home = () => {
   const [diaries, setDiaries] = useState([]);
@@ -13,7 +16,7 @@ const Home = () => {
     totalEntries: 0,
     averageMood: 0
   });
-  
+
   const { diaries: contextDiaries, loading: contextLoading, error: contextError } = useDiary();
   const { currentUser, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -23,7 +26,7 @@ const Home = () => {
       navigate('/login');
       return;
     }
-    
+
     if (contextDiaries) {
       setDiaries(contextDiaries);
       setFilteredDiaries(contextDiaries);
@@ -45,17 +48,17 @@ const Home = () => {
   const handleSearch = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    
+
     if (!term.trim()) {
       setFilteredDiaries(diaries);
       return;
     }
-    
+
     const filtered = diaries.filter(diary => 
       diary.title.toLowerCase().includes(term.toLowerCase()) || 
       diary.content.toLowerCase().includes(term.toLowerCase())
     );
-    
+
     setFilteredDiaries(filtered);
   };
 
@@ -97,7 +100,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="search-container">
         <input
           type="text"
@@ -107,25 +110,33 @@ const Home = () => {
           className="search-input"
         />
       </div>
-      
+
       <div className="action-buttons">
-        <Link to="/diary/new" className="new-entry-button">
-          Create New Entry
+        <Link to="/diary/new">
+          <MagneticButton className="new-entry-button" glowEffect={true}>
+            Create New Entry
+          </MagneticButton>
         </Link>
-        <Link to="/health-data" className="health-data-button">
-          Health Data
+        <Link to="/health-data">
+          <MagneticButton className="health-data-button">
+            Health Data
+          </MagneticButton>
         </Link>
-        <Link to="/todo" className="todo-button">
-          Todo List
+        <Link to="/todo">
+          <MagneticButton className="todo-button">
+            Todo List
+          </MagneticButton>
         </Link>
-        <Link to="/recommendations" className="recommendations-button">
-          Recommendations
+        <Link to="/recommendations">
+          <MagneticButton className="recommendations-button">
+            Recommendations
+          </MagneticButton>
         </Link>
       </div>
-      
+
       <div className="diary-list">
         <h2>Your Diary Entries</h2>
-        
+
         {filteredDiaries.length === 0 ? (
           <div className="no-entries">
             {searchTerm ? 
@@ -134,27 +145,7 @@ const Home = () => {
           </div>
         ) : (
           filteredDiaries.map(diary => (
-            <div key={diary.id} className="diary-card">
-              <div className="diary-card-header">
-                <h3 className="diary-card-title">{diary.title}</h3>
-                <span className="diary-card-date">{formatDate(diary.createdAt)}</span>
-              </div>
-              <div className="diary-card-content">
-                <p>{diary.content.length > 150 ? 
-                  `${diary.content.substring(0, 150)}...` : 
-                  diary.content}
-                </p>
-              </div>
-              <div className="diary-card-footer">
-                <div className="diary-card-metrics">
-                  <span className="mood">Mood: {diary.moodScore}/10</span>
-                  <span className="energy">Energy: {diary.energyLevel}/10</span>
-                </div>
-                <Link to={`/diary/${diary.id}`} className="view-button">
-                  View Entry
-                </Link>
-              </div>
-            </div>
+            <DiaryCard key={diary.id} diary={diary} />
           ))
         )}
       </div>

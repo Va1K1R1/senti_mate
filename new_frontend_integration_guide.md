@@ -111,10 +111,28 @@ The SentiMate backend uses the following data models:
   "username": "johndoe",
   "email": "john@example.com",
   "password": "********", // Not returned in responses
+  "firstName": "John",
+  "lastName": "Doe",
+  "profilePicture": "profile.jpg",
+  "isActive": true,
+  "isEmailVerified": false,
   "createdAt": "2023-01-01T12:00:00",
-  "updatedAt": "2023-01-01T12:00:00"
+  "updatedAt": "2023-01-01T12:00:00",
+  "roles": [
+    {
+      "id": 1,
+      "name": "USER",
+      "description": "Regular user role"
+    }
+  ],
+  "diaryEntries": [], // Only included when specifically requested
+  "healthData": [], // Only included when specifically requested
+  "recommendations": [], // Only included when specifically requested
+  "todos": [] // Only included when specifically requested
 }
 ```
+
+Note: The User model uses `@JsonManagedReference` on collection fields (diaryEntries, healthData, recommendations, todos) to manage serialization of bidirectional relationships.
 
 ### DiaryEntry
 
@@ -130,18 +148,20 @@ The SentiMate backend uses the following data models:
   "isPrivate": true,
   "createdAt": "2023-01-01T12:00:00",
   "updatedAt": "2023-01-01T12:00:00",
-  "user": {
-    "id": 1
-  },
   "emotions": [
     {
       "id": 1,
       "name": "happy",
-      "intensity": 8
+      "intensity": 8,
+      "description": "Feeling of joy",
+      "colorCode": "#FFD700"
     }
   ]
+  // user field is not included in JSON response due to @JsonBackReference
 }
 ```
+
+Note: The DiaryEntry model uses `@JsonBackReference` on the user field to prevent circular references during serialization. It also uses `@JsonManagedReference` on the emotions collection to manage the bidirectional relationship with Emotion entities.
 
 ### Emotion
 
@@ -150,58 +170,98 @@ The SentiMate backend uses the following data models:
   "id": 1,
   "name": "happy",
   "intensity": 8,
-  "diaryEntry": {
-    "id": 1
-  }
+  "description": "Feeling of joy",
+  "colorCode": "#FFD700",
+  "createdAt": "2023-01-01T12:00:00"
+  // diaryEntry field is not included in JSON response due to @JsonBackReference
 }
 ```
+
+Note: The Emotion model uses `@JsonBackReference` on the diaryEntry field to prevent circular references during serialization.
 
 ### HealthData
 
 ```
 {
   "id": 1,
-  "dataType": "steps",
-  "value": 8500,
-  "unit": "count",
-  "timestamp": "2023-01-01T12:00:00",
-  "source": "Samsung Health",
-  "user": {
-    "id": 1
-  }
+  "date": "2023-01-01",
+  "stepCount": 8500,
+  "heartRateAvg": 72,
+  "heartRateMin": 60,
+  "heartRateMax": 120,
+  "sleepDurationMinutes": 420,
+  "deepSleepMinutes": 90,
+  "lightSleepMinutes": 240,
+  "remSleepMinutes": 90,
+  "caloriesBurned": 2100,
+  "exerciseDurationMinutes": 45,
+  "exerciseType": "Running",
+  "dataSource": "Samsung Health",
+  "syncStatus": "Synced",
+  "createdAt": "2023-01-01T12:00:00",
+  "updatedAt": "2023-01-01T12:00:00"
+  // user field is not included in JSON response due to @JsonBackReference
 }
 ```
+
+Note: The HealthData model uses `@JsonBackReference` on the user field to prevent circular references during serialization.
 
 ### Todo
 
 ```
 {
   "id": 1,
-  "text": "Go for a walk",
+  "title": "Go for a walk",
+  "description": "Take a 30-minute walk in the park",
   "completed": false,
+  "dueDate": "2023-01-02T18:00:00",
+  "priority": 2,
   "createdAt": "2023-01-01T12:00:00",
-  "updatedAt": "2023-01-01T12:00:00",
-  "user": {
-    "id": 1
-  }
+  "updatedAt": "2023-01-01T12:00:00"
+  // user field is not included in JSON response due to @JsonBackReference
 }
 ```
+
+Note: The Todo model uses `@JsonBackReference` on the user field to prevent circular references during serialization.
 
 ### Recommendation
 
 ```
 {
   "id": 1,
+  "title": "Take Short Breaks",
   "content": "Based on your mood patterns, consider taking short breaks during work hours.",
+  "category": "Wellness",
+  "priorityLevel": 2,
+  "isRead": false,
+  "isFavorite": false,
+  "source": "ChatGPT",
+  "sourcePrompt": "Generate a recommendation based on low energy levels",
+  "sourceResponse": "Full response from ChatGPT",
   "createdAt": "2023-01-01T12:00:00",
-  "user": {
-    "id": 1
-  },
-  "diaryEntry": {
-    "id": 1
-  }
+  "updatedAt": "2023-01-01T12:00:00"
+  // user field is not included in JSON response due to @JsonBackReference
 }
 ```
+
+Note: The Recommendation model uses `@JsonBackReference` on the user field to prevent circular references during serialization.
+
+## JSON Serialization
+
+The SentiMate backend uses Jackson annotations to manage circular references in the model classes. This is important to understand when working with the API responses:
+
+### Managing Circular References
+
+1. `@JsonManagedReference` is used on parent fields (collections) in the User class to indicate that this is the forward part of the reference.
+2. `@JsonBackReference` is used on child fields (references back to parent) in the DiaryEntry, HealthData, Recommendation, Todo, and Emotion classes to indicate that this is the back part of the reference that will be omitted from serialization.
+
+This means that when you receive a User object, it may include collections of related entities (diaryEntries, healthData, recommendations, todos), but when you receive a DiaryEntry, HealthData, Recommendation, Todo, or Emotion object, it will not include the full User object to prevent circular references.
+
+### Date Format
+
+All dates are serialized as ISO 8601 strings:
+- Date and time: `YYYY-MM-DDTHH:mm:ss.SSSZ`
+- Date only: `YYYY-MM-DD`
 
 ## Authentication Flow
 
